@@ -1,3 +1,6 @@
+DP_DATA_ROOT ?= $(abspath ../dp-data)
+export DP_DATA_ROOT
+
 .PHONY: restore analysis figures paper manuscript format lint test check ci-docker clean
 
 restore:
@@ -27,7 +30,8 @@ test:
 check: paper lint test
 
 ci-docker:
-	docker run --rm -v "$(PWD):/project" -w /project rocker/verse:4.6.0 \
+	docker run --rm -e DP_DATA_ROOT=/dp-data -v "$(DP_DATA_ROOT):/dp-data:ro" \
+		-v "$(CURDIR):/project" -w /project rocker/verse:4.6.0 \
 		bash -lc "Rscript -e 'install.packages(\"renv\", repos = \"https://cloud.r-project.org\")' && make restore check"
 
 clean:

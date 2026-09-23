@@ -2,17 +2,17 @@ project_file <- function(...) {
   file.path(rprojroot::find_root(rprojroot::has_file("DESCRIPTION")), ...)
 }
 
-source_manifest <- tibble::tribble(
-  ~source, ~path, ~doi, ~md5, ~license,
-  "distortions_responses", "data/raw/polardata.tab", "10.7910/DVN/D7G1LO",
-  "8e2b8aa45f9ebb71d73d88e2ecf3dbdb", "CC0 1.0",
-  "distortions_indices", "data/raw/poll_indices.tab", "10.7910/DVN/D7G1LO",
-  "cb262ca053f88d0119757a5c1039ba18", "CC0 1.0",
-  "cor_sood_replication", "data/raw/cor-sood-replication.zip", "10.7910/DVN/HZHVCU",
-  "80b59acf267496b42f48756a1b3d9a5c", "CC0 1.0",
-  "greece", "data/raw/greece.csv", NA,
-  "adde068512852c8094af82f5920bf353", "CC0 1.0"
-)
+dp_data_root <- function() {
+  Sys.getenv("DP_DATA_ROOT", unset = project_file("..", "dp-data"))
+}
+
+source_manifest <- readr::read_csv(project_file("data", "sources.csv"), show_col_types = FALSE)
+
+source_path <- function(source, manifest = source_manifest, root = dp_data_root()) {
+  entry <- manifest[manifest$source == source, ]
+  if (nrow(entry) != 1L) stop("Expected exactly one source entry: ", source)
+  file.path(root, entry$path)
+}
 
 poll_map <- tibble::tibble(
   file_key = c(
@@ -70,32 +70,41 @@ missing_dp_polls <- tibble::tibble(
   mismatch_reason = "No matching public item matrix was found in the Cor-Sood deposit."
 )
 
-verify_sources <- function(manifest = source_manifest) {
-  hashes <- manifest |>
-    dplyr::mutate(
-      observed_md5 = unname(tools::md5sum(project_file(manifest$path)))
+verify_sources <- function(manifest = source_manifest, root = dp_data_root()) {
+  paths <- file.path(root, manifest$path)
+  missing <- !file.exists(paths)
+  if (any(missing)) {
+    stop(
+      "Missing upstream source: ", paste(paths[missing], collapse = ", "),
+      ". See README.md for dp-data setup."
     )
-  assertr::verify(
-    hashes,
-    all(hashes$md5 == hashes$observed_md5),
-    error_fun = assertr::error_stop
-  )
+  }
+  observed <- vapply(paths, function(path) {
+    digest::digest(file = path, algo = "sha256")
+  }, character(1L), USE.NAMES = FALSE)
+  changed <- observed != manifest$sha256
+  if (any(changed)) {
+    stop(
+      "Source checksum mismatch: ", paste(manifest$source[changed], collapse = ", "),
+      ". Investigate source and result differences before updating data/sources.csv."
+    )
+  }
   invisible(TRUE)
 }
 
-read_polardata <- function(path = project_file("data", "raw", "polardata.tab")) {
+read_polardata <- function(path = source_path("distortions_responses")) {
   readr::read_tsv(path, show_col_types = FALSE) |>
     dplyr::distinct(dplyr::across(-X), .keep_all = TRUE)
 }
 
 # Marousi, Greece (2006) was withheld from the public polardata release; these
-# rows come from the authors' 2014 analysis file (see data/raw/README.md).
-read_greece <- function(path = project_file("data", "raw", "greece.csv")) {
+# rows come from the authors' 2014 analysis file (see README.md).
+read_greece <- function(path = source_path("greece")) {
   readr::read_csv(path, show_col_types = FALSE)
 }
 
 extract_cor_data <- function(
-  archive = project_file("data", "raw", "cor-sood-replication.zip"),
+  archive = source_path("cor_sood_replication"),
   target = project_file("build", "cor-sood")
 ) {
   dir.create(target, recursive = TRUE, showWarnings = FALSE)

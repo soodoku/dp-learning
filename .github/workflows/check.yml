@@ -7,8 +7,17 @@ permissions:
 jobs:
   check:
     runs-on: ubuntu-latest
+    env:
+      DP_DATA_ROOT: ${{ github.workspace }}/build/dp-data
     steps:
       - uses: actions/checkout@v7.0.1
+      - name: Check out pinned data sources
+        uses: actions/checkout@v7.0.1
+        with:
+          repository: soodoku/dp-data
+          ref: dbc04c3b41f50e24d70e8d85ec5d134d19f7cec0
+          path: build/dp-data
+          persist-credentials: false
       - uses: r-lib/actions/setup-r@v2
         with:
           r-version: '4.6.0'

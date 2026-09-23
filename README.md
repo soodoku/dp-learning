@@ -24,15 +24,34 @@ Who learns how much in a Deliberative Poll, and does deliberating cause the lear
 | America in One Room: Climate (2021) | Attendees and uninvited control, three waves | [10.7910/DVN/IIOG1S](https://doi.org/10.7910/DVN/IIOG1S) |
 | Sandefur et al. (2022), Tanzania | Village-randomized experiment | [10.7910/DVN/S3NRQL](https://doi.org/10.7910/DVN/S3NRQL) |
 | Mendelson et al. (2026), Antimicrobial Resistance | Randomized; attendees vs controls, six countries | [10.25740/sb639ms2957](https://doi.org/10.25740/sb639ms2957) |
-| Marousi, Greece (2006) | Participant-level scores, first released here | `data/raw/greece.csv` |
+| Marousi, Greece (2006) | Participant-level scores, first released here | `dp-data/data/marousi-2006/participants.csv` |
 
-All are CC0 except the antimicrobial-resistance data (CC BY 4.0). The Distortions, Cor–Sood and Greece files are in `data/raw/` and checked by MD5. The four control-group files are downloaded into the ignored `data/cache/` and checked against the SHA-256 hashes in [`data/control_files.csv`](data/control_files.csv).
+All are CC0 except the antimicrobial-resistance data (CC BY 4.0). All eight input
+files are read from `../dp-data`, with paths, SHA-256 checksums, DOIs, and licenses
+pinned in [`data/sources.csv`](data/sources.csv). Set `DP_DATA_ROOT` to use a different
+checkout location. The build stops if a source is missing or changed; it does not
+download inputs or fall back to local copies.
+
+The inputs preserve the published aggregates and replication deposit used by this
+analysis. Adopting dp-data's rebuilt knowledge tables would be a separate analytical
+change. Marousi comes from the authors' 2014 `agg_data.Rdata` file (pollid 2000),
+first released in this repository. It contains derived scores, group identifiers,
+and demographics, with no item-level responses; recodes remain in
+[`docs/recode_ledger.csv`](docs/recode_ledger.csv).
+
+Before updating source checksums, compare the changed inputs and resulting tables,
+and explain any differences in the commit description.
 
 ## Reproduce
 
 R packages are pinned in `renv.lock`; the paper also needs Pandoc and XeLaTeX.
 
+Clone `soodoku/dp-data` alongside this repository and check out the source revision
+used by CI:
+
 ```sh
+git clone https://github.com/soodoku/dp-data.git ../dp-data
+git -C ../dp-data checkout dbc04c3b41f50e24d70e8d85ec5d134d19f7cec0
 make restore
 make check
 ```
@@ -43,7 +62,7 @@ make check
 
 | Folder | Contents |
 |---|---|
-| `data/` | Raw inputs and the download manifest for the control-group studies |
+| `data/` | Manifest of upstream inputs and their checksums |
 | `R/` | Functions: reading and checking sources, measures, models, meta-analysis, figures style |
 | `scripts/` | `run_all.R` builds `tabs/`; `figures.R` builds `figs/` |
 | `tabs/`, `figs/` | Generated tables (CSV) and figures |

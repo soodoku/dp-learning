@@ -56,7 +56,7 @@ list(
   purrr::list_rbind() |>
   write_output("meta.csv")
 
-control_paths <- fetch_control_files()
+control_paths <- control_source_paths()
 effects <- control_effects(control_paths)
 write_output(effects, "control_effects.csv")
 write_output(meta_causal(effects), "meta_causal.csv")

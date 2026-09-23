@@ -1,0 +1,9 @@
+source,path,sha256,doi,license
+distortions_responses,evidence/benchmarks/polardata.tab,98153f8fcde1d9c2bcb56b6179d66210834ab344790c835ddcf5f1f1039b448a,10.7910/DVN/D7G1LO,CC0 1.0
+distortions_indices,evidence/benchmarks/attitude-indices.tab,e849d6a0926712e0193d2f1d7fecd17352170c510fa9c995529566162a206e4a,10.7910/DVN/D7G1LO,CC0 1.0
+cor_sood_replication,evidence/deposits/guessing-and-forgetting.zip,6cb0fe9b9e0e6f1a381e200277665ad32f78c24b93346c48e55598c156633e7c,10.7910/DVN/HZHVCU,CC0 1.0
+greece,data/marousi-2006/participants.csv,32a031325309136318ba9ab8f2a500956df05f0e2bdaa75b78ee2bff4aa23bb2,,CC0 1.0
+a1r,data/america-in-one-room-2019/participants.tab,06134deebb34b08ffac91068727b55c1ec4dde88df5f388e1552b0bfa54c6818,10.7910/DVN/KJ8IH2,CC0 1.0
+tanzania,data/tanzania-2015/participants.dta,38c7faf5bec7538e32e04c3f62b5c4c43b8ad4c2d2b10b5ef00cf80b577b7af8,10.7910/DVN/S3NRQL,CC0 1.0
+climate,data/a1r-climate-2021/participants.tab,5e95a85c1fe356673c2b0a56d1e9aa463ab40e1defe3b33f1940ff83e5eee83a,10.7910/DVN/IIOG1S,CC0 1.0
+amr,data/amr-2024/participants.csv,c2877392f6b4d2e6146d09e40625d8ccf5d51f12b6150e3d07f7ab824c97d065,10.25740/sb639ms2957,CC BY 4.0

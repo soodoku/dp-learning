@@ -1,16 +1,6 @@
-fetch_control_files <- function(manifest = project_file("data", "control_files.csv"),
-                                cache = project_file("data", "cache")) {
-  files <- readr::read_csv(manifest, show_col_types = FALSE)
-  dir.create(cache, recursive = TRUE, showWarnings = FALSE)
-  paths <- file.path(cache, files$file)
-  purrr::walk2(files$url, paths, \(url, path) {
-    if (!file.exists(path)) utils::download.file(url, path, mode = "wb", quiet = TRUE)
-  })
-  observed <- purrr::map_chr(paths, \(path) digest::digest(file = path, algo = "sha256"))
-  if (!identical(observed, files$sha256)) {
-    stop("Checksum mismatch: ", paste(files$file[observed != files$sha256], collapse = ", "))
-  }
-  rlang::set_names(paths, tools::file_path_sans_ext(files$file))
+control_source_paths <- function() {
+  studies <- c("a1r", "tanzania", "climate", "amr")
+  rlang::set_names(vapply(studies, source_path, character(1L)), studies)
 }
 
 # Proportion correct; don't know, skipped and refused count as not knowing,
