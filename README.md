@@ -10,7 +10,6 @@ Who learns how much in a Deliberative Poll, and does deliberating cause the lear
 
 - **Participation causes learning.** In four Deliberative Polls with control groups (America in One Room 2019, its 2021 climate successor, Tanzania 2015, and the 2024 poll on antimicrobial resistance in six countries), participating raised factual knowledge by .46 SD [.34, .58]. A year after the climate poll, 45% of the effect remained. [Estimates](tabs/control_effects.csv)
 - **Every poll shows learning.** Across 22 polls without controls, the share of items answered correctly rose by .130 [.099, .162], about twice as much face to face as online. [Poll gains](tabs/poll_gains.csv)
-- **The usual guessing correction manufactures learning.** Resetting items answered right at T1 and wrong at T2 finds gains of .11 to .13 among untreated controls; the Cor and Sood latent class model finds .03 to .04. [Check](tabs/correction_check.csv)
 - **Who learns.** Participation helps those who start out knowing less, and those without degrees, somewhat more. Small groups are composed as if at random, and groupmates' knowledge has no detectable effect on learning. [Models](tabs/models.csv) · [peer effects](tabs/peer_effects_pooled.csv)
 
 ![Learning in every poll](figs/learning.png)

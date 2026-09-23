@@ -61,7 +61,6 @@ effects <- control_effects(control_paths)
 write_output(effects, "control_effects.csv")
 write_output(meta_causal(effects), "meta_causal.csv")
 write_output(control_heterogeneity(control_paths), "control_heterogeneity.csv")
-write_output(correction_check(control_paths), "correction_check.csv")
 write_output(selection(control_paths), "selection.csv")
 
 peers <- peer_effects(frame, a1r_group_frame(control_paths[["a1r"]]))

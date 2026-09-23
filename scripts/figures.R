@@ -67,32 +67,7 @@ learning <- dplyr::bind_rows(
 p <- forest(learning, "Learning, in standard deviations of T1 knowledge (95% CI)")
 save_evidence(p, "figs/learning", width = 6.5, height = 7)
 
-# Figure 2. Three learning estimates for attendees and untreated controls.
-measures <- c(raw = "Raw", reset = "Reset correction", lca = "Latent class")
-check <- read_output("correction_check.csv") |>
-  dplyr::filter(!grepl("later", group)) |>
-  tidyr::pivot_longer(
-    dplyr::matches("_gain"),
-    names_to = c("measure", ".value"),
-    names_pattern = "(raw|reset|lca)_(gain_se|gain)$"
-  ) |>
-  with_interval(gain, gain_se) |>
-  dplyr::mutate(
-    measure = factor(measures[measure], measures),
-    arm = factor(sub(",.*", "", group), c("Controls", "Attendees")),
-    study = sub("America in One Room: ", "", study)
-  )
-p <- ggplot2::ggplot(check, ggplot2::aes(gain, arm)) +
-  geom_zero() +
-  geom_estimate() +
-  ggplot2::facet_grid(study ~ measure) +
-  ggplot2::scale_x_continuous(breaks = c(0, 0.1, 0.2)) +
-  ggplot2::labs(x = "Learning, change in proportion correct (95% CI)", y = NULL) +
-  theme_evidence() +
-  ggplot2::theme(strip.text.y = ggplot2::element_text(angle = 0, hjust = 0))
-save_evidence(p, "figs/correction_check", width = 6.5, height = 3.4)
-
-# Figure 3. Within-poll effect of groupmates' T1 knowledge.
+# Figure 2. Within-poll effect of groupmates' T1 knowledge.
 peers <- read_output("peer_effects.csv") |>
   dplyr::filter(peer == "k1") |>
   dplyr::transmute(panel = "", label = poll, estimate, se = std_error, pooled = FALSE) |>

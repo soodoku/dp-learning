@@ -60,11 +60,6 @@ test_that("AMR 2024 counts match the published Extended Data Table 2", {
   )
 })
 
-test_that("in untreated controls the latent class model finds little learning", {
-  check <- read_output("correction_check.csv") |> dplyr::filter(grepl("Controls", group))
-  expect_true(all(check$lca_gain < 0.05))
-  expect_true(all(check$reset_gain > 0.1))
-})
 
 test_that("Greece enters with its T2 zeros treated as missing", {
   gains <- read_output("poll_gains.csv") |> dplyr::filter(pollname == "Marousi, Greece")

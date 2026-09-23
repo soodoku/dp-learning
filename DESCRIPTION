@@ -30,8 +30,7 @@ Imports:
     rprojroot,
     sandwich,
     tibble,
-    tidyr,
-    withr
+    tidyr
 Suggests:
     lintr,
     renv,
