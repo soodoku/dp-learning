@@ -1,0 +1,8 @@
+poll,variable,rule,rows_affected_basis,evidence
+National Issues Convention,mode,online 1 -> 0,all rows,"Held face to face in Austin, January 1996"
+National Issues Convention,ppage,age = 1996 - ppage,all rows,"ppage ranges 1900-1989 in this poll only, i.e. birth year"
+All polls,ppage,age < 16 or > 100 -> NA,"Zeguo age 1; Europolis age 109","Deliberative Polls sample adults"
+BTP 2004 Presidential Primaries,all,exact duplicate rows dropped,217 of 434 rows,"Exact duplicates in the public release"
+"Marousi, Greece",t2know,0 -> NA when T1 > 0,26 of 146 rows,"27 T2 scores of 0 against 2 at T1, implausible for a knowledge scale after deliberation"
+"Marousi, Greece",educ3,educ4 code 7 -> NA,20 rows,"Code outside the four education categories"
+All polls,"t1know, t2know",rounded to 10 decimals,2 NIC rows,"Stored as 1.0000000002"

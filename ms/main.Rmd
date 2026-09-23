@@ -1,0 +1,288 @@
+---
+title: "Deliberation and Learning: Evidence From Deliberative Polls"
+author: "Robert C. Luskin, Gaurav Sood, and James S. Fishkin"
+date: "Working draft"
+output:
+  pdf_document:
+    latex_engine: xelatex
+    keep_tex: true
+    number_sections: true
+    fig_caption: true
+bibliography: references.bib
+link-citations: true
+fontsize: 11pt
+geometry: margin=1in
+header-includes:
+  - \usepackage{booktabs}
+  - \usepackage{float}
+  - \usepackage{longtable}
+  - \usepackage{caption}
+  - \captionsetup{font=small,labelfont=bf}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE, fig.align = "center", fig.pos = "H")
+options(knitr.graphics.rel_path = FALSE)
+source("R/paper.R")
+figure <- \(name) knitr::include_graphics(normalizePath(file.path("figs", paste0(name, ".pdf"))))
+count <- \(x) prettyNum(x, big.mark = ",")
+gains <- read_out("poll_gains.csv")
+learning <- read_out("item_learning.csv")
+meta <- read_out("meta.csv")
+meta_c <- read_out("meta_causal.csv")
+models <- read_out("models.csv")
+effects <- read_out("control_effects.csv")
+hetero <- read_out("control_heterogeneity.csv")
+check <- read_out("correction_check.csv")
+peers <- read_out("peer_effects_pooled.csv")
+selected <- read_out("selection.csv")
+assignment <- read_out("assignment_check.csv")
+polls <- readr::read_csv("docs/polls.csv", show_col_types = FALSE)
+
+a1r <- control_row(effects, "America in One Room 2019", "Attended vs uninvited control")
+climate <- control_row(effects, "America in One Room: Climate 2021", "Attended vs uninvited control")
+climate_t3 <- control_row(effects, "America in One Room: Climate 2021", "Attended vs control, one year later")
+tz_delib <- control_row(effects, "Tanzania 2015", "Deliberation vs control villages")
+tz_info <- control_row(effects, "Tanzania 2015", "Information vs control villages")
+tz_vs <- control_row(effects, "Tanzania 2015", "Deliberation vs information")
+amr <- control_row(effects, "Antimicrobial Resistance 2024", "Attended vs randomized control")
+amr_country <- \(country) control_row(effects, "Antimicrobial Resistance 2024", paste0("Attended vs randomized control: ", country))
+mu <- meta_c[meta_c$parameter == "mu", ]
+persist <- round(100 * climate_t3$estimate / climate$estimate)
+chk <- \(study, group) check[check$study == study & check$group == group, ]
+controls <- check[grepl("Controls", check$group), ]
+het <- \(study, moderator) hetero[hetero$study == study & hetero$moderator == moderator, ]
+peer <- \(p) peers[peers$peer == p, ]
+term <- \(model, t) model_term(models, model, t)
+size <- \(model, what) models[[what]][models$model == model][1]
+greece_n <- gains$respondents[gains$pollname == "Marousi, Greece"]
+```
+
+\begin{abstract}
+Among the great virtues ascribed to deliberation is learning. We ask how much participants in Deliberative Polls learn, whether taking part causes the learning, and who learns. In four Deliberative Polls with control groups, held in seven countries, participation raised factual knowledge by `r coef_text(mu$median, 2)` standard deviations (95\% interval `r coef_text(mu$lower, 2)` to `r coef_text(mu$upper, 2)`); in the one poll followed for a year, `r persist`\% of the effect remained. Across `r nrow(gains)` polls without controls, the share of items answered correctly rose by `r meta_row(meta, "raw, pooled", "mu")`, about twice as much face to face as online. A common correction for lucky guesses finds nearly as much learning among untreated controls as among participants; a latent class model does not. Participants who start out knowing less, and those without degrees, gain somewhat more from participation. Small groups are composed as if at random, and who is in one's group, including how much the others know, has no detectable effect on learning.
+\end{abstract}
+
+# Introduction
+
+Among the great virtues commonly ascribed to deliberation is learning. The participants learn about the topics under discussion and, to a lesser degree, incidentally, about related ones. They learn not only relevant facts but the arguments for and against particular alternatives and what other people unlike themselves, their circumstances, and their ways of thinking are like. This is helpful, both at the individual level, for discerning what policies most closely accord with one's values and interests and voting accordingly, and at the aggregate level, for forming "authentic" majorities---majorities that "know what they are doing" [@luskin2003]. How much citizens know shapes what they prefer and how they vote [@converse1964; @bartels1996; @althaus1998; @dellicarpini1996], even on foreign policy [@aldrich1989; @foyle2004], though information shortcuts can partly stand in for knowledge [@popkin1991; @lupia1994].
+
+The expectation of learning follows directly from the nature of "deliberation," conventionally construed as discussion, but not just any discussion [@fishkin2005]. While definitions vary, deliberation is generally viewed as normatively elevated discussion---in which, among other things, the participants clarify and refine their preferences by open-mindedly weighing competing arguments. As part of that weighing, they absorb factual information and sift out misinformation.
+
+Or so the theory runs. But how much do participants actually learn, is it the deliberation that teaches them, and who learns the most? We examine learning of relevant facts. This is not the only sort of learning involved, but it is the easiest to measure, and it is both important in itself and positively correlated with the rest.
+
+Deliberative Polls teach. In four polls that surveyed a control group alongside the participants---two in the United States, one in Tanzania, and one across six middle-income countries---taking part raised factual knowledge by `r coef_text(mu$median, 2)` standard deviations of the controls' initial knowledge, and in the one poll re-interviewed a year later, `r persist`\% of that effect remained. Earlier studies of Deliberative Polls and other forums found that participants learn a lot [@luskin2002b; @barabas2004; @sturgis2005; @esterling2011; @theuwis2025], but most compared participants before and after, without a comparison group. We add three things. The standard correction for lucky guesses on knowledge items manufactures learning: applied to control groups that received no treatment, it finds gains of `r coef_text(min(controls$reset_gain), 2)` to `r coef_text(max(controls$reset_gain), 2)` of the scale, nearly the size of the true effects, while the latent class model of @cor2016 passes the same test. Participation helps those who start out knowing less somewhat more. And because small groups are composed as if at random, group composition is a natural experiment, and it shows no effect of one's groupmates on how much one learns.
+
+# Deliberative Polling and Learning
+
+Deliberative Polling [@fishkin1991; @fishkin1995; @luskin2002b] aims to capture fuller-information, more thoughtful opinions than those expressed in ordinary polls. In very brief, a Deliberative Poll interviews and assembles, as many as are willing of, a random sample to deliberate some policy or electoral choice, in alternating small group discussions and plenary question-and-answer sessions with panels of competing experts, and then re-measures the sample's opinions at the end. These latter are frequently different, both at the individual level and in the aggregate, from what they were before deliberating. The absolute net change is statistically significant nearly three-quarters of the time and averages nearly .1 on a 0--1 scale [@luskin2007b].
+
+This design, admittedly a particular embodiment of deliberation, affords additional opportunities and incentives to learn. The participants are provided with carefully balanced briefing documents, rehearsing the arguments each side would make. There is usually a section of basic background information, and the arguments embed each side's pet facts---those most congenial to its arguments. In addition, the participants know from the moment they are first recruited that they will be attending the deliberation and that the deliberation (typically) will be an "Event," capital "e"---away from home, usually televised or taped for later broadcast, often attended by high-profile policy experts or policy-makers in the role of observers or panelists. Thus, motivated by a desire to "do well," many participants use the weeks between their recruitment and the event itself to prepare---not only by reading the briefing materials but by paying heightened attention to stories about the topic in the media, by talking more with friends, family, and coworkers about it, and even, in some cases, by researching it in the library or online.
+
+So if knowledge, like its close relative "sophistication," depends on the confluence of cognitive ability, motivation, and exposure to relevant information [@luskin1990; @luskin2002a], the deliberation in Deliberative Polling stands to increase two of those three. There is not much to be done, in adulthood, about ability---and in fact we should want the participants to be representative in this, as in all other respects. But the treatment can and does affect motivation and exposure. Judging from past polls, that is enough to produce considerable, sometimes dramatic learning [@luskin2002b; @list2013].
+
+The online design is intended to be as similar as possible to the face-to-face one, given the difference in mode. The deliberation is by voice rather than text, so as to capture as much as possible of deliberation's social elements. The participants still "meet" in small groups, still led by trained moderators, and still question panels of policy experts and policy makers. They still receive briefing materials. They are still a representative sample---sometimes randomly sampled offline, with "nonusers" receiving free access, including free equipment, to get them online, sometimes drawn from online panels and matched to approximate a random sample. On the other hand, deliberating by voice, even by video, online can never capture the full richness and complexity of in-person interactions; the discussions are interrupted, spread over a period of weeks, with much greater possibility of real-world intrusion, and the assignment to small groups is perforce constrained by possible meeting times. All these differences may act to weaken the online treatment's effects [@luskin2006; @iyengar2005].
+
+# Data
+
+We use two kinds of data (Table \ref{tab:sources}; Appendix \ref{app:polls} lists every poll). For `r nrow(gains)` polls held between 1994 and 2009 we have each participant's proportion of knowledge items answered correctly before (T1) and after (T2) deliberating, with small-group membership and demographics: 21 from the replication data for @luskin2022, and a poll in Marousi, Greece, in which a party chose its mayoral candidate, released here for the first time. For `r nrow(learning)` polls, most of them the same, we have responses item by item [@cor2016]. Four more recent polls surveyed control groups.
+
+```{r sources}
+row <- \(x) c(count(x$n_treated), count(x$n_control))
+tibble::tibble(
+  Study = c(
+    "21 Deliberative Polls, 1994--2009", "Marousi, Greece, 2006", "23 Deliberative Polls, item level",
+    "America in One Room, 2019", "America in One Room: Climate, 2021", "Tanzania, 2015",
+    "Antimicrobial Resistance, 2024"
+  ),
+  Design = c(
+    "Pre-post", "Pre-post", "Pre-post", "Uninvited sample", "Uninvited sample",
+    "Randomized", "Randomized; attendees"
+  ),
+  Participants = c(
+    count(sum(gains$respondents) - greece_n), count(greece_n), count(sum(learning$respondents)),
+    row(a1r)[1], row(climate)[1], row(tz_delib)[1], row(amr)[1]
+  ),
+  Controls = c("", "", "", row(a1r)[2], row(climate)[2], row(tz_delib)[2], row(amr)[2])
+) |>
+  knitr::kable(
+    format = "latex", booktabs = TRUE, position = "H", linesep = "", align = "llrr",
+    caption = "Data. Participants and controls are panel respondents used in the analyses. Control groups are an uninvited random sample, or randomized; in the antimicrobial-resistance poll the treated group is the attendees."
+  )
+```
+
+The control groups differ in how they were formed. America in One Room and its 2021 climate successor interviewed a separate random sample that was never invited [@fishkin2021]. The Tanzanian poll randomized villages to treatment or control and, within treated villages, individuals to deliberation or to the briefing materials alone [@sandefur2022]. The poll on antimicrobial resistance, held online in Brazil, Colombia, India, Indonesia, Nigeria and Tanzania, randomized panel members after the first interview; the release contains the controls and the invitees who attended, but not the invitees who stayed home [@mendelson2026]. Appendix Table \ref{tab:recodes} lists our recodes of the pre-post data.
+
+# Measuring Learning
+
+We measure knowledge by closed-ended knowledge questions, mostly multiple choice, in some cases extracted from party or candidate placements, and in a few cases true-false [@luskin1987; @luskin2005; @price1999; @mondak1999; @mondak2001]. Appendix \ref{app:items} lists the items. Correct responses are scored as 1, incorrect responses and "don't knows" as 0 [@luskin2011], and these scores are then averaged across items to give the proportion answered correctly.
+
+We must also confront a distinction between knowledge gain ($K_2 - K_1$) and post-deliberation knowledge ($K_2$), where $K$ is observed (measured, as distinct from actual) knowledge, subscripted for wave of measurement. Let us denote the respondent's actual knowledge at these same times as $K^*_1$ and $K^*_2$, his or her actual knowledge gain (presumed to be nonnegative) as $\Delta K^* = K^*_2 - K^*_1$, and his or her observed knowledge gain as $\Delta K = K_2 - K_1$. $K_2$ is a better proxy for $\Delta K^*$ than $\Delta K$ is. Indeed, under hard-to-assail assumptions, $\Delta K$ can be *negatively* correlated with $\Delta K^*$ and is generally less highly correlated with $\Delta K^*$ than $K_2$ is [@luskin2016]. The intuition is that the participants who know a lot at the outset (a) cannot show much increase in knowledge, because they already have the maximum score or something close to it, but (b) are those who are actually learning the most, consistent with the rich-get-richer thrust of the relevant literatures in psychology and communication research [@kinder1998]. $\Delta K$ will be very low for precisely the participants for whom $\Delta K^*$ is highest. $K_2$, by contrast, is high for all those learning the most, either because they started low and observably learned a lot or because they started (and remained) high and unobservably learned a lot. So when explaining who learns we model $K_2$ with $K_1$ among the regressors---what @allison1990 called the "regressor variable" as opposed to the "change score" approach---and when describing how much a poll's participants learned we report the mean gain.
+
+Closed-ended items invite guessing, which inflates $K_1$ and can hide learning. Two corrections are common. The first assumes that a participant who answers an item correctly at T1 and incorrectly at T2 was merely guessing luckily at T1---its being unlikely that someone who knew the answer would have forgotten it a few weeks later---and resets that T1 answer to 0. The second fits a latent class model to each item's pattern of answers across the two waves, separating respondents who knew, learned, or guessed [@cor2016]. Both assume nobody forgets.
+
+# How Much Do Participants Learn, and Does Participating Cause It?
+
+Figure \ref{fig:learning} puts all the evidence on one scale, standard deviations of T1 knowledge. Panel A shows the mean gain in each of the `r nrow(gains)` polls without a control group; panel B shows the effect of participation in the four polls with one.
+
+```{r learning, fig.cap = "Learning in every poll, in standard deviations of T1 knowledge, with 95\\% intervals. A: mean T2 minus T1 gain among participants, scaled by the poll's T1 standard deviation. B: effect of participation, from a regression of T2 on treatment and T1 knowledge, scaled by the control group's T1 standard deviation; Tanzanian standard errors are clustered by village. Pooled estimates are from Bayesian random-effects meta-analyses.", out.width = "100%"}
+figure("learning")
+```
+
+Every poll shows learning. Raw gains range from `r coef_text(min(gains$raw))` to `r coef_text(max(gains$raw))` of the items; pooled, the proportion correct rose by `r meta_row(meta, "raw, pooled", "mu")`, or `r meta_row(meta, "raw SD, pooled", "mu", 2)` standard deviations. The pooling is a Bayesian random-effects meta-analysis: each poll's mean gain is its true gain plus sampling error, true gains are normally distributed around an overall mean, the prior on the mean is flat and that on the between-poll standard deviation half-normal with scale .1 [@rover2020]. Face-to-face polls produced about twice the gain of online ones (`r meta_row(meta, "raw, by mode", "face_to_face")` against `r meta_row(meta, "raw, by mode", "online")`; Appendix Table \ref{tab:meta}).
+
+A pre-post gain alone does not show that deliberation taught anything: participants take the same quiz twice and live through weeks of news. The control groups net these out, and participation still teaches. Adjusting for T1 knowledge, it added `r est_se(a1r$estimate, a1r$std_error)` to the proportion correct in America in One Room, `r est_se(climate$estimate, climate$std_error)` in the 2021 climate poll, and `r est_se(amr$estimate, amr$std_error)` in the antimicrobial-resistance poll, where the country estimates range from `r coef_text(amr_country("Tanzania")$estimate, 2)` in Tanzania to `r coef_text(amr_country("Nigeria")$estimate, 2)` in Nigeria. In Tanzania's national poll, deliberation raised a standardized knowledge index by `r est_se(tz_delib$estimate, tz_delib$std_error)` standard deviations, matching the published estimate [@sandefur2022]. Pooled, the effect is `r interval(mu$median, mu$lower, mu$upper, 2)` standard deviations. A year after the climate poll, attendees still knew `r coef_text(climate_t3$estimate)` more than controls (s.e. `r coef_text(climate_t3$std_error)`), `r persist`\% of the immediate effect. The controls' own gains, `r coef_text(min(controls$raw_gain), 2)` to `r coef_text(max(controls$raw_gain), 2)` of the items, show how little of a pre-post gain testing and news explain.
+
+The designs differ in what they rule out. Tanzania randomized; its estimates are causal. The antimicrobial-resistance poll randomized too, but its treated group is the attendees, who were 23 to 92\% of invitees depending on the country, so the comparison adds self-selection to randomization. The two American polls compare attendees with a separately drawn sample, and attendees are a selected subset of invitees: in America in One Room they answered `r coef_text(selected$k1[1])` of T1 items correctly against `r coef_text(selected$k1[2])` for invitees who stayed home, and in the climate poll `r coef_text(selected$k1[3])` against `r coef_text(selected$k1[4])`. Conditioning on T1 knowledge removes differences in where people start. The difference in gains, which instead assumes that the two groups would have gained equally, gives `r coef_text(a1r$gain_difference)`, `r coef_text(climate$gain_difference)` and `r coef_text(amr$gain_difference)` in the three studies; when both assumptions are plausible the truth lies between the two estimates [@angrist2009].
+
+Does deliberation add anything to the briefing materials? In Tanzania, deliberation and the briefing materials alone were randomized among individuals in the same villages. Deliberation added `r est_se(tz_vs$estimate, tz_vs$std_error)` standard deviations adjusting for T1 knowledge, but only `r est_se(tz_vs$gain_difference, tz_vs$gain_difference_se)` in the difference of gains, because the deliberation arm happened to start `r coef_text(tz_vs$t1_difference, 2)` standard deviations higher. Discussion probably helps; this one comparison cannot say by how much.
+
+# What the Reset Correction Gets Wrong
+
+Control groups offer a test of the corrections: nobody in them was treated, so a correction that finds learning there is finding an artefact. Figure \ref{fig:correction} applies both to attendees and controls in the three studies with item-level data.
+
+```{r correction, fig.cap = "Learning estimated three ways among attendees and untreated controls, with 95\\% intervals. Raw: T2 minus T1 proportion correct. Reset correction: T1 answers that are correct but wrong at T2 are reset to incorrect. Latent class: mean item learning from the model of Cor and Sood (2016). Intervals for raw and reset gains use person-level standard errors; latent class intervals use 200 bootstrap resamples of respondents.", out.width = "100%"}
+figure("correction_check")
+```
+
+The reset correction fails. Among controls it finds gains of `r coef_text(min(controls$reset_gain))` to `r coef_text(max(controls$reset_gain))`, against raw gains near zero, because `r round(100 * min(controls$right_to_wrong))` to `r round(100 * max(controls$right_to_wrong))`\% of the controls' correct T1 answers are wrong at T2. Those reversals reflect inconsistent answering and forgetting, not lucky guesses later exposed. The latent class model, which estimates guessing from the whole pattern of answers, finds `r coef_text(min(controls$lca_gain))` to `r coef_text(max(controls$lca_gain))` among controls, and its attendee-minus-control differences match the raw ones. Forgetting is real: a year after the climate poll, attendees answered `r coef_text(-chk("America in One Room: Climate 2021", "Attendees, T2 to one year later")$raw_gain, 2)` fewer of the items correctly than at its end. So the latent class estimates are the better guide to how much participants know after a poll: across the `r nrow(learning)` polls with item-level data they average `r coef_text(mean(learning$lca))`, against a raw `r coef_text(mean(learning$raw))`. A two-parameter item response model, with item parameters held equal across waves [@chalmers2012], ranks the polls much the same way: its estimates of learning correlate `r coef_text(cor(learning$theta_gain, learning$raw), 2)` with raw gains and `r coef_text(cor(learning$theta_gain, learning$lca), 2)` with the latent class estimates.
+
+# Who Learns?
+
+## Regressors and hypotheses
+
+Our explanatory variables vary by level of aggregation---some individual-level, some group-level, some poll-level---and substantively, in the degree to which they revolve around motivation versus ability versus exposure to relevant information. All are measured before deliberation.
+
+*Initial knowledge* ($K_1$). The information-rich tend to get information-richer. The more one knows going in, the more one tends to learn and thus know going out. Absent ceiling effects, the coefficient should be $> 1$; given them, it may be $< 1$. Prior knowledge on a particular topic improves people's ability to comprehend new information, enabling them to extract the central elements of a message and draw appropriate inferences efficiently [@eckhardt1991; @recht1988]. Prior knowledge also enhances people's ability to store new information on that topic and retrieve it later [@cooke1993; @fiske1990; @hambrick2003; @mcgraw1990; @recht1988; @schneider1993]. So the less political information individuals have stored in memory, the more difficult it is for them to acquire new information.
+
+*Education*. Education, qua years of schooling, is distinct from, and only moderately correlated with, political knowledge. Controlling for cognitive ability, with which it is more strongly correlated, its effect on knowledge appears negligible [@luskin1990]. But absent a separate measure of cognitive ability, it can roughly proxy the latter. Naturally, we expect it to have a positive effect. There may, however, be some mutual substitution with initial knowledge. People who know enough already may not need to be as bright to learn a lot, and people who are bright enough may not need to know as much to do so. We measure education as comparably as possible across polls in three categories: less than high school graduation, high school graduation, and a bachelor's degree or more.
+
+*Gender and age*. These demographic variables exhibit real-world political knowledge gaps, with men knowing more than women and older people more than younger ones [@dellicarpini1996]. Age is measured in decades and gender as a dummy scored 1 for women.
+
+*Proportion of women*. Whether from greater comfort, more widely shared cognitive or communication style, or lower stereotype threat [@steele1997], women may learn more in small groups containing more women. We calculate the proportion excluding the participant herself.
+
+*Mode*. Online deliberation, with its thinner exposure to other participants, may be, either intrinsically or at least in its current instantiations, a somewhat etiolated version of the face-to-face treatment [@luskin2006]. It is therefore plausible that people learn less from online deliberations.
+
+*Group size*. The number of people in the participant's small group may affect the quality of the deliberation, with larger groups arguably making for a less informative experience. As group size increases, attention may wander, and participants may not learn all that they hear [@latane1979].
+
+*Group knowledge*. Participants may learn more from the other members of their small group when the latter know more. This suggests using the mean knowledge of the group's other members. But what should matter is not how much the other group members know but how much they know about the particular facts the participant does not already know. So where the item-level data allow, we also measure group knowledge as the other members' mean T1 score on the items the participant answered incorrectly at T1.
+
+*Heterogeneity of opinion*. In the real world, people often know congenial but not uncongenial facts---those commonly cited by those sharing their views but not those commonly cited by those holding opposing views. Part of deliberation's effect on learning may consist in getting people to note and accept (if, in many cases, still argue around) uncongenial facts. This can be expected to occur mainly on site. Participants learn a great deal in anticipation of the event, but the learning at that stage is mainly of congenial facts [@hansen2004]. On site, the participants find it harder to avoid confronting the uncongenial ones. This may happen more, the more opposing points of view are represented and argued in the small group---the more attitudinally heterogeneous the group is. We gauge this as the generalized variance, the determinant of the covariance matrix, of the group's policy attitudes [@anderson2003].
+
+*Attitude extremity*. Participants starting with more extreme views may have shuttered out more uncongenial facts, leaving them with more ground for deliberation to make up. We measure extremity as the mean, across attitude indices $j$, of $|A_{ij} - .5|$, where $A_{ij}$ is the $i$th respondent's score on the $j$th index.
+
+*Reading the briefing materials*. One of the main information vectors is the briefing document sent to all participants shortly after recruitment, normally well in advance of the on-site deliberations. It provides some background facts and lays out the major arguments for and against given policy options, which embed additional facts congenial to each argument. For four polls we have the participants' reports of how much of the briefing document they read, which we score linearly and use in a separate analysis confined to those polls.
+
+*Issue salience*. More salient issues, to which many participants have already given some attention, exhibit decidedly less net attitude change [@luskin2007b] and fall shorter of single-peakedness [@list2013]. We suspect they also, and relatedly, show less learning: there is less left to learn. We proxy salience by the participants' mean T1 knowledge.
+
+## Model
+
+The nested structure of the data, with individuals clustered in small groups clustered in polls, suggests a hierarchical linear model [@raudenbush2002] with random intercepts by small group and poll:
+$$K_{igd2} = \beta_0 + \alpha_g + \gamma_d + \mathbf{x}_{igd}'\boldsymbol{\beta} + u_{igd},$$
+where $i$, $g$ and $d$ index individuals, small groups and polls; $\alpha_g \sim N(0, \sigma^2_\alpha)$ and $\gamma_d \sim N(0, \sigma^2_\gamma)$ are unmodeled parts of the intercept; $\mathbf{x}_{igd}$ holds the regressors above; and $u_{igd} \sim N(0, \sigma^2_u)$ is a disturbance. We estimate it by maximum likelihood [@bates2015]. The main model uses `r count(size("main", "n"))` participants in `r size("main", "groups")` groups in `r size("main", "polls")` polls.
+
+## Whom participation helps most
+
+Before turning to the model, the control-group studies let us ask whose knowledge participation raises most, a causal question the pre-post data cannot answer. Adding the product of treatment and centred T1 knowledge, the effect of participation is smaller for those who start knowing more, by `r est_se(het("America in One Room 2019", "k1")$interaction, het("America in One Room 2019", "k1")$interaction_se, 2)` per unit of T1 knowledge in America in One Room and `r est_se(het("America in One Room: Climate 2021", "k1")$interaction, het("America in One Room: Climate 2021", "k1")$interaction_se, 2)` in the climate poll, with no difference in the other two studies (Appendix Table \ref{tab:hetero}). Part of this is the ceiling: those who start high have less room to show a gain. Participation also helped those without a bachelor's degree somewhat more in the climate and antimicrobial-resistance polls (`r est_se(het("America in One Room: Climate 2021", "ba")$interaction, het("America in One Room: Climate 2021", "ba")$interaction_se)` and `r est_se(het("Antimicrobial Resistance 2024", "ba")$interaction, het("Antimicrobial Resistance 2024", "ba")$interaction_se)`), though not in America in One Room. Deliberation narrows knowledge gaps modestly; it does not widen them.
+
+## Who ends up knowing the most
+
+```{r models}
+model_table(models, c("main", "items", "briefing"), c("All polls", "Item-specific (8 polls)", "Briefing (4 polls)")) |>
+  knitr::kable(
+    format = "latex", booktabs = TRUE, position = "H", align = "lrrr", linesep = "",
+    caption = "Post-deliberation knowledge: maximum likelihood estimates (standard errors) with random intercepts for small group and poll. The second column is limited to the 8 polls whose item-level answers link to small groups, which allows group knowledge to be measured on the items each participant missed at T1. The third is limited to the 4 polls that asked about the briefing materials and uses poll fixed effects in place of poll-level variables."
+  )
+```
+
+Table \ref{tab:models} shows the estimates. T2 knowledge depends heavily on T1 knowledge (`r term("main", "k1")`); measurement error in T1 scores pulls this estimate toward zero. Education also has a powerful effect: a bachelor's degree adds `r term("main", "educationBA or more")` for a participant who starts with nothing right. Education and prior knowledge substitute for one another, as the negative interaction indicates (`r term("main", "k1:educationBA or more")` per unit of T1 knowledge): among the well educated, those who initially know the least close much of the gap. Older participants end knowing slightly less (`r term("main", "age_decades")` per decade). Participants in online polls end up knowing less (`r term("main", "online")`), and those in polls whose participants start out knowing more end up knowing more (`r term("main", "poll_k1")`), contrary to the salience hypothesis. In the four polls that asked, those who read more of the briefing materials knew more afterwards (`r term("briefing", "read_briefing")`), though reading is itself a choice. Attitude extremity and opinion heterogeneity have no detectable effect.
+
+## Do small groups matter?
+
+If participants learn from each other, those placed with more knowledgeable groupmates should learn more. Estimating this requires that groupmates' characteristics be unrelated to one's own, which random assignment to groups ensures and self-selection does not. Organizers intend random assignment. We test it by regressing each participant's characteristic on the mean among the other members of the group, controlling for the mean among the other members of the poll, without which the test is biased toward finding negative sorting [@guryan2009]. The coefficients are near zero for T1 knowledge (`r est_se(assignment$estimate[1], assignment$std_error[1])`), gender (`r est_se(assignment$estimate[2], assignment$std_error[2])`) and age (`r est_se(assignment$estimate[3], assignment$std_error[3])`), and small for a bachelor's degree (`r est_se(assignment$estimate[4], assignment$std_error[4])`). Groups are composed as if at random.
+
+That makes group composition a natural experiment. Within each of `r peer("k1")$polls` polls, the `r nrow(gains)` above and America in One Room, we regress T2 knowledge on the other members' mean T1 knowledge, controlling for one's own and the poll's, and pool the estimates (Figure \ref{fig:peers}). The pooled effect is `r interval(peer("k1")$median, peer("k1")$lower, peer("k1")$upper)`: at the upper end, a group whose other members answered ten more points of the T1 items correctly would raise one's T2 score by `r round(10 * peer("k1")$upper, 1)` points. The share of women in the group has no detectable effect either (`r interval(peer("female")$median, peer("female")$lower, peer("female")$upper)`). Measured on the items each participant missed, which is closer to what one could learn from others, group knowledge again has no effect (`r term("items", "group_k1_items")` in the `r size("items", "polls")` polls with linked item data). Group knowledge measured after the deliberation would show an effect for the wrong reason: groupmates' T2 answers reflect the experience they shared with the participant [@manski1993].
+
+```{r peers, fig.cap = "Effect of the other group members' mean T1 knowledge on own T2 knowledge, by poll, with 95\\% intervals. Each estimate controls for own T1 knowledge and the poll's leave-one-out mean, with standard errors clustered by small group; the pooled estimate is from a Bayesian random-effects meta-analysis.", out.width = "100%"}
+figure("peer_effects")
+```
+
+# Conclusion
+
+Deliberative Polls raise what participants know by about half a standard deviation, and much of the gain lasts. The learning does not depend on whom participants happen to deliberate with, and it favours, if anything, those who start out knowing less. The simplest reading is that the whole event teaches, through the briefing materials, the expert sessions, the discussion, and the anticipation of taking part, rather than through particular groupmates.
+
+Two limits remain. Only Tanzania randomized people to take part or not; elsewhere the comparison involves attendees, who differ from those who stay home. And the knowledge items are few and chosen by the organizers, so the gains are gains in the facts the event emphasized.
+
+# References {-}
+
+<div id="refs"></div>
+
+\appendix
+
+# The Deliberative Polls {#app:polls}
+
+```{r polls, results = "asis"}
+polls |>
+  dplyr::mutate(
+    source = dplyr::if_else(is.na(source), "", paste0("@", gsub("; ", "; @", source))),
+    data = dplyr::recode(data, Both = "P+I", Participants = "P", Items = "I"),
+    poll = paste0(poll, dplyr::if_else(mode == "Online", " (online)", ""))
+  ) |>
+  dplyr::select(poll, year, topic, data, source) |>
+  purrr::set_names(c("Poll", "Year", "Topic", "Data", "Source")) |>
+  knitr::kable(
+    format = "pipe",
+    caption = "The Deliberative Polls without control groups. Data: P, participant-level scores; I, item-level responses."
+  ) |>
+  print()
+```
+
+# Recodes {#app:recodes}
+
+```{r recodes}
+readr::read_csv("docs/recode_ledger.csv", show_col_types = FALSE) |>
+  purrr::set_names(c("Poll", "Variable", "Rule", "Rows affected", "Evidence")) |>
+  knitr::kable(
+    format = "latex", booktabs = TRUE, position = "H", linesep = "",
+    align = "p{2.6cm}p{1.4cm}p{2.8cm}p{2.8cm}p{4.2cm}",
+    caption = "Recodes applied to the participant-level data"
+  )
+```
+
+# Further results {#app:further}
+
+```{r meta}
+meta |>
+  dplyr::filter(model %in% c("raw, pooled", "raw, by mode")) |>
+  dplyr::mutate(
+    parameter = dplyr::recode(parameter, mu = "Mean gain", face_to_face = "Face-to-face", online = "Online", tau = "Between-poll SD"),
+    model = dplyr::recode(model, "raw, pooled" = "Pooled", "raw, by mode" = "By mode"),
+    dplyr::across(c(median, lower, upper), \(x) coef_text(x))
+  ) |>
+  knitr::kable(
+    format = "latex", booktabs = TRUE, position = "H", align = "llrrr", linesep = "",
+    col.names = c("Model", "Parameter", "Median", "2.5%", "97.5%"),
+    caption = "Bayesian random-effects meta-analysis of poll mean gains, in proportion correct"
+  )
+```
+
+```{r hetero}
+hetero |>
+  dplyr::mutate(
+    moderator = dplyr::recode(moderator, k1 = "T1 knowledge (centred)", ba = "Bachelor's degree"),
+    interaction = est_se(interaction, interaction_se),
+    n = count(n)
+  ) |>
+  dplyr::select(study, moderator, interaction, n) |>
+  knitr::kable(
+    format = "latex", booktabs = TRUE, position = "H", linesep = "",
+    col.names = c("Study", "Moderator", "Treatment x moderator", "n"),
+    caption = "Heterogeneous effects of participation. Each row adds the product of treatment and the moderator to the regression of T2 on treatment and T1 knowledge."
+  )
+```
+
+# Knowledge items {#app:items}
+
+The items for the polls in the participant-level data, with correct answers in parentheses where the item is not multiple choice.
+
+```{r items, child = "ms/appendix_items.md"}
+```

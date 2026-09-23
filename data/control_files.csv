@@ -1,0 +1,5 @@
+file,url,sha256,doi,license,accessed
+a1r.tab,https://dataverse.harvard.edu/api/access/datafile/4803077,06134deebb34b08ffac91068727b55c1ec4dde88df5f388e1552b0bfa54c6818,10.7910/DVN/KJ8IH2,CC0 1.0,2026-09-11
+tanzania.dta,https://dataverse.harvard.edu/api/access/datafile/6277232?format=original,38c7faf5bec7538e32e04c3f62b5c4c43b8ad4c2d2b10b5ef00cf80b577b7af8,10.7910/DVN/S3NRQL,CC0 1.0,2026-09-11
+climate.tab,https://dataverse.harvard.edu/api/access/datafile/10472491,5e95a85c1fe356673c2b0a56d1e9aa463ab40e1defe3b33f1940ff83e5eee83a,10.7910/DVN/IIOG1S,CC0 1.0,2026-09-11
+amr.csv,https://stacks.stanford.edu/file/sb639ms2957/data/AMR_harmonized_numeric.csv,c2877392f6b4d2e6146d09e40625d8ccf5d51f12b6150e3d07f7ab824c97d065,10.25740/sb639ms2957,CC BY 4.0,2026-09-22
