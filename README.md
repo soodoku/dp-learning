@@ -26,15 +26,17 @@ Who learns how much in a Deliberative Poll, and does deliberating cause the lear
 | Mendelson et al. (2026), Antimicrobial Resistance | Randomized; attendees vs controls, six countries | [10.25740/sb639ms2957](https://doi.org/10.25740/sb639ms2957) |
 | Marousi, Greece (2006) | Participant-level scores, first released here | `dp-data/data/marousi-2006/participants.csv` |
 
-All are CC0 except the antimicrobial-resistance data (CC BY 4.0). All eight input
+All are CC0 except the antimicrobial-resistance data (CC BY 4.0). All nine input
 files are read from `../dp-data`, with paths, SHA-256 checksums, DOIs, and licenses
 pinned in [`data/sources.csv`](data/sources.csv). Set `DP_DATA_ROOT` to use a different
 checkout location. The build stops if a source is missing or changed; it does not
 download inputs or fall back to local copies.
 
-The inputs preserve the published aggregates and replication deposit used by this
-analysis. Adopting dp-data's rebuilt knowledge tables would be a separate analytical
-change. Marousi comes from the authors' 2014 `agg_data.Rdata` file (pollid 2000),
+The respondent analysis uses dp-data's rebuilt aggregate with the approved UK Crime,
+UK General Election, and National Issues Convention corrections. Baseline item
+models join upstream item responses to respondent IDs; they do not infer identity
+from row order. The separate Cor–Sood replication analysis retains its deposited
+batteries. Marousi comes from the authors' 2014 `agg_data.Rdata` file (pollid 2000),
 first released in this repository. It contains derived scores, group identifiers,
 and demographics, with no item-level responses; recodes remain in
 [`docs/recode_ledger.csv`](docs/recode_ledger.csv).
@@ -51,7 +53,7 @@ used by CI:
 
 ```sh
 git clone https://github.com/soodoku/dp-data.git ../dp-data
-git -C ../dp-data checkout dbc04c3b41f50e24d70e8d85ec5d134d19f7cec0
+git -C ../dp-data checkout a621a51ef6273d3758f6af0e0b3042065a810891
 make restore
 make check
 ```
