@@ -11,8 +11,8 @@ write_output(assignment_check(frame), "assignment_check.csv")
 
 polardata <- read_polardata()
 group_items <- purrr::map2(
-  t1_linked_polls$file_key, t1_linked_polls$dpnum, t1_items_for_poll,
-  polardata = polardata, data_dir = cor_dir
+  t1_linked_polls$poll_id, t1_linked_polls$dpnum, t1_items_for_poll,
+  polardata = polardata, knowledge = read_respondent_knowledge()
 ) |>
   purrr::list_rbind() |>
   item_group_knowledge()

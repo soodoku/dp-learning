@@ -1,23 +1,47 @@
-# Polls whose Cor-Sood item file links to polardata row for row at T1.
+# Reviewed baseline batteries with identified upstream respondent links.
 t1_linked_polls <- tibble::tribble(
-  ~file_key, ~dpnum,
-  "ukhealth", 2L, "ukcrime", 6L, "cpl", 8L, "btp05", 18L, "wtu", 19L, "swp", 21L,
-  "ukbge", 4L, "sm", 17L
+  ~poll_id, ~dpnum,
+  "uk-health-1998", 2L,
+  "uk-crime-1994", 6L,
+  "cpl-1996", 8L,
+  "btp-health-education-2005", 18L,
+  "wtu-1996", 19L,
+  "swepco-1996", 21L,
+  "uk-general-election-1997", 4L,
+  "san-mateo-2008", 17L
 )
 
-# Item-level T1 correctness linked to small groups.
-t1_items_for_poll <- function(file_key, dpnum, polardata, data_dir) {
-  battery <- read_battery(file.path(data_dir, paste0(file_key, ".csv")))
+read_respondent_knowledge <- function(path = source_path("respondent_knowledge")) {
+  arrow::read_parquet(path)
+}
+
+t1_items_for_poll <- function(poll_id, dpnum, polardata, knowledge) {
   poll <- dplyr::filter(polardata, .data$dpnum == .env$dpnum)
-  observed <- !is.na(battery$female) & !is.na(poll$female)
+  items <- knowledge |>
+    dplyr::filter(.data$poll_id == .env$poll_id, wave == 1L) |>
+    dplyr::transmute(
+      caseid = as.numeric(historical_respondent_id),
+      item = item_id, correct = correct_zero_filled
+    )
   stopifnot(
-    nrow(poll) == nrow(battery$t1),
-    all(abs(rowMeans(battery$t1) - poll$t1know) < 1e-7),
-    all(battery$female[observed] == poll$female[observed])
+    nrow(poll) > 0L, nrow(items) > 0L,
+    !anyNA(items$caseid), !anyNA(items$correct),
+    !anyDuplicated(poll$caseid), !anyDuplicated(items[c("caseid", "item")]),
+    setequal(items$caseid, poll$caseid), all(items$correct %in% 0:1)
   )
-  battery$t1 |>
-    dplyr::mutate(pollid = poll$pollid, caseid = poll$caseid, group = paste(poll$pollid, poll$pollgroup, sep = "_")) |>
-    tidyr::pivot_longer(-c(pollid, caseid, group), names_to = "item", values_to = "correct")
+  scores <- items |>
+    dplyr::summarise(score = mean(correct), n_items = dplyr::n(), .by = caseid)
+  stopifnot(
+    dplyr::n_distinct(scores$n_items) == 1L,
+    all(abs(scores$score - poll$t1know[match(scores$caseid, poll$caseid)]) < 1e-7)
+  )
+  items |>
+    dplyr::left_join(
+      dplyr::transmute(poll, caseid, pollid, group = paste(pollid, pollgroup, sep = "_")),
+      by = "caseid", relationship = "many-to-one", unmatched = "error"
+    ) |>
+    dplyr::select(pollid, caseid, group, item, correct) |>
+    dplyr::arrange(caseid, item)
 }
 
 a1r_t1_items <- function(path) {

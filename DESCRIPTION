@@ -11,6 +11,7 @@ Description: Reproducible analyses and manuscript on who learns how much in
 License: MIT + file LICENSE
 Encoding: UTF-8
 Imports:
+    arrow,
     assertr,
     bayesmeta,
     digest,

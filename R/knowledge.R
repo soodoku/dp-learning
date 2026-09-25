@@ -3,15 +3,12 @@ education_labels <- c("0" = "Below high school", "0.5" = "High school", "1" = "B
 # One row per participant with the variables the models use. Recodes are
 # documented in docs/recode_ledger.csv.
 analysis_frame <- function(polardata) {
-  nic <- polardata$pollname == "National Issues Convention"
   greece <- polardata$pollname == "Marousi, Greece"
   polardata |>
     dplyr::mutate(
       t2know = dplyr::if_else(greece & t2know == 0 & t1know > 0, NA_real_, t2know),
       educ3 = dplyr::if_else(greece & educ4 %in% 7, NA_real_, educ3),
       dplyr::across(c(t1know, t2know), \(x) round(x, 10)),
-      mode = dplyr::if_else(nic, 0, mode),
-      ppage = dplyr::if_else(nic, 1996 - ppage, ppage),
       ppage = dplyr::if_else(ppage < 16 | ppage > 100, NA_real_, ppage)
     ) |>
     dplyr::transmute(

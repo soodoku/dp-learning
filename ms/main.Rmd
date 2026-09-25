@@ -83,6 +83,8 @@ The online design is intended to be as similar as possible to the face-to-face o
 
 We use two kinds of data (Table \ref{tab:sources}; Appendix \ref{app:polls} lists every poll). For `r nrow(gains)` polls held between 1994 and 2009 we have each participant's proportion of knowledge items answered correctly before (T1) and after (T2) deliberating, with small-group membership and demographics: 21 from the replication data for @luskin2022, and a poll in Marousi, Greece, in which a party chose its mayoral candidate, released here for the first time. For `r nrow(learning)` polls, most of them the same, we have responses item by item [@cor2016]. Four more recent polls surveyed control groups.
 
+The 21-poll respondent file is rebuilt from poll-level sources in the accompanying dp-data repository. It incorporates documented corrections to the UK Crime post-attitude index, UK General Election post-knowledge item, and National Issues Convention age and mode. Baseline item responses used in the peer-knowledge models are linked by respondent IDs. The separate Cor--Sood learning replication retains its deposited item batteries.
+
 ```{r sources}
 row <- \(x) c(count(x$n_treated), count(x$n_control))
 tibble::tibble(
@@ -181,7 +183,7 @@ model_table(models, c("main", "items", "briefing"), c("All polls", "Item-specifi
   )
 ```
 
-Table \ref{tab:models} shows the estimates. T2 knowledge depends heavily on T1 knowledge (`r term("main", "k1")`); measurement error in T1 scores pulls this estimate toward zero. Education also has a powerful effect: a bachelor's degree adds `r term("main", "educationBA or more")` for a participant who starts with nothing right. Education and prior knowledge substitute for one another, as the negative interaction indicates (`r term("main", "k1:educationBA or more")` per unit of T1 knowledge): among the well educated, those who initially know the least close much of the gap. Older participants end knowing slightly less (`r term("main", "age_decades")` per decade). Participants in online polls end up knowing less (`r term("main", "online")`), and those in polls whose participants start out knowing more end up knowing more (`r term("main", "poll_k1")`), contrary to the salience hypothesis. In the four polls that asked, those who read more of the briefing materials knew more afterwards (`r term("briefing", "read_briefing")`), though reading is itself a choice. Attitude extremity and opinion heterogeneity have no detectable effect.
+Table \ref{tab:models} shows the estimates. T2 knowledge depends heavily on T1 knowledge (`r term("main", "k1")`); measurement error in T1 scores pulls this estimate toward zero. Education also has a powerful effect: a bachelor's degree adds `r term("main", "educationBA or more")` for a participant who starts with nothing right. Education and prior knowledge substitute for one another, as the negative interaction indicates (`r term("main", "k1:educationBA or more")` per unit of T1 knowledge): among the well educated, those who initially know the least close much of the gap. The age estimate is small and negative (`r term("main", "age_decades")` per decade), with a 95% confidence interval that includes zero. Participants in online polls end up knowing less (`r term("main", "online")`), and those in polls whose participants start out knowing more end up knowing more (`r term("main", "poll_k1")`), contrary to the salience hypothesis. In the four polls that asked, those who read more of the briefing materials knew more afterwards (`r term("briefing", "read_briefing")`), though reading is itself a choice. Attitude extremity and opinion heterogeneity have no detectable effect.
 
 ## Do small groups matter?
 
@@ -229,7 +231,7 @@ polls |>
 readr::read_csv("docs/recode_ledger.csv", show_col_types = FALSE) |>
   purrr::set_names(c("Poll", "Variable", "Rule", "Rows affected", "Evidence")) |>
   knitr::kable(
-    format = "latex", booktabs = TRUE, position = "H", linesep = "",
+    format = "latex", booktabs = TRUE, longtable = TRUE, linesep = "",
     align = "p{2.6cm}p{1.4cm}p{2.8cm}p{2.8cm}p{4.2cm}",
     caption = "Recodes applied to the participant-level data"
   )
