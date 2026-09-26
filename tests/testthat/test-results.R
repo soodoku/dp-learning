@@ -60,14 +60,14 @@ test_that("gains are computed for all 22 polls", {
 test_that("missed-item peer model uses the historical item sample", {
   items <- read_output("models.csv") |> dplyr::filter(model == "items")
   expect_equal(unique(items$polls), 21L)
-  expect_equal(unique(items$n), 5570L)
+  expect_equal(unique(items$n), 5587L)
   expect_true(all(items$r2_marginal >= 0 & items$r2_conditional <= 1))
 })
 
 test_that("briefing model uses all source-linked reading reports", {
   briefing <- read_output("models.csv") |> dplyr::filter(model == "briefing")
   expect_equal(unique(briefing$polls), 9L)
-  expect_equal(unique(briefing$n), 2626L)
+  expect_equal(unique(briefing$n), 2643L)
 })
 
 test_that("AMR 2024 counts match the published Extended Data Table 2", {
