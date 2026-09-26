@@ -30,7 +30,11 @@ item_appendix_markdown <- function(root = Sys.getenv("DP_DATA_ROOT", unset = "..
       if (!is.na(item$answer_choices)) {
         detail <- c(detail, paste0("Choices: ", item$answer_choices, "."))
       }
-      key <- paste0(item$correct_answer, " [", item$correct_codes, "].")
+      key <- if (item$correct_answer == "Answer text not recovered") {
+        paste0("Code ", item$correct_codes, " (answer text not recovered).")
+      } else {
+        paste0(item$correct_answer, " [", item$correct_codes, "].")
+      }
       detail <- c(detail, paste("Scored correct:", key))
       if (!is.na(item$coding_note)) detail <- c(detail, item$coding_note)
       lines <- c(lines, paste0("- ", paste(detail, collapse = " "), "\n"))

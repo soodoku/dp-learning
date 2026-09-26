@@ -1,6 +1,6 @@
 test_that("upstream manifests identify available and unchanged files", {
   manifest <- upstream_source_manifest()
-  expect_equal(nrow(manifest), 10L)
+  expect_equal(nrow(manifest), 9L)
   expect_false(anyDuplicated(manifest$source) > 0L)
   expect_true(verify_sources())
   expect_named(control_source_paths(), c("a1r", "tanzania", "climate", "amr"))
@@ -12,15 +12,30 @@ test_that("briefing reports link nine upstream polls to historical participants"
   expect_false(anyDuplicated(reading[c("dpnum", "caseid")]) > 0L)
 })
 
+test_that("both score waves are rebuilt from respondent item answers", {
+  source <- read_polardata()
+  scores <- item_scores_for_respondents(read_historical_items(), source)
+  expect_equal(nrow(scores), nrow(source))
+  frame <- analysis_frame(source, scores)
+  expect_equal(nrow(frame), nrow(source))
+  changed <- scores
+  changed$k2[1] <- changed$k2[1] + 0.1
+  expect_error(analysis_frame(source, changed))
+})
+
 test_that("appendix poll coverage comes from upstream data", {
-  frame <- analysis_frame(dplyr::bind_rows(read_polardata(), read_greece()))
+  source <- read_polardata()
+  items <- read_historical_items()
+  frame <- analysis_frame(source, item_scores_for_respondents(items, source))
   scores <- arrow::read_parquet(source_path("knowledge_scores"))
-  polls <- appendix_polls(frame, scores, read_historical_items())
-  expect_equal(nrow(polls), 29L)
-  expect_equal(sum(grepl("P", polls$data, fixed = TRUE)), 22L)
-  expect_equal(sum(grepl("I", polls$data, fixed = TRUE)), 28L)
-  expect_equal(sum(polls$data == "P+I"), 21L)
-  expect_equal(polls$data[polls$poll == "Marousi, Greece"], "P")
+  polls <- appendix_polls(frame, scores, items)
+  expect_equal(nrow(polls), 33L)
+  expect_equal(sum(polls$control_group), 4L)
+  expect_equal(sum(polls$item_answers), 31L)
+  expect_false(anyDuplicated(polls$poll) > 0L)
+  expect_false(polls$item_answers[polls$poll == "Marousi, Greece"])
+  expect_false(polls$item_answers[polls$poll == "Tanzania"])
+  expect_true(polls$control_group[polls$poll == "America in One Room"])
   expect_true(any(polls$poll == "Bulgarian National Crime Poll" & polls$year == 2002L))
 })
 
@@ -68,8 +83,8 @@ test_that("the upstream location can be overridden", {
   Sys.setenv(DP_DATA_ROOT = "/alternative/dp-data")
   expect_identical(dp_data_root(), "/alternative/dp-data")
   expect_identical(
-    source_path("greece", manifest = manifest),
-    "/alternative/dp-data/data/marousi-2006/participants.csv"
+    source_path("historical_items", manifest = manifest),
+    "/alternative/dp-data/output/respondent/historical_knowledge_items.parquet"
   )
 })
 
@@ -100,7 +115,7 @@ test_that("baseline items join by respondent ID regardless of input order", {
 
 test_that("NIC age and mode are consumed from corrected upstream values", {
   source <- read_polardata()
-  frame <- analysis_frame(dplyr::bind_rows(source, read_greece()))
+  frame <- analysis_frame(source, item_scores_for_respondents(read_historical_items(), source))
   nic <- dplyr::filter(frame, pollname == "National Issues Convention")
   expect_equal(nrow(nic), 466L)
   expect_true(all(nic$online == 0))

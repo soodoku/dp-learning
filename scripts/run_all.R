@@ -1,7 +1,11 @@
 purrr::walk(list.files("R", full.names = TRUE), source)
 
 verify_sources()
-frame <- analysis_frame(dplyr::bind_rows(read_polardata(), read_greece()))
+polardata <- read_polardata()
+historical_items <- read_historical_items()
+frame <- analysis_frame(
+  polardata, item_scores_for_respondents(historical_items, polardata)
+)
 frame <- dplyr::left_join(
   frame, read_briefing_scores(), by = c("dpnum", "caseid"), relationship = "one-to-one"
 )
@@ -13,8 +17,6 @@ write_output <- \(x, name) readr::write_csv(x, file.path("tabs", name), na = "")
 
 write_output(assignment_check(frame), "assignment_check.csv")
 
-polardata <- read_polardata()
-historical_items <- read_historical_items()
 historical_polls <- read_respondent_sources() |>
   dplyr::select(poll_id, dpnum) |>
   dplyr::filter(dpnum %in% polardata$dpnum)

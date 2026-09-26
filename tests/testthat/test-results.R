@@ -51,16 +51,17 @@ test_that("missed-item peer scores ignore absent answers and empty groups", {
   expect_equal(out$item_group_k1, c(1, NA, NA, NA))
 })
 
-test_that("gains are computed for all 22 polls", {
+test_that("gains are computed for all item-linked respondent polls", {
   gains <- read_output("poll_gains.csv")
-  expect_equal(nrow(gains), 22)
+  expect_equal(nrow(gains), 21)
+  expect_equal(sum(gains$respondents), 5869L)
   expect_true(all(gains$raw_se > 0))
 })
 
 test_that("missed-item peer model uses the historical item sample", {
   items <- read_output("models.csv") |> dplyr::filter(model == "items")
   expect_equal(unique(items$polls), 21L)
-  expect_equal(unique(items$n), 5587L)
+  expect_equal(unique(items$n), 5588L)
   expect_true(all(items$r2_marginal >= 0 & items$r2_conditional <= 1))
 })
 
@@ -81,11 +82,4 @@ test_that("AMR 2024 counts match the published Extended Data Table 2", {
       Nigeria = "203 210", Tanzania = "185 206"
     )
   )
-})
-
-
-test_that("Greece enters with its T2 zeros treated as missing", {
-  gains <- read_output("poll_gains.csv") |> dplyr::filter(pollname == "Marousi, Greece")
-  expect_equal(gains$respondents, 146)
-  expect_near(gains$raw, 0.076, 0.005)
 })

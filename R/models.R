@@ -20,7 +20,14 @@ briefing_formula <- stats::update(
 
 fit_knowledge <- function(frame, formula = main_formula) {
   frame <- dplyr::mutate(frame, age_decades = age / 10)
-  lme4::lmer(formula, data = frame, REML = FALSE)
+  fit <- lme4::lmer(
+    formula, data = frame, REML = FALSE,
+    control = lme4::lmerControl(
+      optimizer = "bobyqa", optCtrl = list(maxfun = 200000, rhoend = 1e-9)
+    )
+  )
+  stopifnot(is.null(fit@optinfo$conv$lme4$messages))
+  fit
 }
 
 tidy_fit <- function(fit, model) {

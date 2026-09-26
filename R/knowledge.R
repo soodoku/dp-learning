@@ -1,22 +1,28 @@
 education_labels <- c("0" = "Below high school", "0.5" = "High school", "1" = "BA or more")
 
-# One row per participant with the variables the models use. Recodes are
-# visible in this function; upstream corrections are documented in dp-data.
-analysis_frame <- function(polardata) {
-  greece <- polardata$pollname == "Marousi, Greece"
+# One row per participant with the variables the models use. Knowledge scores
+# come from respondent-level item responses; upstream corrections are in dp-data.
+analysis_frame <- function(polardata, item_scores) {
+  polardata <- dplyr::left_join(
+    polardata,
+    dplyr::rename(item_scores, item_k1 = k1, item_k2 = k2),
+    by = c("dpnum", "caseid"), relationship = "one-to-one"
+  )
+  stopifnot(
+    all(is.finite(polardata$item_k1)), all(is.finite(polardata$item_k2)),
+    all(abs(polardata$item_k1 - polardata$t1know) < 1e-6),
+    all(abs(polardata$item_k2 - polardata$t2know) < 1e-6)
+  )
   polardata |>
     dplyr::mutate(
-      t2know = dplyr::if_else(greece & t2know == 0 & t1know > 0, NA_real_, t2know),
-      educ3 = dplyr::if_else(greece & educ4 %in% 7, NA_real_, educ3),
-      dplyr::across(c(t1know, t2know), \(x) round(x, 10)),
       ppage = dplyr::if_else(ppage < 16 | ppage > 100, NA_real_, ppage)
     ) |>
     dplyr::transmute(
       dpnum, pollid, pollname, caseid,
       group = paste(pollid, pollgroup, sep = "_"),
       online = mode,
-      k1 = t1know,
-      k2 = t2know,
+      k1 = item_k1,
+      k2 = item_k2,
       group_k1 = meant1know_ind,
       education = factor(
         education_labels[as.character(educ3)],
@@ -37,7 +43,7 @@ analysis_frame <- function(polardata) {
     assertr::assert(assertr::within_bounds(0, 1), k1, k2, group_k1, female, p_female) |>
     assertr::assert(assertr::in_set(0, 1), online) |>
     assertr::assert(assertr::within_bounds(16, 100), age) |>
-    assertr::verify(dplyr::n_distinct(pollid) == 22)
+    assertr::verify(dplyr::n_distinct(pollid) == dplyr::n_distinct(polardata$pollid))
 }
 
 # Share of the other members of i's group with attribute x, and the same share

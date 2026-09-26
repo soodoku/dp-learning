@@ -12,7 +12,6 @@ upstream_source_ids <- c(
   briefing_reading = "briefing_reading_parquet",
   knowledge_scores = "knowledge_scores_parquet",
   cor_sood_replication = "cor-sood-replication",
-  greece = "dp-learning-greece",
   a1r = "a1r-2019",
   tanzania = "tanzania-2015",
   climate = "a1r-climate-2021",
@@ -87,20 +86,24 @@ appendix_polls <- function(frame, item_scores, historical_items, root = dp_data_
     dplyr::distinct(pollid) |>
     dplyr::left_join(aliases, by = "pollid", relationship = "one-to-one")
   stopifnot(!anyNA(participant_ids$poll_id))
-  item_ids <- union(unique(item_scores$poll_id), unique(historical_items$poll_id))
-  out <- read_poll_registry(root) |>
-    dplyr::filter(poll_id %in% union(participant_ids$poll_id, item_ids)) |>
+  catalog_ids <- readr::read_csv(
+    file.path(root, "metadata", "items.csv"),
+    col_types = readr::cols_only(poll_id = readr::col_character())
+  )$poll_id
+  item_ids <- unique(c(item_scores$poll_id, historical_items$poll_id, catalog_ids))
+  registry <- read_poll_registry(root)
+  control_ids <- registry$poll_id[registry$collection == "public-replication"]
+  included_ids <- union(union(union(participant_ids$poll_id, item_ids), control_ids), "marousi-2006")
+  out <- registry |>
+    dplyr::filter(poll_id %in% included_ids) |>
     dplyr::mutate(
-      participants = poll_id %in% participant_ids$poll_id,
-      items = poll_id %in% item_ids,
-      data = dplyr::case_when(
-        participants & items ~ "P+I", participants ~ "P", items ~ "I"
-      ),
+      control_group = poll_id %in% control_ids,
+      item_answers = poll_id %in% item_ids,
       mode = dplyr::recode(mode, "face-to-face" = "Face to face", online = "Online")
     ) |>
     dplyr::arrange(year, title) |>
-    dplyr::transmute(poll = title, year, topic, mode, data)
-  stopifnot(nrow(out) == length(union(participant_ids$poll_id, item_ids)))
+    dplyr::transmute(poll = title, year, topic, mode, control_group, item_answers)
+  stopifnot(nrow(out) == length(included_ids))
   out
 }
 
@@ -129,12 +132,6 @@ verify_sources <- function(manifest = upstream_source_manifest(), root = dp_data
 read_polardata <- function(path = source_path("distortions_responses")) {
   readr::read_tsv(path, show_col_types = FALSE, guess_max = Inf) |>
     dplyr::distinct(dplyr::across(-X), .keep_all = TRUE)
-}
-
-# Marousi, Greece (2006) was withheld from the public polardata release; these
-# rows come from the authors' 2014 analysis file (see README.md).
-read_greece <- function(path = source_path("greece")) {
-  readr::read_csv(path, show_col_types = FALSE)
 }
 
 extract_cor_data <- function(
