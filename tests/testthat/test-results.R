@@ -60,7 +60,7 @@ test_that("gains are computed for all 22 polls", {
 test_that("missed-item peer model uses the historical item sample", {
   items <- read_output("models.csv") |> dplyr::filter(model == "items")
   expect_equal(unique(items$polls), 21L)
-  expect_equal(unique(items$n), 5568L)
+  expect_equal(unique(items$n), 5570L)
   expect_true(all(items$r2_marginal >= 0 & items$r2_conditional <= 1))
 })
 

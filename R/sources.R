@@ -127,7 +127,7 @@ verify_sources <- function(manifest = upstream_source_manifest(), root = dp_data
 }
 
 read_polardata <- function(path = source_path("distortions_responses")) {
-  readr::read_tsv(path, show_col_types = FALSE) |>
+  readr::read_tsv(path, show_col_types = FALSE, guess_max = Inf) |>
     dplyr::distinct(dplyr::across(-X), .keep_all = TRUE)
 }
 
