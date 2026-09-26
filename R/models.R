@@ -8,8 +8,9 @@ main_formula <- k2 ~ k1 * education + age_decades + extremity + group_size + gro
 minority_formula <- stats::update(main_formula, . ~ . + minority * p_minority)
 
 # Other members' T1 knowledge of items the participant missed at T1, added
-# alongside their overall T1 knowledge.
-items_formula <- stats::update(main_formula, . ~ . + group_k1_items)
+# alongside their overall T1 knowledge. A separate indicator marks respondents
+# with no missed T1 items, whose targeted opportunity score is zero.
+items_formula <- stats::update(main_formula, . ~ . + group_k1_items + no_missed_items)
 
 # Source-linked respondent reports of briefing-material reading are available.
 # Poll-level terms are replaced by poll intercepts.

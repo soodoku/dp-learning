@@ -2,15 +2,6 @@ expect_near <- \(actual, expected, tolerance) expect_lte(abs(actual - expected),
 
 read_output <- \(name) readr::read_csv(file.path("../../tabs", name), show_col_types = FALSE)
 
-test_that("item learning uses the rebuilt source-survey batteries", {
-  learning <- read_output("item_learning.csv")
-  expect_equal(nrow(learning), 23)
-  expect_equal(learning$raw, learning$k2 - learning$k1, tolerance = 1e-8)
-  expect_near(mean(learning$raw), 0.1611, 0.001)
-  expect_near(mean(learning$lca), 0.2110, 0.001)
-  expect_true(all(learning$converged))
-})
-
 test_that("A1R 2019 scoring reproduces the published 46% -> 60%", {
   effects <- read_output("control_effects.csv") |>
     dplyr::filter(study == "America in One Room 2019", comparison == "Attended vs uninvited control")
@@ -39,7 +30,8 @@ test_that("item_group_knowledge() matches a hand calculation", {
   )
   out <- item_group_knowledge(items)
   # Person 1 missed a; others (2, 3) got a right: 1. Person 2 missed b; others: (1 + 1) / 2.
-  expect_equal(out$item_group_k1, c(1, 1, NA))
+  expect_equal(out$item_group_k1, c(1, 1, 0))
+  expect_equal(out$no_missed_items, c(0L, 0L, 1L))
 })
 
 test_that("missed-item peer scores ignore absent answers and empty groups", {
@@ -49,7 +41,8 @@ test_that("missed-item peer scores ignore absent answers and empty groups", {
     1, 3, "g", "a", 1, 1, 4, "solo", "a", 0
   )
   out <- item_group_knowledge(items)
-  expect_equal(out$item_group_k1, c(1, NA, NA, NA))
+  expect_equal(out$item_group_k1, c(1, NA, 0, NA))
+  expect_equal(out$no_missed_items, c(0L, 0L, 1L, 0L))
 })
 
 test_that("gains are computed for all item-linked respondent polls", {
@@ -63,9 +56,11 @@ test_that("missed-item peer model uses the historical item sample", {
   items <- read_output("models.csv") |> dplyr::filter(model == "items")
   main <- read_output("models.csv") |> dplyr::filter(model == "main")
   expect_equal(unique(items$polls), 21L)
-  expect_equal(unique(items$n), 5588L)
-  expect_equal(unique(main$n) - unique(items$n), 170L)
-  expect_true(all(c("group_k1", "group_k1_items") %in% items$term))
+  expect_equal(unique(items$n), 5758L)
+  expect_equal(unique(main$n) - unique(items$n), 0L)
+  expect_true(all(c(
+    "group_k1", "group_k1_items", "no_missed_items"
+  ) %in% items$term))
   expect_true(all(items$r2_marginal >= 0 & items$r2_conditional <= 1))
 })
 

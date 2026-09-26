@@ -68,8 +68,8 @@ t1_items_for_poll <- function(poll_id, dpnum, polardata, knowledge) {
 }
 
 # For each person, the other group members' mean T1 correctness on the items
-# the person answered incorrectly at T1. People
-# who answered every item correctly have no such items and get NA.
+# the person answered incorrectly at T1. A perfect T1 score has zero missed
+# items; the indicator distinguishes that case from zero peer correctness.
 item_group_knowledge <- function(items) {
   items |>
     dplyr::mutate(
@@ -79,9 +79,15 @@ item_group_knowledge <- function(items) {
     ) |>
     dplyr::summarise(
       item_group_k1 = {
-        value <- mean(others_correct[correct %in% 0L], na.rm = TRUE)
-        if (is.nan(value)) NA_real_ else value
+        missed <- others_correct[correct %in% 0L]
+        if (length(missed) == 0L) {
+          if (all(!is.na(correct) & correct == 1L)) 0 else NA_real_
+        } else {
+          value <- mean(missed, na.rm = TRUE)
+          if (is.nan(value)) NA_real_ else value
+        }
       },
+      no_missed_items = as.integer(all(!is.na(correct) & correct == 1L)),
       .by = c(pollid, caseid, group)
     )
 }

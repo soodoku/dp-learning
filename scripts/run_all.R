@@ -28,7 +28,10 @@ group_items <- purrr::map2(
   item_group_knowledge()
 frame <- dplyr::left_join(
   frame,
-  dplyr::select(group_items, pollid, caseid, group_k1_items = item_group_k1),
+  dplyr::select(
+    group_items, pollid, caseid, group_k1_items = item_group_k1,
+    no_missed_items
+  ),
   by = c("pollid", "caseid"),
   relationship = "one-to-one"
 )
@@ -36,22 +39,6 @@ frame <- dplyr::left_join(
 gains <- poll_gains(frame)
 write_output(gains, "poll_gains.csv")
 write_output(appendix_polls(), "polls.csv")
-
-cor_polls <- cor_poll_map()
-cor_responses <- read_analysis_responses() |>
-  dplyr::filter(source_dataset == "cor_sood")
-cor_learning <- cor_polls$poll_id |>
-  purrr::map(poll_learning, responses = cor_responses) |>
-  purrr::list_rbind() |>
-  dplyr::left_join(
-    purrr::list_rbind(purrr::map(
-      cor_polls$poll_id, irt_learning, responses = cor_responses
-    )),
-    by = "poll_id",
-    relationship = "one-to-one"
-  ) |>
-  dplyr::left_join(dplyr::select(cor_polls, poll_id, cor_poll_name), by = "poll_id")
-write_output(cor_learning, "item_learning.csv")
 
 models <- list(
   main = main_formula,

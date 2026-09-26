@@ -76,18 +76,6 @@ read_briefing_scores <- function(path = source_path("briefing_reading"), root = 
   out
 }
 
-cor_poll_map <- function(root = dp_data_root()) {
-  ids <- read_analysis_participants(root) |>
-    dplyr::filter(source_dataset == "cor_sood") |>
-    dplyr::distinct(poll_id)
-  out <- dplyr::left_join(
-    ids, dplyr::select(read_poll_registry(root), poll_id, cor_poll_name = title),
-    by = "poll_id", relationship = "one-to-one"
-  )
-  stopifnot(nrow(out) == 23L, !anyNA(out$cor_poll_name))
-  out
-}
-
 appendix_polls <- function(root = dp_data_root()) {
   participants <- read_analysis_participants(root)
   item_ids <- unique(read_analysis_responses(root)$poll_id)
