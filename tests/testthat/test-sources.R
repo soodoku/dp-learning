@@ -107,3 +107,18 @@ test_that("NIC age and mode are consumed from corrected upstream values", {
   expect_equal(nic$age[nic$caseid %in% 10000080], 34)
   expect_equal(sum(!is.na(nic$age)), 454L)
 })
+
+test_that("participant ages come from upstream without reader recoding", {
+  source <- read_polardata()
+  frame <- analysis_frame(dplyr::bind_rows(source, read_greece()))
+  zeguo <- frame[frame$dpnum == 9 & frame$caseid == 52125, ]
+  europolis <- frame[frame$dpnum == 11 & frame$caseid == 71300005619, ]
+  expect_equal(zeguo$age, 33)
+  expect_true(is.na(europolis$age))
+  expect_equal(frame$age[match(
+    paste(source$dpnum, source$caseid), paste(frame$dpnum, frame$caseid)
+  )], source$ppage)
+
+  source$ppage[source$dpnum == 9 & source$caseid == 52125] <- 15
+  expect_error(analysis_frame(dplyr::bind_rows(source, read_greece())))
+})
