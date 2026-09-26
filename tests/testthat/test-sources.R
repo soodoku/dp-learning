@@ -1,8 +1,27 @@
-test_that("all pinned upstream files are available and unchanged", {
-  expect_equal(nrow(source_manifest), 9L)
-  expect_false(anyDuplicated(source_manifest$source) > 0L)
+test_that("upstream manifests identify available and unchanged files", {
+  manifest <- upstream_source_manifest()
+  expect_equal(nrow(manifest), 10L)
+  expect_false(anyDuplicated(manifest$source) > 0L)
   expect_true(verify_sources())
   expect_named(control_source_paths(), c("a1r", "tanzania", "climate", "amr"))
+})
+
+test_that("briefing reports link nine upstream polls to historical participants", {
+  reading <- read_briefing_scores()
+  expect_equal(dplyr::n_distinct(reading$dpnum[!is.na(reading$read_briefing)]), 9L)
+  expect_false(anyDuplicated(reading[c("dpnum", "caseid")]) > 0L)
+})
+
+test_that("appendix poll coverage comes from upstream data", {
+  frame <- analysis_frame(dplyr::bind_rows(read_polardata(), read_greece()))
+  scores <- arrow::read_parquet(source_path("knowledge_scores"))
+  polls <- appendix_polls(frame, scores, read_historical_items())
+  expect_equal(nrow(polls), 29L)
+  expect_equal(sum(grepl("P", polls$data, fixed = TRUE)), 22L)
+  expect_equal(sum(grepl("I", polls$data, fixed = TRUE)), 28L)
+  expect_equal(sum(polls$data == "P+I"), 21L)
+  expect_equal(polls$data[polls$poll == "Marousi, Greece"], "P")
+  expect_true(any(polls$poll == "Bulgarian National Crime Poll" & polls$year == 2002L))
 })
 
 test_that("source verification rejects missing and altered files", {
@@ -28,6 +47,7 @@ test_that("source verification rejects missing and altered files", {
 })
 
 test_that("the upstream location can be overridden", {
+  manifest <- upstream_source_manifest()
   original <- Sys.getenv("DP_DATA_ROOT", unset = NA_character_)
   on.exit({
     if (is.na(original)) Sys.unsetenv("DP_DATA_ROOT") else Sys.setenv(DP_DATA_ROOT = original)
@@ -35,7 +55,7 @@ test_that("the upstream location can be overridden", {
   Sys.setenv(DP_DATA_ROOT = "/alternative/dp-data")
   expect_identical(dp_data_root(), "/alternative/dp-data")
   expect_identical(
-    source_path("greece"),
+    source_path("greece", manifest = manifest),
     "/alternative/dp-data/data/marousi-2006/participants.csv"
   )
 })
@@ -48,7 +68,7 @@ test_that("baseline items join by respondent ID regardless of input order", {
   items <- tibble::tibble(
     poll_id = "san-mateo-2008", wave = 1L,
     historical_respondent_id = c("1", "2", "1", "2"),
-    item_id = c("a", "b", "b", "a"), correct_zero_filled = c(0L, 1L, 1L, 1L)
+    item_id = c("a", "b", "b", "a"), correct = c(0L, 1L, 1L, 1L)
   )
   read <- function(p = poll, x = items) t1_items_for_poll("san-mateo-2008", 17L, p, x)
   expected <- read()
@@ -60,8 +80,9 @@ test_that("baseline items join by respondent ID regardless of input order", {
   changed$historical_respondent_id[1] <- "3"
   expect_error(read(x = changed))
   changed <- items
-  changed$correct_zero_filled[1] <- 1L
+  changed$correct[1] <- 1L
   expect_error(read(x = changed))
+  expect_equal(nrow(read(poll[1, ], items[items$historical_respondent_id == "2", ])), 2L)
 })
 
 test_that("NIC age and mode are consumed from corrected upstream values", {

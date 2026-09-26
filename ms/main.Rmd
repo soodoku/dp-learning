@@ -36,7 +36,7 @@ hetero <- read_out("control_heterogeneity.csv")
 peers <- read_out("peer_effects_pooled.csv")
 selected <- read_out("selection.csv")
 assignment <- read_out("assignment_check.csv")
-polls <- readr::read_csv("docs/polls.csv", show_col_types = FALSE)
+polls <- read_out("polls.csv")
 
 a1r <- control_row(effects, "America in One Room 2019", "Attended vs uninvited control")
 climate <- control_row(effects, "America in One Room: Climate 2021", "Attended vs uninvited control")
@@ -81,9 +81,9 @@ The online design is intended to be as similar as possible to the face-to-face o
 
 # Data
 
-We use two kinds of data (Table \ref{tab:sources}; Appendix \ref{app:polls} lists every poll). For `r nrow(gains)` polls held between 1994 and 2009 we have each participant's proportion of knowledge items answered correctly before (T1) and after (T2) deliberating, with small-group membership and demographics: 21 from the replication data for @luskin2022, and a poll in Marousi, Greece, in which a party chose its mayoral candidate, released here for the first time. For `r nrow(learning)` polls, most of them the same, we have responses item by item [@cor2016]. Four more recent polls surveyed control groups.
+We use two kinds of data (Table \ref{tab:sources}; Appendix \ref{app:polls} lists every poll). For `r nrow(gains)` polls held between 1994 and 2009 we have each participant's proportion of knowledge items answered correctly before (T1) and after (T2) deliberating, with small-group membership and demographics: 21 from the replication data for @luskin2022, and a poll in Marousi, Greece, in which a party chose its mayoral candidate, released here for the first time. A separate replication provides item batteries for `r nrow(learning)` polls, 16 of which overlap that historical set [@cor2016]. Four more recent polls surveyed control groups.
 
-The 21-poll respondent file is rebuilt from poll-level sources in the accompanying dp-data repository. It incorporates documented corrections to the UK Crime post-attitude index, UK General Election post-knowledge item, and National Issues Convention age and mode. Baseline item responses used in the peer-knowledge models are linked by respondent IDs. The separate Cor--Sood learning replication retains its deposited item batteries.
+The 21-poll respondent file is rebuilt from poll-level sources in the accompanying dp-data repository, where scoring decisions and corrections are documented. Those sources also provide respondent-linked answers to the knowledge items in both waves for all 21 polls; their item means reproduce the historical T1 and T2 scores. Marousi has respondent scores but no recovered individual item answers. The separate Cor--Sood learning replication uses 23 deposited item batteries, including seven polls outside the historical respondent file. Among the control studies, the two American files and the antimicrobial-resistance file contain item answers; the Tanzanian file used here contains a standardized knowledge index.
 
 ```{r sources}
 row <- \(x) c(count(x$n_treated), count(x$n_control))
@@ -109,13 +109,13 @@ tibble::tibble(
   )
 ```
 
-The control groups differ in how they were formed. America in One Room and its 2021 climate successor interviewed a separate random sample that was never invited [@fishkin2021]. The Tanzanian poll randomized villages to treatment or control and, within treated villages, individuals to deliberation or to the briefing materials alone [@sandefur2022]. The poll on antimicrobial resistance, held online in Brazil, Colombia, India, Indonesia, Nigeria and Tanzania, randomized panel members after the first interview; the release contains the controls and the invitees who attended, but not the invitees who stayed home [@mendelson2026]. Appendix Table \ref{tab:recodes} lists our recodes of the pre-post data.
+The control groups differ in how they were formed. America in One Room and its 2021 climate successor interviewed a separate random sample that was never invited [@fishkin2021]. The Tanzanian poll randomized villages to treatment or control and, within treated villages, individuals to deliberation or to the briefing materials alone [@sandefur2022]. The poll on antimicrobial resistance, held online in Brazil, Colombia, India, Indonesia, Nigeria and Tanzania, randomized panel members after the first interview; the release contains the controls and the invitees who attended, but not the invitees who stayed home [@mendelson2026]. The respondent scores and poll metadata come from dp-data. In this analysis we remove duplicate Primaries rows, treat implausible ages and specified missing values in the Marousi file as missing, and round two scores stored just above one.
 
 # Measuring Learning
 
 We measure knowledge by closed-ended knowledge questions, mostly multiple choice, in some cases extracted from party or candidate placements, and in a few cases true-false [@luskin1987; @luskin2005; @price1999; @mondak1999; @mondak2001]. Appendix \ref{app:items} lists the items. Correct responses are scored as 1, incorrect responses and "don't knows" as 0 [@luskin2011], and these scores are then averaged across items to give the proportion answered correctly.
 
-We must also confront a distinction between knowledge gain ($K_2 - K_1$) and post-deliberation knowledge ($K_2$), where $K$ is observed (measured, as distinct from actual) knowledge, subscripted for wave of measurement. Let us denote the respondent's actual knowledge at these same times as $K^*_1$ and $K^*_2$, his or her actual knowledge gain (presumed to be nonnegative) as $\Delta K^* = K^*_2 - K^*_1$, and his or her observed knowledge gain as $\Delta K = K_2 - K_1$. $K_2$ is a better proxy for $\Delta K^*$ than $\Delta K$ is. Indeed, under hard-to-assail assumptions, $\Delta K$ can be *negatively* correlated with $\Delta K^*$ and is generally less highly correlated with $\Delta K^*$ than $K_2$ is [@luskin2016]. The intuition is that the participants who know a lot at the outset (a) cannot show much increase in knowledge, because they already have the maximum score or something close to it, but (b) are those who are actually learning the most, consistent with the rich-get-richer thrust of the relevant literatures in psychology and communication research [@kinder1998]. $\Delta K$ will be very low for precisely the participants for whom $\Delta K^*$ is highest. $K_2$, by contrast, is high for all those learning the most, either because they started low and observably learned a lot or because they started (and remained) high and unobservably learned a lot. So when explaining who learns we model $K_2$ with $K_1$ among the regressors---what @allison1990 called the "regressor variable" as opposed to the "change score" approach---and when describing how much a poll's participants learned we report the mean gain.
+Table \ref{tab:models} models T2 knowledge conditional on T1 knowledge. Writing the outcome as $K_2-K_1$ while retaining $K_1$ gives the same fit and the same coefficients for every other regressor; only the coefficient on $K_1$ falls by one. An unadjusted change-score model instead fixes the coefficient on $K_1$ in the T2 equation at one. It asks whether covariates predict the raw score difference, whereas Table \ref{tab:models} compares participants with the same measured starting score. The approaches can disagree when groups differ at baseline [@allison1990; @vanbreukelen2006]. The observed score has a ceiling, and guessing and measurement error complicate its relationship to learning of the underlying facts [@luskin2016]. We therefore treat the T1 coefficient as an association between measured scores, not an estimate of how prior knowledge causes learning.
 
 Closed-ended items invite guessing, which inflates $K_1$ and can hide learning. The latent class model of @cor2016 separates, item by item, respondents who knew the answer, learned it, or guessed, assuming nobody forgets. Across the `r nrow(learning)` polls with item-level data, its estimates of learning average `r coef_text(mean(learning$lca))`, against a raw `r coef_text(mean(learning$raw))`.
 
@@ -153,13 +153,13 @@ Our explanatory variables vary by level of aggregation---some individual-level, 
 
 *Group size*. The number of people in the participant's small group may affect the quality of the deliberation, with larger groups arguably making for a less informative experience. As group size increases, attention may wander, and participants may not learn all that they hear [@latane1979].
 
-*Group knowledge*. Participants may learn more from the other members of their small group when the latter know more. This suggests using the mean knowledge of the group's other members. But what should matter is not how much the other group members know but how much they know about the particular facts the participant does not already know. So where the item-level data allow, we also measure group knowledge as the other members' mean T1 score on the items the participant answered incorrectly at T1.
+*Group knowledge*. Participants may learn more from the other members of their small group when the latter know more. This suggests using the mean knowledge of the group's other members. But what should matter is not how much the other group members know but how much they know about the particular facts the participant does not already know. So where the item-level data allow, we also measure group knowledge as the other members' mean T1 score on the items the participant answered incorrectly at T1. This measure is undefined for participants who answered every T1 item correctly. It is unavailable for Marousi, where individual item answers have not been recovered.
 
 *Heterogeneity of opinion*. In the real world, people often know congenial but not uncongenial facts---those commonly cited by those sharing their views but not those commonly cited by those holding opposing views. Part of deliberation's effect on learning may consist in getting people to note and accept (if, in many cases, still argue around) uncongenial facts. This can be expected to occur mainly on site. Participants learn a great deal in anticipation of the event, but the learning at that stage is mainly of congenial facts [@hansen2004]. On site, the participants find it harder to avoid confronting the uncongenial ones. This may happen more, the more opposing points of view are represented and argued in the small group---the more attitudinally heterogeneous the group is. We gauge this as the generalized variance, the determinant of the covariance matrix, of the group's policy attitudes [@anderson2003].
 
 *Attitude extremity*. Participants starting with more extreme views may have shuttered out more uncongenial facts, leaving them with more ground for deliberation to make up. We measure extremity as the mean, across attitude indices $j$, of $|A_{ij} - .5|$, where $A_{ij}$ is the $i$th respondent's score on the $j$th index.
 
-*Reading the briefing materials*. One of the main information vectors is the briefing document sent to all participants shortly after recruitment, normally well in advance of the on-site deliberations. It provides some background facts and lays out the major arguments for and against given policy options, which embed additional facts congenial to each argument. For four polls we have the participants' reports of how much of the briefing document they read, which we score linearly and use in a separate analysis confined to those polls.
+*Reading the briefing materials*. One of the main information vectors is the briefing document sent to participants shortly after recruitment, normally well in advance of the on-site deliberations. It provides some background facts and lays out the major arguments for and against given policy options, which embed additional facts congenial to each argument. The historical analysis file carries a respondent-level reading report in only four polls: National Issues Convention, National Issues Convention 2, Tomorrow's Europe, and San Mateo. The retained source surveys contain the report in five more: Australia, Central Power & Light, Southwestern Electric Power, West Texas Utilities, and Europolis. We link all nine reports to respondents, score their ordered categories from zero to one using the source-specific response scales, and analyze them in a separate model. We have not recovered a comparable source-linked report for the other 13 polls; this does not mean their participants received no briefing.
 
 *Issue salience*. More salient issues, to which many participants have already given some attention, exhibit decidedly less net attitude change [@luskin2007b] and fall shorter of single-peakedness [@list2013]. We suspect they also, and relatedly, show less learning: there is less left to learn. We proxy salience by the participants' mean T1 knowledge.
 
@@ -173,17 +173,25 @@ where $i$, $g$ and $d$ index individuals, small groups and polls; $\alpha_g \sim
 
 Before turning to the model, the control-group studies let us ask whose knowledge participation raises most, a causal question the pre-post data cannot answer. Adding the product of treatment and centred T1 knowledge, the effect of participation is smaller for those who start knowing more, by `r est_se(het("America in One Room 2019", "k1")$interaction, het("America in One Room 2019", "k1")$interaction_se, 2)` per unit of T1 knowledge in America in One Room and `r est_se(het("America in One Room: Climate 2021", "k1")$interaction, het("America in One Room: Climate 2021", "k1")$interaction_se, 2)` in the climate poll, with no difference in the other two studies (Appendix Table \ref{tab:hetero}). Part of this is the ceiling: those who start high have less room to show a gain. Participation also helped those without a bachelor's degree somewhat more in the climate and antimicrobial-resistance polls (`r est_se(het("America in One Room: Climate 2021", "ba")$interaction, het("America in One Room: Climate 2021", "ba")$interaction_se)` and `r est_se(het("Antimicrobial Resistance 2024", "ba")$interaction, het("Antimicrobial Resistance 2024", "ba")$interaction_se)`), though not in America in One Room. Deliberation narrows knowledge gaps modestly; it does not widen them.
 
-## Who ends up knowing the most
+## Who knows more after deliberation?
 
 ```{r models}
-model_table(models, c("main", "items", "briefing"), c("All polls", "Item-specific (8 polls)", "Briefing (4 polls)")) |>
-  knitr::kable(
-    format = "latex", booktabs = TRUE, position = "H", align = "lrrr", linesep = "",
-    caption = "Post-deliberation knowledge: maximum likelihood estimates (standard errors) with random intercepts for small group and poll. The second column is limited to the 8 polls whose item-level answers link to small groups, which allows group knowledge to be measured on the items each participant missed at T1. The third is limited to the 4 polls that asked about the briefing materials and uses poll fixed effects in place of poll-level variables."
-  )
+table_2 <- model_table(models, c("main", "items", "briefing"), c(
+  "All polls", paste0("Missed-item peers (", size("items", "polls"), " polls)"),
+  paste0("Briefing (", size("briefing", "polls"), " polls)")
+))
+separators <- rep("", nrow(table_2))
+summary_start <- match("Participants", table_2[[1]])
+separators[summary_start - 1L] <- "\\midrule"
+separators[summary_start:(nrow(table_2) - 1L)] <- "\\addlinespace[0.25em]"
+knitr::kable(
+  table_2, format = "latex", booktabs = TRUE, position = "H", align = "lrrr",
+  linesep = separators,
+  caption = "T2 proportion correct conditional on T1: maximum likelihood estimates (standard errors) with small-group random intercepts; the first two models also have poll random intercepts. The second column uses respondent-linked items from the 21 historical polls to measure groupmates' T1 correctness on items each participant missed. The third uses source-linked respondent reports of briefing-material reading and poll fixed effects. Marginal R-squared describes fixed effects; conditional R-squared also includes the random intercepts."
+)
 ```
 
-Table \ref{tab:models} shows the estimates. T2 knowledge depends heavily on T1 knowledge (`r term("main", "k1")`); measurement error in T1 scores pulls this estimate toward zero. Education also has a powerful effect: a bachelor's degree adds `r term("main", "educationBA or more")` for a participant who starts with nothing right. Education and prior knowledge substitute for one another, as the negative interaction indicates (`r term("main", "k1:educationBA or more")` per unit of T1 knowledge): among the well educated, those who initially know the least close much of the gap. The age estimate is small and negative (`r term("main", "age_decades")` per decade), with a 95% confidence interval that includes zero. Participants in online polls end up knowing less (`r term("main", "online")`), and those in polls whose participants start out knowing more end up knowing more (`r term("main", "poll_k1")`), contrary to the salience hypothesis. In the four polls that asked, those who read more of the briefing materials knew more afterwards (`r term("briefing", "read_briefing")`), though reading is itself a choice. Attitude extremity and opinion heterogeneity have no detectable effect.
+Table \ref{tab:models} shows the estimates. Among participants with less than a high-school education, those with higher T1 scores also score higher at T2 (`r term("main", "k1")`); the coefficient below one corresponds to smaller observed gains at higher T1 scores in this reference category. The score ceiling and measurement error complicate an interpretation as differences in actual learning. A bachelor's degree is associated with a T2 advantage of `r term("main", "educationBA or more")` for a participant who starts with nothing right. That advantage narrows as T1 knowledge rises (`r term("main", "k1:educationBA or more")` per unit of T1 knowledge). The age estimate is small and negative (`r term("main", "age_decades")` per decade), with a 95% confidence interval that includes zero. Participants in online polls score lower at T2 (`r term("main", "online")`), conditional on T1, and those in polls whose participants start out knowing more score higher (`r term("main", "poll_k1")`). In the nine polls with a reading report, those who said they read more of the briefing materials scored higher at T2 (`r term("briefing", "read_briefing")`), though reading is itself a choice. Attitude extremity and opinion heterogeneity have no detectable effect.
 
 ## Do small groups matter?
 
@@ -211,30 +219,14 @@ Two limits remain. Only Tanzania randomized people to take part or not; elsewher
 
 ```{r polls, results = "asis"}
 polls |>
-  dplyr::mutate(
-    source = dplyr::if_else(is.na(source), "", paste0("@", gsub("; ", "; @", source))),
-    data = dplyr::recode(data, Both = "P+I", Participants = "P", Items = "I"),
-    poll = paste0(poll, dplyr::if_else(mode == "Online", " (online)", ""))
-  ) |>
-  dplyr::select(poll, year, topic, data, source) |>
-  purrr::set_names(c("Poll", "Year", "Topic", "Data", "Source")) |>
+  dplyr::mutate(poll = paste0(poll, dplyr::if_else(mode == "Online", " (online)", ""))) |>
+  dplyr::select(poll, year, topic, data) |>
+  purrr::set_names(c("Poll", "Year", "Topic", "Data")) |>
   knitr::kable(
     format = "pipe",
     caption = "The Deliberative Polls without control groups. Data: P, participant-level scores; I, item-level responses."
   ) |>
   print()
-```
-
-# Recodes {#app:recodes}
-
-```{r recodes}
-readr::read_csv("docs/recode_ledger.csv", show_col_types = FALSE) |>
-  purrr::set_names(c("Poll", "Variable", "Rule", "Rows affected", "Evidence")) |>
-  knitr::kable(
-    format = "latex", booktabs = TRUE, longtable = TRUE, linesep = "",
-    align = "p{2.6cm}p{1.4cm}p{2.8cm}p{2.8cm}p{4.2cm}",
-    caption = "Recodes applied to the participant-level data"
-  )
 ```
 
 # Further results {#app:further}

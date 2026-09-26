@@ -41,10 +41,33 @@ test_that("item_group_knowledge() matches a hand calculation", {
   expect_equal(out$item_group_k1, c(1, 1, NA))
 })
 
+test_that("missed-item peer scores ignore absent answers and empty groups", {
+  items <- tibble::tribble(
+    ~pollid, ~caseid, ~group, ~item, ~correct,
+    1, 1, "g", "a", 0, 1, 2, "g", "a", NA,
+    1, 3, "g", "a", 1, 1, 4, "solo", "a", 0
+  )
+  out <- item_group_knowledge(items)
+  expect_equal(out$item_group_k1, c(1, NA, NA, NA))
+})
+
 test_that("gains are computed for all 22 polls", {
   gains <- read_output("poll_gains.csv")
   expect_equal(nrow(gains), 22)
   expect_true(all(gains$raw_se > 0))
+})
+
+test_that("missed-item peer model uses the historical item sample", {
+  items <- read_output("models.csv") |> dplyr::filter(model == "items")
+  expect_equal(unique(items$polls), 21L)
+  expect_equal(unique(items$n), 5570L)
+  expect_true(all(items$r2_marginal >= 0 & items$r2_conditional <= 1))
+})
+
+test_that("briefing model uses all source-linked reading reports", {
+  briefing <- read_output("models.csv") |> dplyr::filter(model == "briefing")
+  expect_equal(unique(briefing$polls), 9L)
+  expect_equal(unique(briefing$n), 2626L)
 })
 
 test_that("AMR 2024 counts match the published Extended Data Table 2", {

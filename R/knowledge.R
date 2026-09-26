@@ -1,7 +1,7 @@
 education_labels <- c("0" = "Below high school", "0.5" = "High school", "1" = "BA or more")
 
 # One row per participant with the variables the models use. Recodes are
-# documented in docs/recode_ledger.csv.
+# visible in this function; upstream corrections are documented in dp-data.
 analysis_frame <- function(polardata) {
   greece <- polardata$pollname == "Marousi, Greece"
   polardata |>
@@ -29,8 +29,7 @@ analysis_frame <- function(polardata) {
       p_minority = pminority,
       extremity = attextreme,
       heterogeneity = genvar,
-      group_size = groupsize,
-      read_briefing = readbrief
+      group_size = groupsize
     ) |>
     # Salience: participants' mean T1 knowledge. The whole-sample mean in the
     # release is missing for Australia and equals this in half the polls.
