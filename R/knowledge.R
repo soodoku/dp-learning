@@ -8,8 +8,7 @@ analysis_frame <- function(polardata) {
     dplyr::mutate(
       t2know = dplyr::if_else(greece & t2know == 0 & t1know > 0, NA_real_, t2know),
       educ3 = dplyr::if_else(greece & educ4 %in% 7, NA_real_, educ3),
-      dplyr::across(c(t1know, t2know), \(x) round(x, 10)),
-      ppage = dplyr::if_else(ppage < 16 | ppage > 100, NA_real_, ppage)
+      dplyr::across(c(t1know, t2know), \(x) round(x, 10))
     ) |>
     dplyr::transmute(
       dpnum, pollid, pollname, caseid,
