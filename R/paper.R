@@ -64,11 +64,15 @@ model_table <- function(models, keep, headers) {
     dplyr::arrange(label)
   sizes <- models |>
     dplyr::filter(model %in% keep) |>
-    dplyr::distinct(model, n, groups, polls) |>
+    dplyr::distinct(model, n, groups, polls, r2_marginal, r2_conditional) |>
     dplyr::mutate(dplyr::across(c(n, groups, polls), \(x) prettyNum(x, big.mark = ","))) |>
-    tidyr::pivot_longer(c(n, groups, polls), names_to = "label") |>
+    dplyr::mutate(dplyr::across(c(r2_marginal, r2_conditional), \(x) num(x, 3))) |>
+    tidyr::pivot_longer(c(n, groups, polls, r2_marginal, r2_conditional), names_to = "label") |>
     tidyr::pivot_wider(names_from = model) |>
-    dplyr::mutate(label = c(n = "Participants", groups = "Small groups", polls = "Polls")[label])
+    dplyr::mutate(label = c(
+      n = "Participants", groups = "Small groups", polls = "Polls",
+      r2_marginal = "Marginal R-squared", r2_conditional = "Conditional R-squared"
+    )[label])
   dplyr::bind_rows(dplyr::mutate(est, label = as.character(label)), sizes) |>
     dplyr::select(label, dplyr::all_of(keep)) |>
     purrr::set_names(c("", headers))

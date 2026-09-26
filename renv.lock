@@ -627,32 +627,6 @@
       "Author": "Tony Plate [aut, cre], Richard Heiberger [aut]",
       "Repository": "CRAN"
     },
-    "admisc": {
-      "Package": "admisc",
-      "Version": "0.41",
-      "Source": "Repository",
-      "SystemRequirements": "POSIX threads",
-      "Title": "Adrian Dusa's Miscellaneous",
-      "Authors@R": "person( given = \"Adrian\", family = \"Dusa\", role = c(\"aut\", \"cre\", \"cph\"), email = \"dusa.adrian@unibuc.ro\", comment = c(ORCID = \"0000-0002-3525-9253\"))",
-      "URL": "https://github.com/dusadrian/admisc",
-      "BugReports": "https://github.com/dusadrian/admisc/issues",
-      "Depends": [
-        "R (>= 3.5.0)"
-      ],
-      "Imports": [
-        "methods"
-      ],
-      "Suggests": [
-        "QCA (>= 3.7)"
-      ],
-      "Description": "Contains functions used across packages 'DDIwR', 'QCA' and 'venn'. Interprets and translates, factorizes and negates SOP - Sum of Products expressions, for both binary and multi-value crisp sets, and extracts information (set names, set values) from those expressions. Other functions perform various other checks if possibly numeric (even if all numbers reside in a character vector) and coerce to numeric, or check if the numbers are whole. It also offers, among many others, a highly versatile recoding routine and some more flexible alternatives to the base functions 'with()' and 'within()'. SOP simplification functions in this package use related minimization from package 'QCA', which is recommended to be installed despite not being listed in the Imports field, due to circular dependency issues.",
-      "License": "GPL (>= 3)",
-      "Encoding": "UTF-8",
-      "NeedsCompilation": "yes",
-      "Author": "Adrian Dusa [aut, cre, cph] (ORCID: <https://orcid.org/0000-0002-3525-9253>)",
-      "Maintainer": "Adrian Dusa <dusa.adrian@unibuc.ro>",
-      "Repository": "CRAN"
-    },
     "arrow": {
       "Package": "arrow",
       "Version": "25.0.1",
@@ -1691,38 +1665,6 @@
       "NeedsCompilation": "no",
       "Author": "Hadley Wickham [aut, cre], Yihui Xie [aut] (ORCID: <https://orcid.org/0000-0003-0645-5666>), Michael Lawrence [ctb], Thomas Kluyver [ctb], Jeroen Ooms [ctb], Barret Schloerke [ctb], Adam Ryczkowski [ctb], Hiroaki Yutani [ctb], Michel Lang [ctb], Karolis Koncevičius [ctb], Posit Software, PBC [cph, fnd]",
       "Maintainer": "Hadley Wickham <hadley@posit.co>",
-      "Repository": "CRAN"
-    },
-    "expm": {
-      "Package": "expm",
-      "Version": "1.0-1",
-      "Source": "Repository",
-      "Type": "Package",
-      "Title": "Matrix Exponential, Log, 'etc'",
-      "VersionNote": "Last CRAN: 1.0-0 on 2024-08-19",
-      "Date": "2026-08-21",
-      "Authors@R": "c(person(\"Martin\", \"Maechler\", role=c(\"aut\",\"cre\"), email=\"maechler@stat.math.ethz.ch\", comment = c(ORCID = \"0000-0002-8685-9910\")) , person(\"Christophe\",\"Dutang\", role = \"aut\", comment = c(ORCID = \"0000-0001-6732-1501\")) , person(\"Vincent\",   \"Goulet\", role = \"aut\", comment = c(ORCID = \"0000-0002-9315-5719\")) , person(\"Douglas\",   \"Bates\",      role = \"ctb\", comment = \"cosmetic clean up, in svn r42\") , person(\"David\",     \"Firth\",      role = \"ctb\", comment = \"expm(method= \\\"PadeO\\\" and \\\"TaylorO\\\")\") , person(\"Marina\",    \"Shapira\",    role = \"ctb\", comment = \"expm(method= \\\"PadeO\\\" and \\\"TaylorO\\\")\") , person(\"Michael\",   \"Stadelmann\", role = \"ctb\", comment = \"\\\"Higham08*\\\" methods, see ?expm.Higham08...\") )",
-      "Contact": "expm-developers@lists.R-forge.R-project.org",
-      "Description": "Computation of the matrix exponential, logarithm, sqrt, and related quantities, using traditional and modern methods.",
-      "Depends": [
-        "Matrix"
-      ],
-      "Imports": [
-        "methods"
-      ],
-      "Suggests": [
-        "RColorBrewer",
-        "sfsmisc",
-        "Rmpfr"
-      ],
-      "BuildResaveData": "no",
-      "License": "GPL (>= 2)",
-      "URL": "https://R-Forge.R-project.org/projects/expm/",
-      "BugReports": "https://R-forge.R-project.org/tracker/?atid=472&group_id=107",
-      "Encoding": "UTF-8",
-      "NeedsCompilation": "yes",
-      "Author": "Martin Maechler [aut, cre] (ORCID: <https://orcid.org/0000-0002-8685-9910>), Christophe Dutang [aut] (ORCID: <https://orcid.org/0000-0001-6732-1501>), Vincent Goulet [aut] (ORCID: <https://orcid.org/0000-0002-9315-5719>), Douglas Bates [ctb] (cosmetic clean up, in svn r42), David Firth [ctb] (expm(method= \"PadeO\" and \"TaylorO\")), Marina Shapira [ctb] (expm(method= \"PadeO\" and \"TaylorO\")), Michael Stadelmann [ctb] (\"Higham08*\" methods, see ?expm.Higham08...)",
-      "Maintainer": "Martin Maechler <maechler@stat.math.ethz.ch>",
       "Repository": "CRAN"
     },
     "farver": {
@@ -2855,28 +2797,6 @@
       "Maintainer": "Ben Bolker <bbolker+lme4@gmail.com>",
       "Repository": "CRAN"
     },
-    "ltm": {
-      "Package": "ltm",
-      "Version": "1.2-0",
-      "Source": "Repository",
-      "Title": "Latent Trait Models under IRT",
-      "Date": "2022-02-18",
-      "Author": "Dimitris Rizopoulos <d.rizopoulos@erasmusmc.nl>",
-      "Maintainer": "Dimitris Rizopoulos <d.rizopoulos@erasmusmc.nl>",
-      "Description": "Analysis of multivariate dichotomous and polytomous data using latent trait models under the Item Response Theory approach. It includes the Rasch, the Two-Parameter Logistic, the Birnbaum's Three-Parameter, the Graded Response, and the Generalized Partial Credit Models.",
-      "Depends": [
-        "R (>= 3.0.0)",
-        "MASS",
-        "msm",
-        "polycor"
-      ],
-      "LazyLoad": "yes",
-      "LazyData": "yes",
-      "License": "GPL (>= 2)",
-      "URL": "https://github.com/drizopoulos/ltm",
-      "NeedsCompilation": "no",
-      "Repository": "CRAN"
-    },
     "magrittr": {
       "Package": "magrittr",
       "Version": "2.0.5",
@@ -3226,42 +3146,6 @@
       "Config/roxygen2/version": "8.1.0",
       "NeedsCompilation": "yes",
       "Author": "Phil Chalmers [aut, cre] (ORCID: <https://orcid.org/0000-0001-5332-2810>), Joshua Pritikin [ctb], Alexander Robitzsch [ctb], Mateusz Zoltak [ctb], KwonHyun Kim [ctb], Carl F. Falk [ctb], Adam Meade [ctb], Lennart Schneider [ctb], David King [ctb], Chen-Wei Liu [ctb], Ogreden Oguzhan [ctb], Samuel Huang [ctb]"
-    },
-    "msm": {
-      "Package": "msm",
-      "Version": "1.8.2",
-      "Source": "Repository",
-      "Date": "2024-11-07",
-      "Title": "Multi-State Markov and Hidden Markov Models in Continuous Time",
-      "Authors@R": "c(person(\"Christopher\", \"Jackson\", email=\"chris.jackson@mrc-bsu.cam.ac.uk\", role=c(\"aut\", \"cre\")))",
-      "Description": "Functions for fitting continuous-time Markov and hidden Markov multi-state models to longitudinal data.  Designed for processes observed at arbitrary times in continuous time (panel data) but some other observation schemes are supported. Both Markov transition rates and the hidden Markov output process can be modelled in terms of covariates, which may be constant or piecewise-constant in time.",
-      "License": "GPL (>= 2)",
-      "Imports": [
-        "survival",
-        "mvtnorm",
-        "expm",
-        "generics",
-        "tibble"
-      ],
-      "Suggests": [
-        "mstate",
-        "minqa",
-        "doParallel",
-        "foreach",
-        "numDeriv",
-        "testthat",
-        "flexsurv",
-        "covr"
-      ],
-      "URL": "https://github.com/chjackson/msm, https://chjackson.github.io/msm/",
-      "BugReports": "https://github.com/chjackson/msm/issues",
-      "LazyData": "yes",
-      "Encoding": "UTF-8",
-      "RoxygenNote": "7.3.2",
-      "NeedsCompilation": "yes",
-      "Author": "Christopher Jackson [aut, cre]",
-      "Maintainer": "Christopher Jackson <chris.jackson@mrc-bsu.cam.ac.uk>",
-      "Repository": "CRAN"
     },
     "mvtnorm": {
       "Package": "mvtnorm",
@@ -3665,33 +3549,6 @@
       "NeedsCompilation": "no",
       "Author": "Hadley Wickham [aut], Winston Chang [aut], Jim Hester [aut], Lionel Henry [aut, cre], Posit Software, PBC [cph, fnd], R Core team [ctb] (Some namespace and vignette code extracted from base R)",
       "Maintainer": "Lionel Henry <lionel@posit.co>",
-      "Repository": "CRAN"
-    },
-    "polycor": {
-      "Package": "polycor",
-      "Version": "0.8-2",
-      "Source": "Repository",
-      "Title": "Polychoric and Polyserial Correlations",
-      "Authors@R": "c(person(\"John\", \"Fox\", role = \"aut\"), person(\"Adrian\", \"Dusa\", role = \"ctb\"), person(\"Duncan\", \"Murdoch\", email = \"murdoch.duncan@gmail.com\", role = \"cre\"))",
-      "Depends": [
-        "R (>= 3.3.0)"
-      ],
-      "Imports": [
-        "stats",
-        "mvtnorm",
-        "Matrix",
-        "parallel",
-        "admisc (>= 0.22)"
-      ],
-      "ByteCompile": "yes",
-      "LazyLoad": "yes",
-      "Description": "Computes polychoric and polyserial correlations by quick \"two-step\" methods or ML,  optionally with standard errors; tetrachoric and biserial correlations are special cases.",
-      "License": "GPL (>= 2)",
-      "URL": "https://github.com/dmurdoch/polycor, https://CRAN.R-project.org/package=polycor",
-      "RoxygenNote": "7.3.3",
-      "NeedsCompilation": "no",
-      "Author": "John Fox [aut], Adrian Dusa [ctb], Duncan Murdoch [cre]",
-      "Maintainer": "Duncan Murdoch <murdoch.duncan@gmail.com>",
       "Repository": "CRAN"
     },
     "praise": {
@@ -4753,36 +4610,6 @@
       "NeedsCompilation": "no",
       "Author": "Kirill Müller [aut] (ORCID: <https://orcid.org/0000-0002-1416-3412>), Lorenz Walthert [cre, aut], Indrajeet Patil [aut] (ORCID: <https://orcid.org/0000-0003-1995-6531>)",
       "Maintainer": "Lorenz Walthert <lorenz.walthert@icloud.com>",
-      "Repository": "CRAN"
-    },
-    "survival": {
-      "Package": "survival",
-      "Version": "3.8-6",
-      "Source": "Repository",
-      "Title": "Survival Analysis",
-      "Priority": "recommended",
-      "Date": "2026-01-09",
-      "Depends": [
-        "R (>= 3.5.0)"
-      ],
-      "Imports": [
-        "graphics",
-        "Matrix",
-        "methods",
-        "splines",
-        "stats",
-        "utils"
-      ],
-      "LazyData": "Yes",
-      "LazyDataCompression": "xz",
-      "ByteCompile": "Yes",
-      "Authors@R": "c(person(c(\"Terry\", \"M\"), \"Therneau\", email=\"therneau.terry@mayo.edu\", role=c(\"aut\", \"cre\")), person(\"Thomas\", \"Lumley\", role=c(\"ctb\", \"trl\"), comment=\"original S->R port and R maintainer until 2009\"), person(\"Atkinson\", \"Elizabeth\", role=\"ctb\"), person(\"Crowson\", \"Cynthia\", role=\"ctb\"))",
-      "Description": "Contains the core survival analysis routines, including definition of Surv objects,  Kaplan-Meier and Aalen-Johansen (multi-state) curves, Cox models, and parametric accelerated failure time models.",
-      "License": "LGPL (>= 2)",
-      "URL": "https://github.com/therneau/survival",
-      "NeedsCompilation": "yes",
-      "Author": "Terry M Therneau [aut, cre], Thomas Lumley [ctb, trl] (original S->R port and R maintainer until 2009), Atkinson Elizabeth [ctb], Crowson Cynthia [ctb]",
-      "Maintainer": "Terry M Therneau <therneau.terry@mayo.edu>",
       "Repository": "CRAN"
     },
     "testthat": {

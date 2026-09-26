@@ -1,7 +1,7 @@
 education_labels <- c("0" = "Below high school", "0.5" = "High school", "1" = "BA or more")
 
 # One row per participant with the variables the models use. Recodes are
-# documented in docs/recode_ledger.csv.
+# visible in this function; upstream corrections are documented in dp-data.
 analysis_frame <- function(polardata) {
   greece <- polardata$pollname == "Marousi, Greece"
   polardata |>

@@ -10,9 +10,14 @@ write_output <- \(x, name) readr::write_csv(x, file.path("tabs", name), na = "")
 write_output(assignment_check(frame), "assignment_check.csv")
 
 polardata <- read_polardata()
+historical_items <- read_historical_items()
+historical_polls <- read_respondent_sources() |>
+  dplyr::select(poll_id, dpnum) |>
+  dplyr::filter(dpnum %in% polardata$dpnum)
+stopifnot(nrow(historical_polls) == 21L)
 group_items <- purrr::map2(
-  t1_linked_polls$poll_id, t1_linked_polls$dpnum, t1_items_for_poll,
-  polardata = polardata, knowledge = read_respondent_knowledge()
+  historical_polls$poll_id, historical_polls$dpnum, t1_items_for_poll,
+  polardata = polardata, knowledge = historical_items
 ) |>
   purrr::list_rbind() |>
   item_group_knowledge()
@@ -25,16 +30,20 @@ frame <- dplyr::left_join(
 
 gains <- poll_gains(frame)
 write_output(gains, "poll_gains.csv")
+write_output(appendix_polls(
+  frame, arrow::read_parquet(source_path("knowledge_scores")), historical_items
+), "polls.csv")
 
-cor_learning <- poll_map$file_key |>
+cor_polls <- cor_poll_map()
+cor_learning <- cor_polls$file_key |>
   purrr::map(poll_learning, data_dir = cor_dir) |>
   purrr::list_rbind() |>
   dplyr::left_join(
-    purrr::list_rbind(purrr::map(poll_map$file_key, irt_learning, data_dir = cor_dir)),
+    purrr::list_rbind(purrr::map(cor_polls$file_key, irt_learning, data_dir = cor_dir)),
     by = "file_key",
     relationship = "one-to-one"
   ) |>
-  dplyr::left_join(dplyr::select(poll_map, file_key, cor_poll_name), by = "file_key")
+  dplyr::left_join(dplyr::select(cor_polls, file_key, cor_poll_name), by = "file_key")
 write_output(cor_learning, "item_learning.csv")
 
 models <- list(

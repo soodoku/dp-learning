@@ -1,5 +1,5 @@
 # Item matrices keep don't-know as NA so the latent class model can treat it
-# as its own response; read_battery() in sources.R scores it as wrong.
+# as its own response; the percent-correct scores count it as wrong.
 read_items <- function(path) {
   data <- readr::read_csv(path, na = c("", "NA"), show_col_types = FALSE)
   items <- setdiff(names(data), "female")

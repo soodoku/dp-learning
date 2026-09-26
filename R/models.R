@@ -1,4 +1,4 @@
-# Post-deliberation knowledge on pre-deliberation knowledge and covariates,
+# T2 knowledge on pre-deliberation knowledge and covariates,
 # with random intercepts for small group and poll. Every regressor is measured
 # before deliberation. Minority status is missing for whole polls (EU, China,
 # Greece), so it enters only in a robustness model.
@@ -11,8 +11,8 @@ minority_formula <- stats::update(main_formula, . ~ . + minority * p_minority)
 # linked item-level data.
 items_formula <- stats::update(main_formula, . ~ . - group_k1 + group_k1_items)
 
-# Only four face-to-face polls asked about the briefing materials, so poll-level
-# terms are replaced by poll intercepts.
+# Respondent reports of briefing-material reading are available in four polls.
+# Poll-level terms are replaced by poll intercepts.
 briefing_formula <- stats::update(
   main_formula,
   . ~ . - online - poll_k1 - (1 | pollid) + factor(pollid) + read_briefing
@@ -25,6 +25,11 @@ fit_knowledge <- function(frame, formula = main_formula) {
 
 tidy_fit <- function(fit, model) {
   est <- stats::coef(summary(fit))
+  random <- lme4::VarCorr(fit)
+  stopifnot(all(vapply(random, nrow, integer(1L)) == 1L))
+  fixed_var <- stats::var(as.vector(lme4::getME(fit, "X") %*% lme4::fixef(fit)))
+  random_var <- sum(vapply(random, \(x) as.numeric(x[1, 1]), numeric(1L)))
+  total_var <- fixed_var + random_var + stats::sigma(fit)^2
   tibble::tibble(
     model = model,
     term = rownames(est),
@@ -32,6 +37,8 @@ tidy_fit <- function(fit, model) {
     std_error = est[, "Std. Error"],
     n = stats::nobs(fit),
     polls = dplyr::n_distinct(lme4::getME(fit, "flist")$group |> sub(pattern = "_.*", replacement = "")),
-    groups = lme4::ngrps(fit)[["group"]]
+    groups = lme4::ngrps(fit)[["group"]],
+    r2_marginal = fixed_var / total_var,
+    r2_conditional = (fixed_var + random_var) / total_var
   )
 }

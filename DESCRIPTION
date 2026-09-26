@@ -23,7 +23,6 @@ Imports:
     jsonlite,
     knitr,
     lme4,
-    ltm,
     mirt,
     purrr,
     readr,
