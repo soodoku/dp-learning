@@ -1,32 +1,32 @@
-poll,year,topic,mode,control_group
-UK Crime,1994,Crime,Face to face,FALSE
-UK EU,1995,Britain's future in Europe,Face to face,FALSE
-Central Power & Light,1996,Electricity choices,Face to face,FALSE
-National Issues Convention,1996,Foreign and economic policy,Face to face,FALSE
-Southwestern Electric Power,1996,Electricity choices,Face to face,FALSE
-UK Monarchy,1996,Future of the monarchy,Face to face,FALSE
-West Texas Utilities,1996,Electricity choices,Face to face,FALSE
-UK General Election,1997,Electoral choice,Face to face,FALSE
-UK Health,1998,National Health Service,Face to face,FALSE
-Australia Republic Referendum,1999,Becoming a republic,Face to face,FALSE
-Denmark: Euro,2000,Adopting the euro,Face to face,FALSE
-Bulgarian National Crime Poll,2002,Crime and criminal justice,Face to face,FALSE
-By the People: National,2003,Foreign policy,Online,FALSE
-National Issues Convention 2,2003,Foreign policy,Face to face,FALSE
-By the People 2004 Online Primaries,2004,Presidential primaries,Online,FALSE
-By the People 2004 US General Election,2004,Presidential election,Online,FALSE
-By the People 2004 US Presidential Primaries,2004,Presidential primaries,Online,FALSE
-"New Haven, CT",2004,Airport and regional tax sharing,Face to face,FALSE
-By the People: Health and Education,2005,Health care and education,Online,FALSE
-Zeguo Township,2005,Local infrastructure projects,Face to face,FALSE
-By the People 2007,2007,Electoral reform,Online,FALSE
-Northern Ireland,2007,Local education,Face to face,FALSE
-Tomorrow's Europe (EU),2007,"Pensions, globalization and enlargement",Face to face,FALSE
-Vermont Energy,2007,Energy choices,Face to face,FALSE
-"San Mateo, CA",2008,Housing,Face to face,FALSE
-Europolis,2009,Climate change and immigration,Face to face,FALSE
-Michigan,2009,Economy and budget,Face to face,FALSE
-California What's Next,2011,Government reform,Face to face,FALSE
-America in One Room,2019,National policy,Face to face,TRUE
-America in One Room: Climate,2021,Climate and energy,Online,TRUE
-Antimicrobial Resistance,2024,Antimicrobial resistance,Online,TRUE
+poll,year,topic,mode,control_group,analysis_sample
+UK Crime,1994,Crime,Face to face,FALSE,Gain and group model
+UK EU,1995,Britain's future in Europe,Face to face,FALSE,Gain and group model
+Central Power & Light,1996,Electricity choices,Face to face,FALSE,Gain and group model
+National Issues Convention,1996,Foreign and economic policy,Face to face,FALSE,Gain and group model
+Southwestern Electric Power,1996,Electricity choices,Face to face,FALSE,Gain and group model
+UK Monarchy,1996,Future of the monarchy,Face to face,FALSE,Gain and group model
+West Texas Utilities,1996,Electricity choices,Face to face,FALSE,Gain and group model
+UK General Election,1997,Electoral choice,Face to face,FALSE,Gain and group model
+UK Health,1998,National Health Service,Face to face,FALSE,Gain and group model
+Australia Republic Referendum,1999,Becoming a republic,Face to face,FALSE,Gain and group model
+Denmark: Euro,2000,Adopting the euro,Face to face,FALSE,Gain only
+Bulgarian National Crime Poll,2002,Crime and criminal justice,Face to face,FALSE,Gain and group model
+By the People: National,2003,Foreign policy,Online,FALSE,Gain and group model
+National Issues Convention 2,2003,Foreign policy,Face to face,FALSE,Gain and group model
+By the People 2004 Online Primaries,2004,Presidential primaries,Online,FALSE,Gain only
+By the People 2004 US General Election,2004,Presidential election,Online,FALSE,Gain and group model
+By the People 2004 US Presidential Primaries,2004,Presidential primaries,Online,FALSE,Gain and group model
+"New Haven, CT",2004,Airport and regional tax sharing,Face to face,FALSE,Gain and group model
+By the People: Health and Education,2005,Health care and education,Online,FALSE,Gain and group model
+Zeguo Township,2005,Local infrastructure projects,Face to face,FALSE,Gain and group model
+By the People 2007,2007,Electoral reform,Online,FALSE,Gain only
+Northern Ireland,2007,Local education,Face to face,TRUE,Gain and control comparison
+Tomorrow's Europe (EU),2007,"Pensions, globalization and enlargement",Face to face,FALSE,Gain and group model
+Vermont Energy,2007,Energy choices,Face to face,FALSE,Gain only
+"San Mateo, CA",2008,Housing,Face to face,FALSE,Gain and group model
+Europolis,2009,Climate change and immigration,Face to face,FALSE,Gain and group model
+Michigan,2009,Economy and budget,Face to face,FALSE,Gain only
+California What's Next,2011,Government reform,Face to face,FALSE,Gain only
+America in One Room,2019,National policy,Face to face,TRUE,Gain and control comparison
+America in One Room: Climate,2021,Climate and energy,Online,TRUE,Gain and control comparison
+Antimicrobial Resistance,2024,Antimicrobial resistance,Online,TRUE,Gain and control comparison

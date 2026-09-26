@@ -81,14 +81,21 @@ appendix_polls <- function(root = dp_data_root()) {
   item_ids <- unique(read_analysis_responses(root)$poll_id)
   registry <- read_poll_registry(root)
   control_ids <- unique(participants$poll_id[participants$source_dataset == "control"])
+  group_ids <- unique(participants$poll_id[participants$source_dataset == "historical"])
   out <- registry |>
     dplyr::filter(poll_id %in% item_ids) |>
     dplyr::mutate(
       control_group = poll_id %in% control_ids,
+      analysis_sample = dplyr::case_when(
+        control_group ~ "Gain and control comparison",
+        poll_id %in% group_ids ~ "Gain and group model",
+        .default = "Gain only"
+      ),
       mode = dplyr::recode(mode, "face-to-face" = "Face to face", online = "Online")
     ) |>
     dplyr::arrange(year, title) |>
-    dplyr::transmute(poll = title, year, topic, mode, control_group)
+    dplyr::transmute(poll = title, year, topic, mode, control_group,
+                     analysis_sample)
   stopifnot(nrow(out) == length(item_ids))
   out
 }

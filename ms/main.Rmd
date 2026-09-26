@@ -42,6 +42,7 @@ a1r <- control_row(effects, "America in One Room 2019", "Attended vs uninvited c
 climate <- control_row(effects, "America in One Room: Climate 2021", "Attended vs uninvited control")
 climate_t3 <- control_row(effects, "America in One Room: Climate 2021", "Attended vs control, one year later")
 amr <- control_row(effects, "Antimicrobial Resistance 2024", "Attended vs randomized control")
+ni <- control_row(effects, "Northern Ireland 2007", "T3 attendee vs control, no baseline")
 amr_country <- \(country) control_row(effects, "Antimicrobial Resistance 2024", paste0("Attended vs randomized control: ", country))
 mu <- meta_c[meta_c$parameter == "mu", ]
 persist <- round(100 * climate_t3$estimate / climate$estimate)
@@ -52,7 +53,7 @@ size <- \(model, what) models[[what]][models$model == model][1]
 ```
 
 \begin{abstract}
-Among the great virtues ascribed to deliberation is learning. We ask how much participants in Deliberative Polls learn, what control groups tell us about those gains, and who learns. Respondent-level answers to `r nrow(item_catalog)` knowledge questions cover `r nrow(polls)` polls held from `r min(polls$year)` to `r max(polls$year)` on elections, energy, health, crime, climate, and other policy issues across Europe, Australia, the Americas, Africa, and Asia. The small-group analysis includes `r count(size("main", "n"))` participants in `r size("main", "groups")` groups across `r size("main", "polls")` polls. In three later polls with control groups, held in seven countries, attendees scored `r coef_text(mu$median, 2)` standard deviations above controls after adjustment for initial knowledge (95\% interval `r coef_text(mu$lower, 2)` to `r coef_text(mu$upper, 2)`); in the one poll followed for a year, `r persist`\% of that adjusted gap remained. Across `r nrow(gains)` polls without controls, the share of items answered correctly rose by `r meta_row(meta, "raw, pooled", "mu")`, about twice as much face to face as online. Participants who start out knowing less, and those without degrees, gain somewhat more. Small groups are composed as if at random, and who is in one's group has no detectable effect on learning.
+Among the great virtues ascribed to deliberation is learning. We ask how much participants in Deliberative Polls learn, what control groups tell us about those gains, and who learns. Respondent-level answers to `r nrow(item_catalog)` knowledge questions cover `r nrow(polls)` polls held from `r min(polls$year)` to `r max(polls$year)` on elections, energy, health, crime, climate, and other policy issues across Europe, Australia, the Americas, Africa, and Asia. Across all `r nrow(gains)` polls, `r count(sum(gains$respondents))` attendees supply paired item answers; four polls also have control-group answers, although Northern Ireland's controls were interviewed only at T3. The small-group analysis includes `r count(size("main", "n"))` participants in `r size("main", "groups")` groups across `r size("main", "polls")` polls. In the three control polls with common baseline interviews, held in seven countries, attendees scored `r coef_text(mu$median, 2)` standard deviations above controls after adjustment for initial knowledge (95\% interval `r coef_text(mu$lower, 2)` to `r coef_text(mu$upper, 2)`); in one poll followed for a year, `r persist`\% of that adjusted gap remained. Across all polls, the share of items answered correctly rose by `r meta_row(meta, "raw, pooled", "mu")`, or `r meta_row(meta, "guessing adjusted, pooled", "mu")` after adjustment for guessing. Participants who start out knowing less, and those without degrees, gain somewhat more. Small groups are composed as if at random, and who is in one's group has no detectable effect on learning.
 \end{abstract}
 
 # Introduction
@@ -63,7 +64,7 @@ The expectation of learning follows directly from the nature of "deliberation," 
 
 Or so the theory runs. But how much do participants actually learn, is it the deliberation that teaches them, and who learns the most? We examine learning of relevant facts. This is not the only sort of learning involved, but it is the easiest to measure, and it is both important in itself and positively correlated with the rest.
 
-Participants gain knowledge during Deliberative Polls. In three polls that surveyed a control group alongside attendees---two in the United States and one across six middle-income countries---attendees scored `r coef_text(mu$median, 2)` standard deviations above controls after adjustment for initial knowledge. In the one poll re-interviewed a year later, `r persist`\% of that adjusted gap remained. Earlier studies of Deliberative Polls and other forums found that participants learn a lot [@luskin2002b; @barabas2004; @sturgis2005; @esterling2011; @theuwis2025], but most compared participants before and after, without a comparison group. We also examine how gains vary with starting knowledge and schooling. Because small groups are composed as if at random, group composition offers a test of whether groupmates' knowledge affects learning.
+Participants gain knowledge during Deliberative Polls. In three polls that surveyed a control group at baseline and follow-up---two in the United States and one across six middle-income countries---attendees scored `r coef_text(mu$median, 2)` standard deviations above controls after adjustment for initial knowledge. In the one poll re-interviewed a year later, `r persist`\% of that adjusted gap remained. Northern Ireland also interviewed a T3 control group, without baseline knowledge questions. Earlier studies of Deliberative Polls and other forums found that participants learn a lot [@luskin2002b; @barabas2004; @sturgis2005; @esterling2011; @theuwis2025], but most compared participants before and after, without a comparison group. We also examine how gains vary with starting knowledge and schooling. Because small groups are composed as if at random, group composition offers a test of whether groupmates' knowledge affects learning.
 
 # Deliberative Polling and Learning
 
@@ -79,7 +80,9 @@ The online design is intended to be as similar as possible to the face-to-face o
 
 We include polls with respondent-level knowledge-item answers at both T1 and T2. Each poll appears once in the upstream registry and in Appendix \ref{app:polls}. The accompanying dp-data repository holds the item definitions, scored responses, respondent links, and poll metadata. We average correctness over the questions fielded to a respondent to obtain the proportion correct before (T1) and after (T2) deliberating. Analyses use the respondents for whom the needed group, covariate, or control observations are available. Appendix \ref{app:items} gives the questions and scoring rules.
 
-The control groups differ in how they were formed. America in One Room and its 2021 climate successor interviewed a separate random sample that was never invited [@fishkin2021]. The poll on antimicrobial resistance, held online in Brazil, Colombia, India, Indonesia, Nigeria and Tanzania, randomized panel members after the first interview; the release contains the controls and the invitees who attended, but not the invitees who stayed home [@mendelson2026]. These are comparisons of attendees with controls, so selection into attendance remains possible. Poll metadata and reconstructed respondent answers come from dp-data. We remove duplicate Primaries rows and treat implausible ages as missing.
+The control groups differ in how they were formed. America in One Room and its 2021 climate successor interviewed a separate random sample that was never invited [@fishkin2021]. The poll on antimicrobial resistance, held online in Brazil, Colombia, India, Indonesia, Nigeria and Tanzania, randomized panel members after the first interview; the release contains the controls and the invitees who attended, but not the invitees who stayed home [@mendelson2026]. Northern Ireland interviewed 150 controls at T3, when 93 participants also returned; the controls have no T1 knowledge answers, so only a T3 cross-sectional comparison is possible. These are comparisons of attendees with controls, so selection into attendance remains possible. Poll metadata and reconstructed respondent answers come from dp-data, whose exports resolve duplicate Primaries rows and mark implausible ages missing.
+
+For the three polls with common baselines, we compare attendees with controls using both a T2 regression adjusted for T1 and a difference in T2-minus-T1 gains. The Northern Ireland contrast compares T3 scores; its standard error clusters attendees by discussion group and treats controls as separate clusters.
 
 # Measuring Learning
 
@@ -87,19 +90,19 @@ We measure knowledge by closed-ended knowledge questions, mostly multiple choice
 
 Table \ref{tab:models} models T2 knowledge conditional on T1 knowledge. Writing the outcome as $K_2-K_1$ while retaining $K_1$ gives the same fit and the same coefficients for every other regressor; only the coefficient on $K_1$ falls by one. An unadjusted change-score model instead fixes the coefficient on $K_1$ in the T2 equation at one. It asks whether covariates predict the raw score difference, whereas Table \ref{tab:models} compares participants with the same measured starting score. The approaches can disagree when groups differ at baseline [@allison1990; @vanbreukelen2006]. The observed score has a ceiling, and guessing and measurement error complicate its relationship to learning of the underlying facts [@luskin2016]. We therefore treat the T1 coefficient as an association between measured scores, not an estimate of how prior knowledge causes learning.
 
-Closed-ended items invite guessing, which can hide learning in the difference between observed scores. In an earlier analysis of Deliberative Poll knowledge items, @cor2016 estimated a mean gain of .171 after adjusting for guessing, compared with a raw gain of .140. That comparison used a different set of poll batteries. The item-level latent class model in that study assumes no loss of knowledge between waves. Our participant-level models retain observed scores, since that item-level model does not supply a validated guessing-adjusted outcome for each participant.
+Closed-ended items invite guessing, which can hide learning in the difference between observed scores. We fit the item-level latent class model of @cor2016 to all `r nrow(gains)` polls. It estimates the share who learned each question by allowing a correct answer to come from either knowledge or guessing, assuming knowledge is not lost between waves. We average its estimates across each poll's questions, bootstrap respondents to measure sampling error, and pool across polls. The guessing-adjusted gain is `r meta_row(meta, "guessing adjusted, pooled", "mu")`, compared with the observed gain of `r meta_row(meta, "raw, pooled", "mu")` on the same polls. The two pooled results appear in Figure \ref{fig:learning}. Table \ref{tab:models} retains respondent-level observed scores. The available joint person-level model in `guess` assigns one knowledge trajectory to each respondent across all questions, ruling out knowing one fact while learning another; its posterior is not a suitable outcome for this regression.
 
 # How Much Do Participants Learn, and Does Participating Cause It?
 
-Figure \ref{fig:learning} puts the estimates on one scale, standard deviations of T1 knowledge. Panel A shows the mean gain in each of the `r nrow(gains)` polls without a control group; panel B shows the adjusted attendee-control difference in the three polls with one.
+Figure \ref{fig:learning} shows the observed attendee gain in all `r nrow(gains)` polls and both pooled observed and guessing-adjusted gains. Its second panel shows control comparisons: T1-adjusted T2 differences in three polls, their pooled result, the climate poll's T3 follow-up, and Northern Ireland's T3-only contrast. Northern Ireland uses the control group's T3 standard deviation because its controls have no baseline knowledge answers.
 
-Every poll shows learning. Raw gains range from `r coef_text(min(gains$raw))` to `r coef_text(max(gains$raw))` of the items; pooled, the proportion correct rose by `r meta_row(meta, "raw, pooled", "mu")`, or `r meta_row(meta, "raw SD, pooled", "mu", 2)` standard deviations. The pooling is a Bayesian random-effects meta-analysis: each poll's mean gain is its true gain plus sampling error, true gains are normally distributed around an overall mean, the prior on the mean is flat and that on the between-poll standard deviation half-normal with scale .1 [@rover2020]. Face-to-face polls produced about twice the gain of online ones (`r meta_row(meta, "raw, by mode", "face_to_face")` against `r meta_row(meta, "raw, by mode", "online")`; Appendix Table \ref{tab:meta}).
+Every poll shows learning. Raw gains range from `r coef_text(min(gains$raw))` to `r coef_text(max(gains$raw))` of the items; pooled, the proportion correct rose by `r meta_row(meta, "raw, pooled", "mu")`, or `r meta_row(meta, "raw SD, pooled", "mu", 2)` standard deviations. The guessing-adjusted pooled estimate is `r meta_row(meta, "guessing adjusted SD, pooled", "mu", 2)` on the same T1 standard-deviation scale. The pooling is a Bayesian random-effects meta-analysis: each poll's mean gain is its true gain plus sampling error, true gains are normally distributed around an overall mean, the prior on the mean is flat and that on the between-poll standard deviation half-normal with scale .1 [@rover2020]. Face-to-face polls produced about twice the observed gain of online ones (`r meta_row(meta, "raw, by mode", "face_to_face")` against `r meta_row(meta, "raw, by mode", "online")`; Appendix Table \ref{tab:meta}).
 
 A pre-post gain alone does not show that deliberation taught anything: participants take the same quiz twice and live through weeks of news. The control groups provide a benchmark. Adjusting for T1 knowledge, attendees scored `r est_se(a1r$estimate, a1r$std_error)` higher in proportion correct in America in One Room, `r est_se(climate$estimate, climate$std_error)` higher in the 2021 climate poll, and `r est_se(amr$estimate, amr$std_error)` higher in the antimicrobial-resistance poll, where the country estimates range from `r coef_text(amr_country("Tanzania")$estimate, 2)` in Tanzania to `r coef_text(amr_country("Nigeria")$estimate, 2)` in Nigeria. Pooled, the adjusted difference is `r interval(mu$median, mu$lower, mu$upper, 2)` standard deviations. A year after the climate poll, attendees still scored `r coef_text(climate_t3$estimate)` higher than controls (s.e. `r coef_text(climate_t3$std_error)`), `r persist`\% of the immediate adjusted difference. The controls gained `r coef_text(a1r$control_gain, 2)`, `r coef_text(climate$control_gain, 2)` and `r coef_text(amr$control_gain, 2)` of the items in the three studies.
 
-The antimicrobial-resistance poll randomized invitations, but its treated group here is the attendees, who were 23 to 92\% of invitees depending on the country. Attendees gained `r coef_text(amr$treated_gain)` of the items and randomized controls `r coef_text(amr$control_gain)`; the difference in changes is `r est_se(amr$gain_difference, amr$gain_difference_se)`. This comparison includes selection into attendance. The two American polls likewise compare attendees with separately drawn, uninvited controls. In America in One Room, attendees answered `r coef_text(selected$k1[1])` of T1 items correctly against `r coef_text(selected$k1[2])` for invitees who stayed home; in the climate poll the figures were `r coef_text(selected$k1[3])` and `r coef_text(selected$k1[4])`. Their differences in changes are `r est_se(a1r$gain_difference, a1r$gain_difference_se)` and `r est_se(climate$gain_difference, climate$gain_difference_se)`, respectively. Adjusting for T1 and comparing changes impose different restrictions on baseline differences; neither resolves selection into attendance.
+The antimicrobial-resistance poll randomized invitations, but its treated group here is the attendees, who were 23 to 92\% of invitees depending on the country. Attendees gained `r coef_text(amr$treated_gain)` of the items and randomized controls `r coef_text(amr$control_gain)`; the difference in changes is `r est_se(amr$gain_difference, amr$gain_difference_se)`. This comparison includes selection into attendance. The two American polls likewise compare attendees with separately drawn, uninvited controls. In America in One Room, attendees answered `r coef_text(selected$k1[1])` of T1 items correctly against `r coef_text(selected$k1[2])` for invitees who stayed home; in the climate poll the figures were `r coef_text(selected$k1[3])` and `r coef_text(selected$k1[4])`. Their differences in changes are `r est_se(a1r$gain_difference, a1r$gain_difference_se)` and `r est_se(climate$gain_difference, climate$gain_difference_se)`, respectively. Adjusting for T1 and comparing changes impose different restrictions on baseline differences; neither resolves selection into attendance. In Northern Ireland, returning attendees scored `r est_se(ni$estimate, ni$std_error)` more of the T3 items correctly than controls. This is an unadjusted cross-sectional difference: the controls had no T1 knowledge battery, and event attendance was self-selected.
 
-```{r learning, fig.cap = "Knowledge gains and adjusted attendee-control differences, in standard deviations of T1 knowledge, with 95\\% intervals. A: mean T2 minus T1 gain among participants, scaled by the poll's T1 standard deviation. B: adjusted attendee-control difference in T2, scaled by the control group's T1 standard deviation. Pooled estimates are from Bayesian random-effects meta-analyses.", fig.pos = "H", out.width = "100%"}
+```{r learning, fig.cap = "Knowledge gains and attendee-control differences, with 95\\% intervals. A: observed attendee T2 minus T1 gain in all 31 polls and pooled observed and guessing-adjusted learning, scaled by each poll's T1 standard deviation. B: T1-adjusted T2 attendee-control differences in three polls and their pooled estimate, plus the climate T3 follow-up; these use the control group's T1 standard deviation. Northern Ireland is an unadjusted T3 contrast, scaled by the control group's T3 standard deviation and excluded from the pooled control estimate. Pooled estimates use Bayesian random-effects meta-analysis.", fig.pos = "H", out.width = "100%"}
 figure("learning")
 ```
 
@@ -166,7 +169,7 @@ Table \ref{tab:models} shows the estimates. Among participants with less than a 
 
 If participants learn from each other, those placed with more knowledgeable groupmates should learn more. Estimating this requires that groupmates' characteristics be unrelated to one's own, which random assignment to groups ensures and self-selection does not. Organizers intend random assignment. We test it by regressing each participant's characteristic on the mean among the other members of the group, controlling for the mean among the other members of the poll, without which the test is biased toward finding negative sorting [@guryan2009]. The coefficients are near zero for T1 knowledge (`r est_se(assignment$estimate[1], assignment$std_error[1])`), gender (`r est_se(assignment$estimate[2], assignment$std_error[2])`) and age (`r est_se(assignment$estimate[3], assignment$std_error[3])`), and small for a bachelor's degree (`r est_se(assignment$estimate[4], assignment$std_error[4])`). Groups are composed as if at random.
 
-That makes group composition a natural experiment. Within each of `r peer("k1")$polls` polls, the `r nrow(gains)` above and America in One Room, we regress T2 knowledge on the other members' mean T1 knowledge, controlling for one's own and the poll's, and pool the estimates (Figure \ref{fig:peers}). The pooled effect is `r interval(peer("k1")$median, peer("k1")$lower, peer("k1")$upper)`: at the upper end, a group whose other members answered ten more points of the T1 items correctly would raise one's T2 score by `r round(10 * peer("k1")$upper, 1)` points. The share of women in the group has no detectable effect either (`r interval(peer("female")$median, peer("female")$lower, peer("female")$upper)`). The targeted measure of groupmates' knowledge on items each participant missed also has no detectable effect when included alongside the overall peer mean (Table \ref{tab:models} note). Group knowledge measured after the deliberation would show an effect for the wrong reason: groupmates' T2 answers reflect the experience they shared with the participant [@manski1993].
+That makes group composition a natural experiment. Within each of `r peer("k1")$polls` polls---the `r size("main", "polls")` historical polls in Table \ref{tab:models} and America in One Room---we regress T2 knowledge on the other members' mean T1 knowledge, controlling for one's own and the poll's, and pool the estimates (Figure \ref{fig:peers}). The pooled effect is `r interval(peer("k1")$median, peer("k1")$lower, peer("k1")$upper)`: at the upper end, a group whose other members answered ten more points of the T1 items correctly would raise one's T2 score by `r round(10 * peer("k1")$upper, 1)` points. The share of women in the group has no detectable effect either (`r interval(peer("female")$median, peer("female")$lower, peer("female")$upper)`). The targeted measure of groupmates' knowledge on items each participant missed also has no detectable effect when included alongside the overall peer mean (Table \ref{tab:models} note). Group knowledge measured after the deliberation would show an effect for the wrong reason: groupmates' T2 answers reflect the experience they shared with the participant [@manski1993].
 
 ```{r peers, fig.cap = "Effect of the other group members' mean T1 knowledge on own T2 knowledge, by poll, with 95\\% intervals. Each estimate controls for own T1 knowledge and the poll's leave-one-out mean, with standard errors clustered by small group; the pooled estimate is from a Bayesian random-effects meta-analysis.", out.width = "100%"}
 figure("peer_effects")
@@ -174,7 +177,7 @@ figure("peer_effects")
 
 # Conclusion
 
-Participants in Deliberative Polls gain factual knowledge, and attendees in the three control-group polls score higher than controls after adjusting for T1. Much of the adjusted gap lasts in the one poll with a year-later interview. Within the participant samples, observed gains are larger among those who start out knowing less. We find no evidence that the knowledge of particular groupmates affects those gains.
+Participants in Deliberative Polls gain factual knowledge, and attendees in the three polls with common baseline interviews score higher than controls after adjusting for T1. Northern Ireland's T3-only comparison points in the same direction but lacks baseline knowledge for controls. Much of the adjusted gap lasts in the one poll with a year-later interview. Within the participant samples, observed gains are larger among those who start out knowing less. We find no evidence that the knowledge of particular groupmates affects those gains.
 
 The attendee-control comparisons can reflect selection into attendance, even where invitations were randomized. The knowledge items are few and chosen by the organizers, so the gains concern facts the event emphasized.
 
@@ -182,21 +185,32 @@ The attendee-control comparisons can reflect selection into attendance, even whe
 
 <div id="refs"></div>
 
+\clearpage
 \appendix
+\renewcommand{\thetable}{A\arabic{table}}
+\setcounter{table}{0}
+\renewcommand{\thefigure}{A\arabic{figure}}
+\setcounter{figure}{0}
 
 # The Deliberative Polls {#app:polls}
+
+All `r nrow(polls)` polls with respondent-level knowledge items enter the before-and-after attendee gain analysis. `r sum(polls$analysis_sample == "Gain and group model")` also have the group and covariate data for Table \ref{tab:models}. Four provide control comparisons, including Northern Ireland's T3-only contrast.
 
 ```{r polls, results = "asis"}
 polls |>
   dplyr::transmute(
     poll, year,
     mode = dplyr::if_else(mode == "Online", "Online", "In person"),
-    control = dplyr::if_else(control_group, "Yes", "")
+    group_model = dplyr::if_else(
+      analysis_sample == "Gain and group model", "Yes", "No"
+    ),
+    control = dplyr::if_else(control_group, "Yes", "No")
   ) |>
-  purrr::set_names(c("Poll", "Year", "Mode", "Control")) |>
+  purrr::set_names(c("Poll", "Year", "Mode", "Group model", "Control")) |>
   knitr::kable(
-    format = "latex", booktabs = TRUE, longtable = TRUE, linesep = "", align = "lclc",
-    caption = "Polls with respondent-level knowledge-item answers at both waves. Control indicates a comparison group."
+    format = "latex", booktabs = TRUE, longtable = TRUE,
+    linesep = "", align = "lclcc",
+    caption = "Polls with respondent-level knowledge-item answers at both waves."
   ) |>
   print()
 ```
@@ -205,16 +219,22 @@ polls |>
 
 ```{r meta}
 meta |>
-  dplyr::filter(model %in% c("raw, pooled", "raw, by mode")) |>
+  dplyr::filter(model %in% c(
+    "raw, pooled", "raw, by mode", "guessing adjusted, pooled"
+  )) |>
   dplyr::mutate(
     parameter = dplyr::recode(parameter, mu = "Mean gain", face_to_face = "Face-to-face", online = "Online", tau = "Between-poll SD"),
-    model = dplyr::recode(model, "raw, pooled" = "Pooled", "raw, by mode" = "By mode"),
+    model = dplyr::recode(
+      model, "raw, pooled" = "Observed pooled",
+      "raw, by mode" = "Observed by mode",
+      "guessing adjusted, pooled" = "Guessing adjusted pooled"
+    ),
     dplyr::across(c(median, lower, upper), \(x) coef_text(x))
   ) |>
   knitr::kable(
     format = "latex", booktabs = TRUE, position = "H", align = "llrrr", linesep = "",
     col.names = c("Model", "Parameter", "Median", "2.5%", "97.5%"),
-    caption = "Bayesian random-effects meta-analysis of poll mean gains, in proportion correct"
+    caption = "Bayesian random-effects meta-analysis of observed and guessing-adjusted gains across 31 polls, in proportions of knowledge items"
   )
 ```
 

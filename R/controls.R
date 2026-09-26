@@ -14,7 +14,8 @@ control_panel <- function(
   labels <- c(
     "america-in-one-room-2019" = "America in One Room 2019",
     "a1r-climate-2021" = "America in One Room: Climate 2021",
-    "amr-2024" = "Antimicrobial Resistance 2024"
+    "amr-2024" = "Antimicrobial Resistance 2024",
+    "northern-ireland-2007" = "Northern Ireland 2007"
   )
   out <- people |>
     dplyr::left_join(outcomes, by = c("poll_id", "respondent_id"),
@@ -63,6 +64,27 @@ effect <- function(data, contrast, treated_value, control_value, weights = NULL)
   )
 }
 
+ni_t3_effect <- function(data) {
+  data <- data |>
+    dplyr::filter(poll_id == "northern-ireland-2007", !is.na(k3))
+  stopifnot(sum(data$treated == 1) == 93L,
+            sum(data$treated == 0) == 150L)
+  fit <- stats::lm(k3 ~ treated, data = data)
+  vc <- sandwich::vcovCL(fit, cluster = ~cluster, type = "HC1")
+  control_sd <- stats::sd(data$k3[data$treated == 0])
+  tibble::tibble(
+    study = "Northern Ireland 2007",
+    comparison = "T3 attendee vs control, no baseline",
+    scale = "percent",
+    estimate = stats::coef(fit)[["treated"]],
+    std_error = sqrt(vc["treated", "treated"]),
+    control_t1_sd = NA_real_, control_t3_sd = control_sd,
+    n_treated = sum(data$treated == 1),
+    n_control = sum(data$treated == 0),
+    estimate_sd = estimate / control_sd
+  )
+}
+
 control_effects <- function(data) {
   a1r <- read_a1r(data)
   climate <- read_climate(data)
@@ -74,7 +96,7 @@ control_effects <- function(data) {
       paste0("Attended vs randomized control: ", country), "percent"
     )
   })
-  c(list(
+  adjusted <- c(list(
     list(a1r, "treated", 1, 0, NULL, "Attended vs uninvited control", "percent"),
     list(a1r, "treated", 1, 0, "weight", "Attended vs uninvited control, weighted", "percent"),
     list(climate, "treated", 1, 0, NULL, "Attended vs uninvited control", "percent"),
@@ -89,6 +111,7 @@ control_effects <- function(data) {
     }) |>
     purrr::list_rbind() |>
     dplyr::mutate(estimate_sd = estimate / control_t1_sd)
+  dplyr::bind_rows(adjusted, ni_t3_effect(data))
 }
 
 # Who shows up: T1 knowledge of attendees vs invitees who did not attend.

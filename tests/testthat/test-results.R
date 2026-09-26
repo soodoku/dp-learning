@@ -9,11 +9,15 @@ test_that("A1R 2019 scoring reproduces the published 46% -> 60%", {
   expect_near(effects$control_gain, 0.01, 0.005)
 })
 
-test_that("control comparisons use only the three item-linked polls", {
+test_that("control comparisons distinguish the T3-only poll", {
   effects <- read_output("control_effects.csv")
   pooled <- read_output("meta_control.csv")
-  expect_equal(dplyr::n_distinct(effects$study), 3L)
+  expect_equal(dplyr::n_distinct(effects$study), 4L)
   expect_true(all(pooled$studies == 3L))
+  ni <- dplyr::filter(effects, study == "Northern Ireland 2007")
+  expect_equal(c(ni$n_treated, ni$n_control), c(93L, 150L))
+  expect_true(is.na(ni$control_t1_sd))
+  expect_true(is.finite(ni$control_t3_sd))
 })
 
 test_that("small-group assignment shows no peer sorting", {
@@ -47,9 +51,32 @@ test_that("missed-item peer scores ignore absent answers and empty groups", {
 
 test_that("gains are computed for all item-linked respondent polls", {
   gains <- read_output("poll_gains.csv")
-  expect_equal(nrow(gains), 21)
-  expect_equal(sum(gains$respondents), 5869L)
+  expect_equal(nrow(gains), 31)
+  expect_equal(sum(gains$respondents), 10598L)
+  expect_equal(sum(gains$respondents[!is.na(gains$dpnum)]), 5869L)
+  expect_equal(sum(is.na(gains$dpnum)), 10L)
+  effects <- read_output("control_effects.csv") |>
+    dplyr::filter(comparison %in% c(
+      "Attended vs uninvited control", "Attended vs randomized control"
+    ))
+  expect_equal(sum(gains$respondents[gains$poll_id %in% c(
+    "america-in-one-room-2019", "a1r-climate-2021", "amr-2024"
+  )]), sum(effects$n_treated))
+  expect_equal(anyDuplicated(gains$poll_id), 0L)
   expect_true(all(gains$raw_se > 0))
+})
+
+test_that("guessing-adjusted pooling uses the same poll samples", {
+  gains <- read_output("poll_gains.csv")
+  adjusted <- read_output("guessing_gains.csv")
+  meta <- read_output("meta.csv")
+  expect_setequal(adjusted$poll_id, gains$poll_id)
+  expect_equal(adjusted$respondents[match(gains$poll_id, adjusted$poll_id)],
+               gains$respondents)
+  expect_true(all(is.finite(adjusted$adjusted_se) & adjusted$adjusted_se > 0))
+  expect_true(all(adjusted$adjusted >= 0 & adjusted$adjusted <= 1))
+  expect_equal(sum(meta$model == "guessing adjusted SD, pooled" &
+                     meta$parameter == "mu"), 1L)
 })
 
 test_that("missed-item peer model uses the historical item sample", {

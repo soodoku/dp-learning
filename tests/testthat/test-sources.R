@@ -30,7 +30,10 @@ test_that("both score waves are rebuilt from respondent item answers", {
 test_that("appendix poll coverage comes from upstream data", {
   polls <- appendix_polls()
   expect_equal(nrow(polls), 31L)
-  expect_equal(sum(polls$control_group), 3L)
+  expect_equal(sum(polls$control_group), 4L)
+  expect_equal(sum(polls$analysis_sample == "Gain and group model"), 21L)
+  expect_equal(sum(polls$analysis_sample == "Gain only"), 6L)
+  expect_equal(sum(polls$analysis_sample == "Gain and control comparison"), 4L)
   expect_false(anyDuplicated(polls$poll) > 0L)
   expect_false(any(polls$poll == "Marousi, Greece"))
   expect_false(any(polls$poll == "Tanzania"))
@@ -42,7 +45,10 @@ test_that("control analyses include only polls with respondent item answers", {
   panel <- control_panel()
   expect_setequal(
     unique(panel$poll_id),
-    c("america-in-one-room-2019", "a1r-climate-2021", "amr-2024")
+    c(
+      "america-in-one-room-2019", "a1r-climate-2021", "amr-2024",
+      "northern-ireland-2007"
+    )
   )
   expect_true(all(unique(panel$poll_id) %in% unique(read_analysis_responses()$poll_id)))
 })

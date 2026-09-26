@@ -36,8 +36,21 @@ frame <- dplyr::left_join(
   relationship = "one-to-one"
 )
 
-gains <- poll_gains(frame)
+control_data <- control_panel()
+gains <- poll_gains(frame) |>
+  dplyr::left_join(historical_polls, by = "dpnum", relationship = "one-to-one") |>
+  dplyr::bind_rows(additional_poll_gains(
+    read_analysis_scores(), read_poll_registry(), historical_polls$poll_id
+  )) |>
+  dplyr::bind_rows(control_poll_gains(control_data, read_poll_registry())) |>
+  dplyr::arrange(dplyr::desc(raw))
+stopifnot(nrow(gains) == 31L, !anyDuplicated(gains$poll_id))
 write_output(gains, "poll_gains.csv")
+guessing <- guessing_adjusted_gains(
+  historical_items, read_analysis_responses(), frame, historical_polls,
+  control_data, gains
+)
+write_output(guessing, "guessing_gains.csv")
 write_output(appendix_polls(), "polls.csv")
 
 models <- list(
@@ -54,12 +67,15 @@ list(
   meta_gain(gains, "raw", "raw_se") |> tidy_meta("raw, pooled"),
   meta_mode(gains, "raw", "raw_se") |> tidy_meta("raw, by mode"),
   meta_gain(gains, "raw_sd", "raw_sd_se") |> tidy_meta("raw SD, pooled"),
-  meta_mode(gains, "raw_sd", "raw_sd_se") |> tidy_meta("raw SD, by mode")
+  meta_mode(gains, "raw_sd", "raw_sd_se") |> tidy_meta("raw SD, by mode"),
+  meta_gain(guessing, "adjusted", "adjusted_se") |>
+    tidy_meta("guessing adjusted, pooled"),
+  meta_gain(guessing, "adjusted_sd", "adjusted_sd_se") |>
+    tidy_meta("guessing adjusted SD, pooled")
 ) |>
   purrr::list_rbind() |>
   write_output("meta.csv")
 
-control_data <- control_panel()
 effects <- control_effects(control_data)
 write_output(effects, "control_effects.csv")
 write_output(meta_control(effects), "meta_control.csv")
