@@ -1,5 +1,44 @@
 read_out <- \(name) readr::read_csv(file.path("tabs", name), show_col_types = FALSE)
 
+read_item_catalog <- function(root = Sys.getenv("DP_DATA_ROOT", unset = "../dp-data")) {
+  readr::read_csv(
+    file.path(root, "metadata", "items.csv"),
+    col_types = readr::cols(.default = readr::col_character())
+  )
+}
+
+item_appendix_markdown <- function(root = Sys.getenv("DP_DATA_ROOT", unset = "../dp-data")) {
+  items <- read_item_catalog(root)
+  polls <- readr::read_csv(file.path(root, "metadata", "polls.csv"), show_col_types = FALSE)
+  items <- dplyr::left_join(
+    items, dplyr::select(polls, "poll_id", "title", "year"),
+    by = "poll_id", relationship = "many-to-one"
+  ) |>
+    dplyr::arrange(.data$year, .data$title)
+  stopifnot(!anyNA(items$title), !anyDuplicated(items[c("poll_id", "item_id")]))
+
+  lines <- character()
+  for (poll_id in unique(items$poll_id)) {
+    group <- items[items$poll_id == poll_id, ]
+    lines <- c(lines, sprintf("## %s (%s)\n", group$title[1], group$year[1]))
+    for (i in seq_len(nrow(group))) {
+      item <- group[i, ]
+      question <- item$question
+      type <- item$response_type
+      source <- item$source_column_t1
+      detail <- sprintf("**%s** (%s; source `%s`).", question, type, source)
+      if (!is.na(item$answer_choices)) {
+        detail <- c(detail, paste0("Choices: ", item$answer_choices, "."))
+      }
+      key <- paste0(item$correct_answer, " [", item$correct_codes, "].")
+      detail <- c(detail, paste("Scored correct:", key))
+      if (!is.na(item$coding_note)) detail <- c(detail, item$coding_note)
+      lines <- c(lines, paste0("- ", paste(detail, collapse = " "), "\n"))
+    }
+  }
+  paste(lines, collapse = "\n")
+}
+
 num <- \(x, digits = 2) formatC(x, format = "f", digits = digits)
 
 # Drops the leading zero, as for coefficients and proportions in the text.
@@ -31,23 +70,23 @@ term_labels <- c(
   k1 = "T1 knowledge",
   "educationHigh school" = "High school",
   "educationBA or more" = "BA or more",
-  "k1:educationHigh school" = "T1 knowledge x high school",
-  "k1:educationBA or more" = "T1 knowledge x BA or more",
+  "k1:educationHigh school" = "T1 x high school",
+  "k1:educationBA or more" = "T1 x BA or more",
   age_decades = "Age (decades)",
   extremity = "Attitude extremity",
   group_size = "Group size",
-  group_k1 = "Group knowledge: others' mean T1",
-  group_k1_items = "Group knowledge: others' T1 on items missed",
+  group_k1 = "Groupmates' mean T1",
+  group_k1_items = "Groupmates' T1 on missed questions",
   heterogeneity = "Opinion heterogeneity",
   female = "Female",
-  p_female = "Proportion female in group",
-  "female:p_female" = "Female x proportion female",
+  p_female = "Group share women",
+  "female:p_female" = "Female x group share women",
   minority = "Minority",
-  p_minority = "Proportion minority in group",
-  "minority:p_minority" = "Minority x proportion minority",
+  p_minority = "Group share minority",
+  "minority:p_minority" = "Minority x group share minority",
   online = "Online",
-  poll_k1 = "Poll mean T1 knowledge",
-  read_briefing = "Read briefing materials"
+  poll_k1 = "Poll mean T1",
+  read_briefing = "Briefing reading"
 )
 
 row_labels <- term_labels

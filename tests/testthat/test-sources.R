@@ -24,6 +24,19 @@ test_that("appendix poll coverage comes from upstream data", {
   expect_true(any(polls$poll == "Bulgarian National Crime Poll" & polls$year == 2002L))
 })
 
+test_that("item appendix renders every canonical upstream question", {
+  catalog <- readr::read_csv(
+    file.path(dp_data_root(), "metadata", "items.csv"),
+    col_types = readr::cols(.default = readr::col_character())
+  )
+  appendix <- item_appendix_markdown()
+  expect_equal(lengths(regmatches(appendix, gregexpr("\\n- \\*\\*", appendix))), nrow(catalog))
+  headings <- gregexpr("## ", appendix, fixed = TRUE)
+  expect_equal(lengths(regmatches(appendix, headings)), dplyr::n_distinct(catalog$poll_id))
+  expect_match(appendix, "Open answer coded into source categories", fixed = TRUE)
+  expect_match(appendix, "Archived variable/value labels are truncated", fixed = TRUE)
+})
+
 test_that("source verification rejects missing and altered files", {
   root <- tempfile("upstream data ")
   dir.create(root)
