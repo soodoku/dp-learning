@@ -6,13 +6,13 @@ How much do participants in Deliberative Polls learn, does participation cause l
 
 [Manuscript](ms/main.pdf) · [Manuscript source](ms/main.Rmd) · [Results](tabs/) · [Figures](figs/)
 
-The analysis starts from respondent answers to knowledge questions before and after deliberation. It reports poll gains, treatment-control comparisons, and models of T2 knowledge conditional on T1 and group composition. The main pre/post models use scores rebuilt from item answers in 21 polls. Four polls have control groups; the Tanzania control study supplies a standardized knowledge index rather than linked item answers.
+The analysis includes polls with respondent-level knowledge-item answers before and after deliberation. It reports poll gains, attendee-control comparisons, and models of T2 knowledge conditional on T1 and group composition. The main pre/post models use scores rebuilt from item answers in 21 polls. Three polls have control groups. Those comparisons can reflect selection into attendance.
 
-The [dp-data repository](https://github.com/soodoku/dp-data) holds the data and their provenance, poll metadata, source checksums, and generated-file manifests. This repository reads those upstream records. The [poll appendix data](tabs/polls.csv) gives each poll one row, including the control studies. The item appendix is generated from the [canonical knowledge-item catalog](https://github.com/soodoku/dp-data/blob/main/metadata/items.csv). Marousi remains in the poll inventory but is excluded from item-response analyses because its available participant file has scores without respondent-level answers. Table 1 also examines groupmates' T1 answers to the questions each respondent got wrong at T1. The deposited item batteries are used for the latent learning estimates.
+The [dp-data repository](https://github.com/soodoku/dp-data) holds the data and their provenance, poll metadata, source checksums, and generated-file manifests. This repository reads its typed Parquet poll, item, participant, item-response, and score tables. The [poll appendix data](tabs/polls.csv) gives each included poll one row. The item appendix is generated from the [canonical knowledge-item catalog](https://github.com/soodoku/dp-data/blob/main/metadata/items.csv). The regression table also examines groupmates' T1 answers to the questions each respondent got wrong at T1. The latent learning estimates use the source-survey batteries rebuilt in dp-data; [its comparison audit](https://github.com/soodoku/dp-data/blob/main/audit/knowledge_parity.csv) records differences from the Cor–Sood deposit.
 
-The America in One Room, climate, and antimicrobial-resistance analysis files also contain respondent item answers. The Tanzania file used here supplies a standardized knowledge index.
+The America in One Room, climate, and antimicrobial-resistance studies provide respondent item answers for both attendees and controls.
 
-The upstream respondent export recovers briefing-material reading reports for nine polls. Table 1 uses the source-linked reports from all nine.
+The upstream respondent export recovers briefing-material reading reports for nine polls. The regression table uses the source-linked reports from all nine.
 
 ## Reproduce
 

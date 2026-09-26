@@ -1,9 +1,13 @@
 test_that("upstream manifests identify available and unchanged files", {
   manifest <- upstream_source_manifest()
-  expect_equal(nrow(manifest), 9L)
+  expect_equal(nrow(manifest), 7L)
   expect_false(anyDuplicated(manifest$source) > 0L)
   expect_true(verify_sources())
-  expect_named(control_source_paths(), c("a1r", "tanzania", "climate", "amr"))
+  expect_setequal(
+    manifest$source,
+    c("distortions_responses", "briefing_reading", "polls", "items",
+      "participants", "item_responses", "scores")
+  )
 })
 
 test_that("briefing reports link nine upstream polls to historical participants", {
@@ -24,26 +28,27 @@ test_that("both score waves are rebuilt from respondent item answers", {
 })
 
 test_that("appendix poll coverage comes from upstream data", {
-  source <- read_polardata()
-  items <- read_historical_items()
-  frame <- analysis_frame(source, item_scores_for_respondents(items, source))
-  scores <- arrow::read_parquet(source_path("knowledge_scores"))
-  polls <- appendix_polls(frame, scores, items)
-  expect_equal(nrow(polls), 33L)
-  expect_equal(sum(polls$control_group), 4L)
-  expect_equal(sum(polls$item_answers), 31L)
+  polls <- appendix_polls()
+  expect_equal(nrow(polls), 31L)
+  expect_equal(sum(polls$control_group), 3L)
   expect_false(anyDuplicated(polls$poll) > 0L)
-  expect_false(polls$item_answers[polls$poll == "Marousi, Greece"])
-  expect_false(polls$item_answers[polls$poll == "Tanzania"])
+  expect_false(any(polls$poll == "Marousi, Greece"))
+  expect_false(any(polls$poll == "Tanzania"))
   expect_true(polls$control_group[polls$poll == "America in One Room"])
   expect_true(any(polls$poll == "Bulgarian National Crime Poll" & polls$year == 2002L))
 })
 
-test_that("item appendix renders every canonical upstream question", {
-  catalog <- readr::read_csv(
-    file.path(dp_data_root(), "metadata", "items.csv"),
-    col_types = readr::cols(.default = readr::col_character())
+test_that("control analyses include only polls with respondent item answers", {
+  panel <- control_panel()
+  expect_setequal(
+    unique(panel$poll_id),
+    c("america-in-one-room-2019", "a1r-climate-2021", "amr-2024")
   )
+  expect_true(all(unique(panel$poll_id) %in% unique(read_analysis_responses()$poll_id)))
+})
+
+test_that("item appendix renders every canonical upstream question", {
+  catalog <- read_item_catalog()
   appendix <- item_appendix_markdown()
   expect_equal(lengths(regmatches(appendix, gregexpr("\\n- \\*\\*", appendix))), nrow(catalog))
   headings <- gregexpr("## ", appendix, fixed = TRUE)
@@ -83,8 +88,8 @@ test_that("the upstream location can be overridden", {
   Sys.setenv(DP_DATA_ROOT = "/alternative/dp-data")
   expect_identical(dp_data_root(), "/alternative/dp-data")
   expect_identical(
-    source_path("historical_items", manifest = manifest),
-    "/alternative/dp-data/output/respondent/historical_knowledge_items.parquet"
+    source_path("item_responses", manifest = manifest),
+    "/alternative/dp-data/output/analysis/analysis_item_responses.parquet"
   )
 })
 
@@ -94,7 +99,7 @@ test_that("baseline items join by respondent ID regardless of input order", {
     pollid = 96, pollgroup = c(2, 1)
   )
   items <- tibble::tibble(
-    poll_id = "san-mateo-2008", wave = 1L,
+    poll_id = "san-mateo-2008", wave = "t1",
     historical_respondent_id = c("1", "2", "1", "2"),
     item_id = c("a", "b", "b", "a"), correct = c(0L, 1L, 1L, 1L)
   )

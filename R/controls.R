@@ -1,114 +1,44 @@
-control_source_paths <- function() {
-  studies <- c("a1r", "tanzania", "climate", "amr")
-  rlang::set_names(vapply(studies, source_path, character(1L)), studies)
-}
-
-# Proportion correct; don't know, skipped and refused count as not knowing,
-# as in the Deliberative Poll scores.
-score_battery <- function(data, items, key) {
-  purrr::map2(items, key, \(item, answer) as.numeric(data[[item]] == answer)) |>
-    purrr::map(\(x) dplyr::coalesce(x, 0)) |>
-    as.data.frame() |>
-    rowMeans()
-}
-
-# Key checked against the published results: attendees 46% -> 60%, controls +1
-# point (Fishkin et al. 2021). PK4 (Paris Agreement) counts "All of the above":
-# Russia had not ratified when fieldwork began.
-a1r_key <- c(2, 1, 1, 4, 4, 2, 2)
-
-read_a1r <- function(path) {
-  data <- readr::read_tsv(path, show_col_types = FALSE)
-  tibble::tibble(
-    study = "America in One Room 2019",
-    id = seq_len(nrow(data)),
-    treated = data$CONDITION,
-    panel = data$POST == 1,
-    k1 = score_battery(data, paste0("PK", 1:7), a1r_key),
-    k2 = dplyr::if_else(
-      data$POST == 1, score_battery(data, paste0("T2PK", 1:7), a1r_key), NA_real_
-    ),
-    weight = dplyr::if_else(data$CONDITION == 1, data$WEIGHT_DELEGATE, data$WEIGHT_CONTROL),
-    ba = dplyr::if_else(data$EDUC4 %in% 1:4, as.numeric(data$EDUC4 == 4), NA_real_),
-    cluster = seq_len(nrow(data))
+control_panel <- function(
+  participants = read_analysis_participants(),
+  scores = read_analysis_scores(),
+  responses = read_analysis_responses()
+) {
+  item_polls <- unique(responses$poll_id)
+  people <- participants |>
+    dplyr::filter(source_dataset == "control", poll_id %in% item_polls)
+  outcomes <- scores |>
+    dplyr::filter(source_dataset == "control", poll_id %in% item_polls) |>
+    dplyr::select("poll_id", "respondent_id", "wave", "score") |>
+    tidyr::pivot_wider(names_from = wave, values_from = score,
+                       names_prefix = "k")
+  labels <- c(
+    "america-in-one-room-2019" = "America in One Room 2019",
+    "a1r-climate-2021" = "America in One Room: Climate 2021",
+    "amr-2024" = "Antimicrobial Resistance 2024"
   )
+  out <- people |>
+    dplyr::left_join(outcomes, by = c("poll_id", "respondent_id"),
+                     relationship = "one-to-one") |>
+    dplyr::transmute(
+      study = unname(labels[poll_id]), poll_id, id = respondent_id,
+      arm, treated = as.numeric(arm == "attended"), panel,
+      k1 = kt1, k2 = kt2, k3 = kt3,
+      weight, ba, female, group = small_group_id,
+      cluster = cluster_id, country
+    )
+  stopifnot(!anyNA(out$study), !anyDuplicated(out[c("poll_id", "id")]))
+  out
 }
 
-# Key reproduces the weighted percent correct in the published results for
-# every item at T1 and T2.
-climate_key <- c(1, 1, 3, 1, 5, 1, 1, 1)
+read_a1r <- function(data) dplyr::filter(data, poll_id == "america-in-one-room-2019")
+read_climate <- function(data) dplyr::filter(data, poll_id == "a1r-climate-2021")
+read_amr <- function(data) dplyr::filter(data, poll_id == "amr-2024")
 
-read_climate <- function(path) {
-  data <- readr::read_tsv(path, show_col_types = FALSE)
-  attended <- data$P_DELEGATE == 1
-  control_panel <- data$P_TREATMENT == 0 & data$P_DELEGATE == 0
-  tibble::tibble(
-    study = "America in One Room: Climate 2021",
-    id = seq_len(nrow(data)),
-    treated = as.numeric(data$P_TREATMENT == 1),
-    panel = attended | control_panel,
-    k1 = score_battery(data, paste0("Q", 17:24), climate_key),
-    k2 = dplyr::if_else(
-      attended | control_panel, score_battery(data, paste0("T2Q", 17:24), climate_key), NA_real_
-    ),
-    k3 = dplyr::if_else(
-      !is.na(data$T3Q17), score_battery(data, paste0("T3Q", 17:24), climate_key), NA_real_
-    ),
-    weight = data$WEIGHT1,
-    ba = dplyr::if_else(data$EDUC5 %in% 1:5, as.numeric(data$EDUC5 >= 4), NA_real_),
-    cluster = seq_len(nrow(data))
-  )
-}
-
-# The authors' standardized knowledge index; item-level missing codes are
-# undocumented. Village is the unit of randomization.
-read_tanzania <- function(path) {
-  data <- haven::read_dta(path) |>
-    dplyr::filter(sample == "Citizens" | haven::as_factor(sample) == "Citizens")
-  arm <- dplyr::case_when(
-    data$zdelib == 1 ~ "deliberation",
-    data$zoinfo == 1 ~ "information",
-    data$zspill == 1 ~ "spillover",
-    data$z == 0 ~ "control"
-  )
-  tibble::tibble(
-    study = "Tanzania 2015",
-    id = seq_len(nrow(data)),
-    arm = arm,
-    k1 = as.numeric(data$H600),
-    k2 = as.numeric(data$H601),
-    cluster = as.character(data$VillageID)
-  )
-}
-
-# Key from the study's expert panel (Mendelson et al. 2025, Table 14). The
-# release stores "don't know" as blank, scored as not knowing.
-amr_key <- c(4, 4, 5, 5, 4, 5)
 amr_countries <- c("Brazil", "Colombia", "India", "Indonesia", "Nigeria", "Tanzania")
 
-read_amr <- function(path) {
-  data <- readr::read_csv(path, show_col_types = FALSE)
-  data$k <- score_battery(data, paste0("knowledge_", 1:6), amr_key)
-  data |>
-    dplyr::select(ID, Group, Country, Weight, Time, k, education_ISCE) |>
-    tidyr::pivot_wider(names_from = Time, values_from = k, names_prefix = "wave") |>
-    dplyr::transmute(
-      study = "Antimicrobial Resistance 2024",
-      id = ID,
-      treated = Group,
-      country = amr_countries[Country],
-      k1 = wave0,
-      k2 = wave1,
-      weight = Weight,
-      ba = as.numeric(education_ISCE >= 6),
-      cluster = ID
-    )
-}
-
-# ANCOVA: T2 on treatment and T1, which is more precise than the gain-score
-# difference-in-differences and unbiased under randomization. For the A1R
-# studies, whose controls are a separate uninvited sample, it assumes that
-# attendees and controls with the same T1 score would have changed alike.
+# ANCOVA adjusts attendee-control differences in T2 for T1 knowledge.
+# The gain-score comparison uses a different baseline restriction. Both
+# comparisons can reflect selection into attendance.
 effect <- function(data, contrast, treated_value, control_value, weights = NULL) {
   data <- data |>
     dplyr::filter(.data[[contrast]] %in% c(treated_value, control_value), !is.na(k1), !is.na(k2)) |>
@@ -133,12 +63,11 @@ effect <- function(data, contrast, treated_value, control_value, weights = NULL)
   )
 }
 
-control_effects <- function(paths) {
-  a1r <- read_a1r(paths[["a1r"]])
-  climate <- read_climate(paths[["climate"]])
-  tanzania <- read_tanzania(paths[["tanzania"]])
+control_effects <- function(data) {
+  a1r <- read_a1r(data)
+  climate <- read_climate(data)
   climate_t3 <- dplyr::mutate(climate, k2 = k3)
-  amr <- read_amr(paths[["amr"]])
+  amr <- read_amr(data)
   amr_countries_list <- purrr::map(amr_countries, \(country) {
     list(
       dplyr::filter(amr, .data$country == .env$country), "treated", 1, 0, NULL,
@@ -151,9 +80,6 @@ control_effects <- function(paths) {
     list(climate, "treated", 1, 0, NULL, "Attended vs uninvited control", "percent"),
     list(climate, "treated", 1, 0, "weight", "Attended vs uninvited control, weighted", "percent"),
     list(climate_t3, "treated", 1, 0, NULL, "Attended vs control, one year later", "percent"),
-    list(tanzania, "arm", "deliberation", "control", NULL, "Deliberation vs control villages", "index"),
-    list(tanzania, "arm", "information", "control", NULL, "Information vs control villages", "index"),
-    list(tanzania, "arm", "deliberation", "information", NULL, "Deliberation vs information", "index"),
     list(amr, "treated", 1, 0, NULL, "Attended vs randomized control", "percent"),
     list(amr, "treated", 1, 0, "weight", "Attended vs randomized control, weighted", "percent")
   ), amr_countries_list) |>
@@ -166,23 +92,23 @@ control_effects <- function(paths) {
 }
 
 # Who shows up: T1 knowledge of attendees vs invitees who did not attend.
-selection <- function(paths) {
-  a1r <- readr::read_tsv(paths[["a1r"]], show_col_types = FALSE)
-  climate <- readr::read_tsv(paths[["climate"]], show_col_types = FALSE)
-  tibble::tibble(
-    study = c(rep("America in One Room 2019", 2), rep("America in One Room: Climate 2021", 2)),
-    group = rep(c("attended", "invited, did not attend"), 2),
-    k1 = c(
-      mean(score_battery(a1r, paste0("PK", 1:7), a1r_key)[a1r$CONDITION == 1 & a1r$POST == 1]),
-      mean(score_battery(a1r, paste0("PK", 1:7), a1r_key)[a1r$CONDITION == 1 & a1r$POST == 0]),
-      mean(score_battery(climate, paste0("Q", 17:24), climate_key)[climate$P_DELEGATE == 1]),
-      mean(score_battery(climate, paste0("Q", 17:24), climate_key)[climate$P_DELEGATE == -99])
-    ),
-    n = c(
-      sum(a1r$CONDITION == 1 & a1r$POST == 1), sum(a1r$CONDITION == 1 & a1r$POST == 0),
-      sum(climate$P_DELEGATE == 1), sum(climate$P_DELEGATE == -99)
-    )
-  )
+selection <- function(data) {
+  data |>
+    dplyr::filter(
+      poll_id %in% c("america-in-one-room-2019", "a1r-climate-2021"),
+      arm %in% c("attended", "invited_nonattender")
+    ) |>
+    dplyr::summarise(
+      k1 = mean(k1), n = dplyr::n(),
+      .by = c(study, arm)
+    ) |>
+    dplyr::mutate(group = dplyr::recode(
+      arm, attended = "attended",
+      invited_nonattender = "invited, did not attend"
+    )) |>
+    dplyr::mutate(arm = factor(arm, levels = c("attended", "invited_nonattender"))) |>
+    dplyr::arrange(study, arm) |>
+    dplyr::select(study, group, k1, n)
 }
 
 # Does participation help those who start out knowing less, or those with less
@@ -210,16 +136,14 @@ heterogeneity <- function(data, contrast, treated_value, control_value, moderato
   )
 }
 
-control_heterogeneity <- function(paths) {
-  a1r <- read_a1r(paths[["a1r"]])
-  climate <- read_climate(paths[["climate"]])
-  amr <- read_amr(paths[["amr"]])
-  tanzania <- read_tanzania(paths[["tanzania"]])
+control_heterogeneity <- function(data) {
+  a1r <- read_a1r(data)
+  climate <- read_climate(data)
+  amr <- read_amr(data)
   list(
     list(a1r, "treated", 1, 0, "k1"), list(a1r, "treated", 1, 0, "ba"),
     list(climate, "treated", 1, 0, "k1"), list(climate, "treated", 1, 0, "ba"),
-    list(amr, "treated", 1, 0, "k1"), list(amr, "treated", 1, 0, "ba"),
-    list(tanzania, "arm", "deliberation", "control", "k1")
+    list(amr, "treated", 1, 0, "k1"), list(amr, "treated", 1, 0, "ba")
   ) |>
     purrr::map(\(x) {
       heterogeneity(x[[1]], x[[2]], x[[3]], x[[4]], x[[5]]) |>

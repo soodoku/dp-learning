@@ -4,8 +4,8 @@
 # which ignores the pairing of respondents and so understates precision. Items
 # with no variation in either wave cannot be estimated and are dropped.
 # Don't-know is scored as incorrect, as in the percent-correct measures.
-irt_learning <- function(file_key, data_dir) {
-  poll <- read_items(file.path(data_dir, paste0(file_key, ".csv")))
+irt_learning <- function(poll_id, responses) {
+  poll <- read_items(poll_id, responses)
   score <- \(x) dplyr::mutate(x, dplyr::across(dplyr::everything(), \(v) dplyr::coalesce(v, 0L)))
   items <- rbind(score(poll$pre), score(poll$post))
   varies <- purrr::map2_lgl(score(poll$pre), score(poll$post), \(a, b) {
@@ -24,7 +24,7 @@ irt_learning <- function(file_key, data_dir) {
   )
   t2 <- mirt::coef(fit, printSE = TRUE)$t2$GroupPars
   tibble::tibble(
-    file_key = file_key,
+    poll_id = poll_id,
     items_used = ncol(items),
     theta_gain = t2["par", "MEAN_1"],
     theta_gain_se = t2["SE", "MEAN_1"],

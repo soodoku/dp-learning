@@ -23,16 +23,14 @@ peer_effect <- function(poll, peer) {
   )
 }
 
-a1r_group_frame <- function(path) {
-  data <- readr::read_tsv(path, show_col_types = FALSE) |>
-    dplyr::filter(CONDITION == 1, POST == 1)
+a1r_group_frame <- function(panel) {
+  data <- panel |>
+    dplyr::filter(poll_id == "america-in-one-room-2019", arm == "attended")
   tibble::tibble(
     pollid = "a1r2019",
     pollname = "America in One Room 2019",
-    group = paste0("a1r_", data$GROUP),
-    k1 = score_battery(data, paste0("PK", 1:7), a1r_key),
-    k2 = score_battery(data, paste0("T2PK", 1:7), a1r_key),
-    female = dplyr::if_else(data$GENDER %in% 1:2, as.numeric(data$GENDER == 2), NA_real_)
+    group = paste0("a1r_", data$group),
+    k1 = data$k1, k2 = data$k2, female = data$female
   )
 }
 

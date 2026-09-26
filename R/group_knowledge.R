@@ -1,5 +1,13 @@
-read_historical_items <- function(path = source_path("historical_items")) {
-  arrow::read_parquet(path)
+read_historical_items <- function(path = source_path("item_responses")) {
+  bridge <- read_analysis_participants() |>
+    dplyr::filter(source_dataset == "historical") |>
+    dplyr::select("poll_id", "respondent_id", "historical_respondent_id")
+  arrow::read_parquet(path) |>
+    dplyr::filter(source_dataset == "historical") |>
+    dplyr::left_join(
+      bridge, by = c("poll_id", "respondent_id"),
+      relationship = "many-to-one"
+    )
 }
 
 item_scores_for_respondents <- function(items, polardata, root = dp_data_root()) {
@@ -9,7 +17,8 @@ item_scores_for_respondents <- function(items, polardata, root = dp_data_root())
   scores <- items |>
     dplyr::inner_join(poll_ids, by = "poll_id", relationship = "many-to-one") |>
     dplyr::transmute(
-      dpnum, caseid = as.numeric(historical_respondent_id), wave, correct
+      dpnum, caseid = as.numeric(historical_respondent_id),
+      wave = as.integer(sub("^t", "", wave)), correct
     ) |>
     dplyr::inner_join(
       dplyr::distinct(polardata, dpnum, caseid),
@@ -28,7 +37,7 @@ item_scores_for_respondents <- function(items, polardata, root = dp_data_root())
 t1_items_for_poll <- function(poll_id, dpnum, polardata, knowledge) {
   poll <- dplyr::filter(polardata, .data$dpnum == .env$dpnum)
   items <- knowledge |>
-    dplyr::filter(.data$poll_id == .env$poll_id, wave == 1L) |>
+    dplyr::filter(.data$poll_id == .env$poll_id, wave == "t1") |>
     dplyr::transmute(
       caseid = as.numeric(historical_respondent_id),
       item = item_id, correct

@@ -44,8 +44,8 @@ prepost <- read_output("poll_gains.csv") |>
   with_interval(estimate, se)
 controlled <- read_output("control_effects.csv") |>
   dplyr::filter(comparison %in% c(
-    "Attended vs uninvited control", "Deliberation vs control villages",
-    "Attended vs randomized control", "Attended vs control, one year later"
+    "Attended vs uninvited control", "Attended vs randomized control",
+    "Attended vs control, one year later"
   )) |>
   dplyr::transmute(
     panel = controlled_panel,
@@ -62,7 +62,7 @@ learning <- dplyr::bind_rows(
   prepost,
   pooled_row(dplyr::filter(read_output("meta.csv"), model == "raw SD, pooled", parameter == "mu"), prepost_panel),
   controlled,
-  pooled_row(dplyr::filter(read_output("meta_causal.csv"), parameter == "mu"), controlled_panel)
+  pooled_row(dplyr::filter(read_output("meta_control.csv"), parameter == "mu"), controlled_panel)
 )
 p <- forest(learning, "Learning, in standard deviations of T1 knowledge (95% CI)")
 save_evidence(p, "figs/learning", width = 6.5, height = 7)

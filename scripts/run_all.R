@@ -10,7 +10,6 @@ frame <- dplyr::left_join(
   frame, read_briefing_scores(), by = c("dpnum", "caseid"), relationship = "one-to-one"
 )
 stopifnot(dplyr::n_distinct(frame$dpnum[!is.na(frame$read_briefing)]) == 9L)
-cor_dir <- extract_cor_data()
 
 dir.create("tabs", showWarnings = FALSE)
 write_output <- \(x, name) readr::write_csv(x, file.path("tabs", name), na = "")
@@ -36,20 +35,22 @@ frame <- dplyr::left_join(
 
 gains <- poll_gains(frame)
 write_output(gains, "poll_gains.csv")
-write_output(appendix_polls(
-  frame, arrow::read_parquet(source_path("knowledge_scores")), historical_items
-), "polls.csv")
+write_output(appendix_polls(), "polls.csv")
 
 cor_polls <- cor_poll_map()
-cor_learning <- cor_polls$file_key |>
-  purrr::map(poll_learning, data_dir = cor_dir) |>
+cor_responses <- read_analysis_responses() |>
+  dplyr::filter(source_dataset == "cor_sood")
+cor_learning <- cor_polls$poll_id |>
+  purrr::map(poll_learning, responses = cor_responses) |>
   purrr::list_rbind() |>
   dplyr::left_join(
-    purrr::list_rbind(purrr::map(cor_polls$file_key, irt_learning, data_dir = cor_dir)),
-    by = "file_key",
+    purrr::list_rbind(purrr::map(
+      cor_polls$poll_id, irt_learning, responses = cor_responses
+    )),
+    by = "poll_id",
     relationship = "one-to-one"
   ) |>
-  dplyr::left_join(dplyr::select(cor_polls, file_key, cor_poll_name), by = "file_key")
+  dplyr::left_join(dplyr::select(cor_polls, poll_id, cor_poll_name), by = "poll_id")
 write_output(cor_learning, "item_learning.csv")
 
 models <- list(
@@ -71,13 +72,13 @@ list(
   purrr::list_rbind() |>
   write_output("meta.csv")
 
-control_paths <- control_source_paths()
-effects <- control_effects(control_paths)
+control_data <- control_panel()
+effects <- control_effects(control_data)
 write_output(effects, "control_effects.csv")
-write_output(meta_causal(effects), "meta_causal.csv")
-write_output(control_heterogeneity(control_paths), "control_heterogeneity.csv")
-write_output(selection(control_paths), "selection.csv")
+write_output(meta_control(effects), "meta_control.csv")
+write_output(control_heterogeneity(control_data), "control_heterogeneity.csv")
+write_output(selection(control_data), "selection.csv")
 
-peers <- peer_effects(frame, a1r_group_frame(control_paths[["a1r"]]))
+peers <- peer_effects(frame, a1r_group_frame(control_data))
 write_output(peers, "peer_effects.csv")
 write_output(pool_peer_effects(peers), "peer_effects_pooled.csv")

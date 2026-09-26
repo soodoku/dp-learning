@@ -42,18 +42,15 @@ tidy_meta <- function(fit, model) {
   )
 }
 
-# Pools the causal estimates across control-group studies in control-group SD
-# units, overall and by mode.
-meta_causal <- function(effects) {
+# Pools the adjusted attendee-control comparisons in control-group SD units.
+meta_control <- function(effects) {
   primary <- effects |>
     dplyr::filter(comparison %in% c(
-      "Attended vs uninvited control", "Deliberation vs control villages", "Attended vs randomized control"
+      "Attended vs uninvited control", "Attended vs randomized control"
     )) |>
-    dplyr::filter(!(study == "America in One Room: Climate 2021" & grepl("later", comparison))) |>
     dplyr::mutate(
       y = estimate / control_t1_sd,
-      sigma = std_error / control_t1_sd,
-      online = as.numeric(study %in% c("America in One Room: Climate 2021", "Antimicrobial Resistance 2024"))
+      sigma = std_error / control_t1_sd
     )
   pooled <- bayesmeta::bayesmeta(y = primary$y, sigma = primary$sigma, labels = primary$study, tau.prior = tau_prior)
   tibble::tibble(

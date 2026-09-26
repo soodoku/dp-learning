@@ -1,15 +1,12 @@
 read_out <- \(name) readr::read_csv(file.path("tabs", name), show_col_types = FALSE)
 
 read_item_catalog <- function(root = Sys.getenv("DP_DATA_ROOT", unset = "../dp-data")) {
-  readr::read_csv(
-    file.path(root, "metadata", "items.csv"),
-    col_types = readr::cols(.default = readr::col_character())
-  )
+  arrow::read_parquet(file.path(root, "output", "analysis", "analysis_items.parquet"))
 }
 
 item_appendix_markdown <- function(root = Sys.getenv("DP_DATA_ROOT", unset = "../dp-data")) {
   items <- read_item_catalog(root)
-  polls <- readr::read_csv(file.path(root, "metadata", "polls.csv"), show_col_types = FALSE)
+  polls <- arrow::read_parquet(file.path(root, "output", "analysis", "analysis_polls.parquet"))
   items <- dplyr::left_join(
     items, dplyr::select(polls, "poll_id", "title", "year"),
     by = "poll_id", relationship = "many-to-one"

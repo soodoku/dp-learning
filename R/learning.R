@@ -1,13 +1,20 @@
-# Item matrices keep don't-know as NA so the latent class model can treat it
-# as its own response; the percent-correct scores count it as wrong.
-read_items <- function(path) {
-  data <- readr::read_csv(path, na = c("", "NA"), show_col_types = FALSE)
-  items <- setdiff(names(data), "female")
-  half <- length(items) / 2L
-  as_int <- \(names) dplyr::mutate(data[names], dplyr::across(dplyr::everything(), as.integer))
-  pre <- as_int(items[seq_len(half)])
-  post <- as_int(items[half + seq_len(half)])
-  names(post) <- names(pre)
+# The rebuilt battery keeps don't-know as NA for the latent class fit.
+read_items <- function(poll_id, responses) {
+  data <- responses |>
+    dplyr::filter(source_dataset == "cor_sood", .data$poll_id == .env$poll_id)
+  wide <- function(wave_name) {
+    data |>
+      dplyr::filter(wave == wave_name) |>
+      dplyr::select("respondent_id", "item_id", "correct") |>
+      tidyr::pivot_wider(names_from = item_id, values_from = correct) |>
+      dplyr::arrange(respondent_id)
+  }
+  pre <- wide("t1")
+  post <- wide("t2")
+  stopifnot(identical(pre$respondent_id, post$respondent_id))
+  pre <- dplyr::select(pre, -"respondent_id")
+  post <- dplyr::select(post, -"respondent_id")
+  stopifnot(identical(names(pre), names(post)))
   list(pre = pre, post = post)
 }
 
@@ -30,13 +37,13 @@ fit_item_model <- function(pre, post) {
   fit
 }
 
-poll_learning <- function(file_key, data_dir) {
-  poll <- read_items(file.path(data_dir, paste0(file_key, ".csv")))
+poll_learning <- function(poll_id, responses) {
+  poll <- read_items(poll_id, responses)
   fit <- fit_item_model(poll$pre, poll$post)
   score <- \(x) as.matrix(dplyr::mutate(x, dplyr::across(dplyr::everything(), \(v) dplyr::coalesce(v, 0L))))
   raw_gain <- rowMeans(score(poll$post) - score(poll$pre))
   tibble::tibble(
-    file_key = file_key,
+    poll_id = poll_id,
     respondents = nrow(poll$pre),
     items = ncol(poll$pre),
     k1 = mean(score(poll$pre)),

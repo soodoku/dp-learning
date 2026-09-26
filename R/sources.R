@@ -7,25 +7,23 @@ dp_data_root <- function() {
 }
 
 upstream_source_ids <- c(
-  distortions_responses = "polardata_tab",
-  historical_items = "historical_knowledge_items_parquet",
+  distortions_responses = "polardata_parquet",
   briefing_reading = "briefing_reading_parquet",
-  knowledge_scores = "knowledge_scores_parquet",
-  cor_sood_replication = "cor-sood-replication",
-  a1r = "a1r-2019",
-  tanzania = "tanzania-2015",
-  climate = "a1r-climate-2021",
-  amr = "amr-2024"
+  polls = "analysis_polls_parquet",
+  items = "analysis_items_parquet",
+  participants = "analysis_participants_parquet",
+  item_responses = "analysis_item_responses_parquet",
+  scores = "analysis_scores_parquet"
 )
 
 upstream_source_manifest <- function(root = dp_data_root()) {
-  raw <- readr::read_csv(file.path(root, "metadata", "source_files.csv"), show_col_types = FALSE) |>
-    dplyr::transmute(id = source_id, path, sha256)
-  generated <- c("output/manifest.csv", "output/polardata/manifest.csv", "output/respondent/manifest.csv") |>
+  catalog <- c(
+    "output/polardata/manifest.csv", "output/respondent/manifest.csv",
+    "output/analysis/manifest.csv"
+  ) |>
     purrr::map(\(path) readr::read_csv(file.path(root, path), show_col_types = FALSE)) |>
     purrr::list_rbind() |>
     dplyr::transmute(id = paste(table, tools::file_ext(path), sep = "_"), path, sha256)
-  catalog <- dplyr::bind_rows(raw, generated)
   selected <- catalog[match(unname(upstream_source_ids), catalog$id), c("path", "sha256")]
   if (anyNA(selected$path) || anyDuplicated(catalog$id)) {
     stop("Missing or duplicate entries in dp-data source manifests.")
@@ -33,18 +31,30 @@ upstream_source_manifest <- function(root = dp_data_root()) {
   dplyr::mutate(selected, source = names(upstream_source_ids), .before = 1)
 }
 
-source_path <- function(source, manifest = upstream_source_manifest(), root = dp_data_root()) {
+source_path <- function(source, manifest = upstream_source_manifest(root), root = dp_data_root()) {
   entry <- manifest[manifest$source == source, ]
   if (nrow(entry) != 1L) stop("Expected exactly one source entry: ", source)
   file.path(root, entry$path)
 }
 
 read_poll_registry <- function(root = dp_data_root()) {
-  readr::read_csv(file.path(root, "metadata", "polls.csv"), show_col_types = FALSE)
+  arrow::read_parquet(source_path("polls", root = root))
 }
 
-read_poll_aliases <- function(root = dp_data_root()) {
-  readr::read_csv(file.path(root, "metadata", "poll_aliases.csv"), show_col_types = FALSE)
+read_item_catalog <- function(root = dp_data_root()) {
+  arrow::read_parquet(source_path("items", root = root))
+}
+
+read_analysis_participants <- function(root = dp_data_root()) {
+  arrow::read_parquet(source_path("participants", root = root))
+}
+
+read_analysis_responses <- function(root = dp_data_root()) {
+  arrow::read_parquet(source_path("item_responses", root = root))
+}
+
+read_analysis_scores <- function(root = dp_data_root()) {
+  arrow::read_parquet(source_path("scores", root = root))
 }
 
 read_respondent_sources <- function(root = dp_data_root()) {
@@ -67,43 +77,31 @@ read_briefing_scores <- function(path = source_path("briefing_reading"), root = 
 }
 
 cor_poll_map <- function(root = dp_data_root()) {
-  aliases <- read_poll_aliases(root) |>
-    dplyr::filter(system == "cor-sood-file") |>
-    dplyr::transmute(poll_id, file_key = alias)
+  ids <- read_analysis_participants(root) |>
+    dplyr::filter(source_dataset == "cor_sood") |>
+    dplyr::distinct(poll_id)
   out <- dplyr::left_join(
-    aliases, dplyr::select(read_poll_registry(root), poll_id, cor_poll_name = title),
+    ids, dplyr::select(read_poll_registry(root), poll_id, cor_poll_name = title),
     by = "poll_id", relationship = "one-to-one"
   )
-  stopifnot(nrow(out) == 23L, !anyNA(out$cor_poll_name), !anyDuplicated(out$file_key))
+  stopifnot(nrow(out) == 23L, !anyNA(out$cor_poll_name))
   out
 }
 
-appendix_polls <- function(frame, item_scores, historical_items, root = dp_data_root()) {
-  aliases <- read_poll_aliases(root) |>
-    dplyr::filter(system == "legacy-pollid") |>
-    dplyr::transmute(poll_id, pollid = as.numeric(alias))
-  participant_ids <- frame |>
-    dplyr::distinct(pollid) |>
-    dplyr::left_join(aliases, by = "pollid", relationship = "one-to-one")
-  stopifnot(!anyNA(participant_ids$poll_id))
-  catalog_ids <- readr::read_csv(
-    file.path(root, "metadata", "items.csv"),
-    col_types = readr::cols_only(poll_id = readr::col_character())
-  )$poll_id
-  item_ids <- unique(c(item_scores$poll_id, historical_items$poll_id, catalog_ids))
+appendix_polls <- function(root = dp_data_root()) {
+  participants <- read_analysis_participants(root)
+  item_ids <- unique(read_analysis_responses(root)$poll_id)
   registry <- read_poll_registry(root)
-  control_ids <- registry$poll_id[registry$collection == "public-replication"]
-  included_ids <- union(union(union(participant_ids$poll_id, item_ids), control_ids), "marousi-2006")
+  control_ids <- unique(participants$poll_id[participants$source_dataset == "control"])
   out <- registry |>
-    dplyr::filter(poll_id %in% included_ids) |>
+    dplyr::filter(poll_id %in% item_ids) |>
     dplyr::mutate(
       control_group = poll_id %in% control_ids,
-      item_answers = poll_id %in% item_ids,
       mode = dplyr::recode(mode, "face-to-face" = "Face to face", online = "Online")
     ) |>
     dplyr::arrange(year, title) |>
-    dplyr::transmute(poll = title, year, topic, mode, control_group, item_answers)
-  stopifnot(nrow(out) == length(included_ids))
+    dplyr::transmute(poll = title, year, topic, mode, control_group)
+  stopifnot(nrow(out) == length(item_ids))
   out
 }
 
@@ -130,21 +128,5 @@ verify_sources <- function(manifest = upstream_source_manifest(), root = dp_data
 }
 
 read_polardata <- function(path = source_path("distortions_responses")) {
-  readr::read_tsv(path, show_col_types = FALSE, guess_max = Inf) |>
-    dplyr::distinct(dplyr::across(-X), .keep_all = TRUE)
-}
-
-extract_cor_data <- function(
-  archive = source_path("cor_sood_replication"),
-  target = project_file("build", "cor-sood")
-) {
-  dir.create(target, recursive = TRUE, showWarnings = FALSE)
-  outer <- file.path(target, "outer")
-  dir.create(outer, recursive = TRUE, showWarnings = FALSE)
-  utils::unzip(archive, files = "replication/data.zip", exdir = outer, overwrite = TRUE)
-  data_zip <- file.path(outer, "replication", "data.zip")
-  data_dir <- file.path(target, "data")
-  dir.create(data_dir, recursive = TRUE, showWarnings = FALSE)
-  utils::unzip(data_zip, exdir = data_dir, overwrite = TRUE)
-  file.path(data_dir, "data")
+  arrow::read_parquet(path)
 }

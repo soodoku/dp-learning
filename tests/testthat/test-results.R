@@ -2,11 +2,12 @@ expect_near <- \(actual, expected, tolerance) expect_lte(abs(actual - expected),
 
 read_output <- \(name) readr::read_csv(file.path("../../tabs", name), show_col_types = FALSE)
 
-test_that("item learning reproduces Cor and Sood (2016)", {
+test_that("item learning uses the rebuilt source-survey batteries", {
   learning <- read_output("item_learning.csv")
   expect_equal(nrow(learning), 23)
-  expect_near(mean(learning$raw), 0.159, 0.001)
-  expect_near(mean(learning$lca), 0.208, 0.001)
+  expect_equal(learning$raw, learning$k2 - learning$k1, tolerance = 1e-8)
+  expect_near(mean(learning$raw), 0.1611, 0.001)
+  expect_near(mean(learning$lca), 0.2110, 0.001)
   expect_true(all(learning$converged))
 })
 
@@ -17,11 +18,11 @@ test_that("A1R 2019 scoring reproduces the published 46% -> 60%", {
   expect_near(effects$control_gain, 0.01, 0.005)
 })
 
-test_that("Tanzania effects match Sandefur et al. appendix Table 6", {
-  effects <- read_output("control_effects.csv") |> dplyr::filter(study == "Tanzania 2015")
-  get <- \(label) effects$estimate[effects$comparison == label]
-  expect_near(get("Deliberation vs control villages"), 0.330, 0.01)
-  expect_near(get("Information vs control villages"), 0.126, 0.01)
+test_that("control comparisons use only the three item-linked polls", {
+  effects <- read_output("control_effects.csv")
+  pooled <- read_output("meta_control.csv")
+  expect_equal(dplyr::n_distinct(effects$study), 3L)
+  expect_true(all(pooled$studies == 3L))
 })
 
 test_that("small-group assignment shows no peer sorting", {
@@ -60,8 +61,11 @@ test_that("gains are computed for all item-linked respondent polls", {
 
 test_that("missed-item peer model uses the historical item sample", {
   items <- read_output("models.csv") |> dplyr::filter(model == "items")
+  main <- read_output("models.csv") |> dplyr::filter(model == "main")
   expect_equal(unique(items$polls), 21L)
   expect_equal(unique(items$n), 5588L)
+  expect_equal(unique(main$n) - unique(items$n), 170L)
+  expect_true(all(c("group_k1", "group_k1_items") %in% items$term))
   expect_true(all(items$r2_marginal >= 0 & items$r2_conditional <= 1))
 })
 
