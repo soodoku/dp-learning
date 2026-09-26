@@ -14,9 +14,6 @@ analysis_frame <- function(polardata, item_scores) {
     all(abs(polardata$item_k2 - polardata$t2know) < 1e-6)
   )
   polardata |>
-    dplyr::mutate(
-      ppage = dplyr::if_else(ppage < 16 | ppage > 100, NA_real_, ppage)
-    ) |>
     dplyr::transmute(
       dpnum, pollid, pollname, caseid,
       group = paste(pollid, pollgroup, sep = "_"),
