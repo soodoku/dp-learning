@@ -1,9 +1,15 @@
 test_that("upstream manifests identify available and unchanged files", {
   manifest <- upstream_source_manifest()
-  expect_equal(nrow(manifest), 9L)
+  expect_equal(nrow(manifest), 10L)
   expect_false(anyDuplicated(manifest$source) > 0L)
   expect_true(verify_sources())
   expect_named(control_source_paths(), c("a1r", "tanzania", "climate", "amr"))
+})
+
+test_that("briefing reports link nine upstream polls to historical participants", {
+  reading <- read_briefing_scores()
+  expect_equal(dplyr::n_distinct(reading$dpnum[!is.na(reading$read_briefing)]), 9L)
+  expect_false(anyDuplicated(reading[c("dpnum", "caseid")]) > 0L)
 })
 
 test_that("appendix poll coverage comes from upstream data", {

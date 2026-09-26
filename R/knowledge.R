@@ -29,8 +29,7 @@ analysis_frame <- function(polardata) {
       p_minority = pminority,
       extremity = attextreme,
       heterogeneity = genvar,
-      group_size = groupsize,
-      read_briefing = readbrief
+      group_size = groupsize
     ) |>
     # Salience: participants' mean T1 knowledge. The whole-sample mean in the
     # release is missing for Australia and equals this in half the polls.

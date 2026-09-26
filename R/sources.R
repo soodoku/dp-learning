@@ -9,6 +9,7 @@ dp_data_root <- function() {
 upstream_source_ids <- c(
   distortions_responses = "polardata_tab",
   historical_items = "historical_knowledge_items_parquet",
+  briefing_reading = "briefing_reading_parquet",
   knowledge_scores = "knowledge_scores_parquet",
   cor_sood_replication = "cor-sood-replication",
   greece = "dp-learning-greece",
@@ -49,6 +50,21 @@ read_poll_aliases <- function(root = dp_data_root()) {
 
 read_respondent_sources <- function(root = dp_data_root()) {
   readr::read_csv(file.path(root, "metadata", "respondent_sources.csv"), show_col_types = FALSE)
+}
+
+read_briefing_scores <- function(path = source_path("briefing_reading"), root = dp_data_root()) {
+  out <- arrow::read_parquet(path) |>
+    dplyr::left_join(
+      dplyr::select(read_respondent_sources(root), "poll_id", "dpnum"),
+      by = "poll_id", relationship = "many-to-one"
+    ) |>
+    dplyr::filter(!is.na(.data$historical_respondent_id)) |>
+    dplyr::transmute(
+      dpnum, caseid = as.numeric(.data$historical_respondent_id),
+      read_briefing = reading_score
+    )
+  stopifnot(!anyNA(out$dpnum), !anyNA(out$caseid), !anyDuplicated(out[c("dpnum", "caseid")]))
+  out
 }
 
 cor_poll_map <- function(root = dp_data_root()) {

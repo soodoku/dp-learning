@@ -2,6 +2,10 @@ purrr::walk(list.files("R", full.names = TRUE), source)
 
 verify_sources()
 frame <- analysis_frame(dplyr::bind_rows(read_polardata(), read_greece()))
+frame <- dplyr::left_join(
+  frame, read_briefing_scores(), by = c("dpnum", "caseid"), relationship = "one-to-one"
+)
+stopifnot(dplyr::n_distinct(frame$dpnum[!is.na(frame$read_briefing)]) == 9L)
 cor_dir <- extract_cor_data()
 
 dir.create("tabs", showWarnings = FALSE)

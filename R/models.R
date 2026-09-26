@@ -11,7 +11,7 @@ minority_formula <- stats::update(main_formula, . ~ . + minority * p_minority)
 # linked item-level data.
 items_formula <- stats::update(main_formula, . ~ . - group_k1 + group_k1_items)
 
-# Respondent reports of briefing-material reading are available in four polls.
+# Source-linked respondent reports of briefing-material reading are available.
 # Poll-level terms are replaced by poll intercepts.
 briefing_formula <- stats::update(
   main_formula,

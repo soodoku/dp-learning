@@ -64,6 +64,12 @@ test_that("missed-item peer model uses the historical item sample", {
   expect_true(all(items$r2_marginal >= 0 & items$r2_conditional <= 1))
 })
 
+test_that("briefing model uses all source-linked reading reports", {
+  briefing <- read_output("models.csv") |> dplyr::filter(model == "briefing")
+  expect_equal(unique(briefing$polls), 9L)
+  expect_equal(unique(briefing$n), 2626L)
+})
+
 test_that("AMR 2024 counts match the published Extended Data Table 2", {
   effects <- read_output("control_effects.csv") |>
     dplyr::filter(study == "Antimicrobial Resistance 2024", grepl("control: ", comparison))

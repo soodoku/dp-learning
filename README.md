@@ -12,6 +12,8 @@ The [dp-data repository](https://github.com/soodoku/dp-data) holds the data and 
 
 The America in One Room, climate, and antimicrobial-resistance analysis files also contain respondent item answers. The Tanzania file used here supplies a standardized knowledge index.
 
+The upstream respondent export recovers briefing-material reading reports for nine of the 22 historical polls. The historical analysis file had this measure for four; five more were found in the retained poll surveys. Table 2 uses the source-linked reports from all nine.
+
 ## Reproduce
 
 Install R 4.6, Pandoc, and XeLaTeX. Clone `dp-data` beside this repository, then run:
