@@ -1,68 +1,73 @@
-# Participant-level mean gain (T2 - T1 proportion correct) by poll.
-poll_gains <- function(frame) {
-  se <- \(x) stats::sd(x, na.rm = TRUE) / sqrt(sum(!is.na(x)))
-  frame |>
+# One paired attendee record per person, selected from the canonical dp-data
+# participant and score tables. Overlapping historical and Cor--Sood source
+# rows represent the same poll, so the historical linkage takes priority.
+attendee_panel <- function(
+  participants = read_analysis_participants(),
+  scores = read_analysis_scores(),
+  polls = read_poll_registry()
+) {
+  paired <- scores |>
+    dplyr::filter(wave %in% c("t1", "t2"), scale == "proportion_correct") |>
+    dplyr::select("poll_id", "source_dataset", "respondent_id", "wave", "score") |>
+    tidyr::pivot_wider(names_from = wave, values_from = score) |>
+    dplyr::filter(!is.na(t1), !is.na(t2))
+  available <- participants |>
+    dplyr::inner_join(
+      paired, by = c("poll_id", "source_dataset", "respondent_id"),
+      relationship = "one-to-one"
+    )
+  historical_ids <- unique(available$poll_id[
+    available$source_dataset == "historical" & available$panel
+  ])
+  cor_ids <- unique(available$poll_id[
+    available$source_dataset == "cor_sood" &
+      !available$poll_id %in% historical_ids
+  ])
+  out <- available |>
+    dplyr::filter(
+      (source_dataset == "historical" & panel) |
+        (source_dataset == "cor_sood" & poll_id %in% cor_ids) |
+        (source_dataset == "control" & arm == "attended" &
+           !poll_id %in% c(historical_ids, cor_ids))
+    ) |>
+    dplyr::left_join(
+      dplyr::select(polls, "poll_id", pollname = "title", "mode"),
+      by = "poll_id", relationship = "many-to-one"
+    ) |>
+    dplyr::transmute(
+      poll_id, pollname, source_dataset, respondent_id,
+      k1 = t1, k2 = t2,
+      online = as.integer(mode == "online"),
+      female, ba,
+      group = dplyr::if_else(
+        is.na(small_group_id), NA_character_,
+        paste(poll_id, small_group_id, sep = "_")
+      )
+    )
+  stopifnot(
+    dplyr::n_distinct(out$poll_id) == 31L,
+    !anyDuplicated(out[c("poll_id", "respondent_id")]),
+    !anyNA(out$pollname), !anyNA(out$online),
+    all(out$k1 >= 0 & out$k1 <= 1),
+    all(out$k2 >= 0 & out$k2 <= 1)
+  )
+  out
+}
+
+poll_gains <- function(panel) {
+  se <- \(x) stats::sd(x) / sqrt(length(x))
+  panel |>
     dplyr::mutate(raw_gain = k2 - k1) |>
     dplyr::summarise(
       respondents = dplyr::n(),
       online = dplyr::first(online),
-      k1_mean = mean(k1, na.rm = TRUE),
-      k2_mean = mean(k2, na.rm = TRUE),
-      raw = mean(raw_gain, na.rm = TRUE),
-      raw_se = se(raw_gain),
-      k1_sd = stats::sd(k1, na.rm = TRUE),
-      .by = c(dpnum, pollname)
+      k1_mean = mean(k1), k2_mean = mean(k2),
+      raw = mean(raw_gain), raw_se = se(raw_gain),
+      k1_sd = stats::sd(k1),
+      .by = c(poll_id, pollname)
     ) |>
-    dplyr::mutate(raw_sd = raw / k1_sd, raw_sd_se = raw_se / k1_sd) |>
+    dplyr::mutate(
+      raw_sd = raw / k1_sd, raw_sd_se = raw_se / k1_sd
+    ) |>
     dplyr::arrange(dplyr::desc(raw))
-}
-
-# Polls represented by source-survey item batteries but absent from the
-# historical respondent panel still contribute to the pre/post comparison.
-additional_poll_gains <- function(scores, polls, historical_ids) {
-  se <- \(x) stats::sd(x) / sqrt(length(x))
-  scores |>
-    dplyr::filter(
-      source_dataset == "cor_sood", !poll_id %in% historical_ids,
-      wave %in% c("t1", "t2")
-    ) |>
-    dplyr::select(poll_id, respondent_id, wave, score) |>
-    tidyr::pivot_wider(names_from = wave, values_from = score) |>
-    dplyr::filter(!is.na(t1), !is.na(t2)) |>
-    dplyr::left_join(
-      dplyr::select(polls, poll_id, pollname = title, mode),
-      by = "poll_id", relationship = "many-to-one"
-    ) |>
-    dplyr::mutate(raw_gain = t2 - t1, online = as.integer(mode == "online")) |>
-    dplyr::summarise(
-      respondents = dplyr::n(), online = dplyr::first(online),
-      k1_mean = mean(t1), k2_mean = mean(t2), raw = mean(raw_gain),
-      raw_se = se(raw_gain), k1_sd = stats::sd(t1),
-      .by = c(poll_id, pollname)
-    ) |>
-    dplyr::mutate(
-      dpnum = NA_real_, raw_sd = raw / k1_sd,
-      raw_sd_se = raw_se / k1_sd
-    )
-}
-
-control_poll_gains <- function(data, polls) {
-  se <- \(x) stats::sd(x) / sqrt(length(x))
-  data |>
-    dplyr::filter(treated == 1, !is.na(k1), !is.na(k2)) |>
-    dplyr::left_join(
-      dplyr::select(polls, poll_id, pollname = title, mode),
-      by = "poll_id", relationship = "many-to-one"
-    ) |>
-    dplyr::mutate(raw_gain = k2 - k1, online = as.integer(mode == "online")) |>
-    dplyr::summarise(
-      respondents = dplyr::n(), online = dplyr::first(online),
-      k1_mean = mean(k1), k2_mean = mean(k2), raw = mean(raw_gain),
-      raw_se = se(raw_gain), k1_sd = stats::sd(k1),
-      .by = c(poll_id, pollname)
-    ) |>
-    dplyr::mutate(
-      dpnum = NA_real_, raw_sd = raw / k1_sd,
-      raw_sd_se = raw_se / k1_sd
-    )
 }

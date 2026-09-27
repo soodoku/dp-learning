@@ -59,46 +59,44 @@ guessing_poll_gain <- function(poll_id, responses, respondents, k1_sd,
   )
 }
 
-guessing_adjusted_gains <- function(historical_items, source_responses,
-                                    frame, historical_polls, control_data, gains,
-                                    n_resamples = 200L) {
-  historical <- historical_items |>
-    dplyr::inner_join(historical_polls, by = "poll_id",
-                      relationship = "many-to-one") |>
-    dplyr::mutate(caseid = as.numeric(historical_respondent_id)) |>
+guessing_adjusted_gains <- function(panel, source_responses, gains,
+                                    n_resamples = 200L, reuse = NULL) {
+  responses <- source_responses |>
+    dplyr::filter(wave %in% c("t1", "t2")) |>
     dplyr::inner_join(
-      dplyr::distinct(frame, dpnum, caseid), by = c("dpnum", "caseid"),
+      dplyr::select(panel, "poll_id", "source_dataset", "respondent_id"),
+      by = c("poll_id", "source_dataset", "respondent_id"),
       relationship = "many-to-one"
     ) |>
     dplyr::select(poll_id, respondent_id, wave, item_id, correct)
-  stopifnot(!anyNA(historical$correct))
-  additional <- source_responses |>
-    dplyr::filter(
-      source_dataset == "cor_sood",
-      !poll_id %in% historical_polls$poll_id
-    ) |>
-    dplyr::select(poll_id, respondent_id, wave, item_id, correct)
-  control_ids <- control_data |>
-    dplyr::filter(treated == 1, !is.na(k1), !is.na(k2)) |>
-    dplyr::transmute(poll_id, respondent_id = id)
-  controlled <- source_responses |>
-    dplyr::filter(source_dataset == "control", wave %in% c("t1", "t2")) |>
-    dplyr::inner_join(control_ids, by = c("poll_id", "respondent_id"),
-                      relationship = "many-to-one") |>
-    dplyr::select(poll_id, respondent_id, wave, item_id, correct)
-  responses <- dplyr::bind_rows(historical, additional, controlled)
   stopifnot(!anyDuplicated(responses[c("poll_id", "respondent_id", "wave", "item_id")]))
-  purrr::pmap(
-    dplyr::arrange(dplyr::select(gains, poll_id, respondents, k1_sd), poll_id),
+  retained <- tibble::tibble(poll_id = character())
+  if (!is.null(reuse)) {
+    retained <- reuse |>
+      dplyr::select(-"pollname") |>
+      dplyr::inner_join(
+        dplyr::select(gains, "poll_id", new_n = "respondents", "k1_sd"),
+        by = "poll_id", relationship = "one-to-one"
+      ) |>
+      dplyr::filter(
+        respondents == new_n,
+        abs(adjusted / adjusted_sd - k1_sd) < 1e-10
+      ) |>
+      dplyr::select(-"new_n", -"k1_sd")
+  }
+  fit_gains <- dplyr::anti_join(gains, retained, by = "poll_id")
+  computed <- purrr::pmap(
+    dplyr::arrange(dplyr::select(fit_gains, poll_id, respondents, k1_sd), poll_id),
     \(poll_id, respondents, k1_sd) {
       guessing_poll_gain(
         poll_id, responses, respondents, k1_sd,
         n_resamples = n_resamples,
-        seed = 20260926L + match(poll_id, sort(gains$poll_id))
+        seed = 20260926L + match(poll_id, sort(unique(source_responses$poll_id)))
       )
     }
   ) |>
-    purrr::list_rbind() |>
+    purrr::list_rbind()
+  dplyr::bind_rows(retained, computed) |>
     dplyr::left_join(
       dplyr::select(gains, poll_id, pollname),
       by = "poll_id", relationship = "one-to-one"

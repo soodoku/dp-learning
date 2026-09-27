@@ -41,7 +41,7 @@ forest <- function(data, x_label) {
 # comparisons by the reference group's observed-wave SD.
 prepost_panel <- "A. Attendees before\nand after"
 controlled_panel <- "B. Attendees versus\ncontrols"
-prepost <- read_output("poll_gains.csv") |>
+prepost <- read_output("poll_gains_main.csv") |>
   dplyr::transmute(
     panel = prepost_panel,
     label = paste0(pollname, dplyr::if_else(online == 1, " (online)", "")),
@@ -93,6 +93,6 @@ peers <- read_output("peer_effects.csv") |>
   dplyr::transmute(panel = "", label = poll, estimate, se = std_error, pooled = FALSE) |>
   with_interval(estimate, se) |>
   dplyr::bind_rows(pooled_row(dplyr::filter(read_output("peer_effects_pooled.csv"), peer == "k1"), ""))
-p <- forest(peers, "Effect of groupmates' mean T1 knowledge (95% CI)") +
+p <- forest(peers, "Association of groupmates' mean T1 knowledge (95% CI)") +
   ggplot2::theme(strip.text = ggplot2::element_blank())
-save_evidence(p, "figs/peer_effects", width = 6.5, height = 5)
+save_evidence(p, "figs/peer_effects", width = 6.5, height = 7.5)

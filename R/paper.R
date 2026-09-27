@@ -75,7 +75,7 @@ term_labels <- c(
   "k1:educationBA or more" = "T1 x BA or more",
   age_decades = "Age (decades)",
   extremity = "Attitude extremity",
-  group_size = "Group size",
+  group_size = "Paired respondents in group",
   group_k1 = "Groupmates' mean T1",
   group_k1_items = "Groupmates' T1 on missed questions",
   heterogeneity = "Opinion heterogeneity",

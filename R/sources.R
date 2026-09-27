@@ -76,26 +76,30 @@ read_briefing_scores <- function(path = source_path("briefing_reading"), root = 
   out
 }
 
-appendix_polls <- function(root = dp_data_root()) {
+appendix_polls <- function(
+  root = dp_data_root(),
+  group_ids = NULL
+) {
   participants <- read_analysis_participants(root)
   item_ids <- unique(read_analysis_responses(root)$poll_id)
   registry <- read_poll_registry(root)
+  if (is.null(group_ids)) {
+    panel <- attendee_panel(
+      participants, read_analysis_scores(root), registry
+    )
+    group_ids <- unique(core_group_frame(panel)$poll_id)
+  }
   control_ids <- unique(participants$poll_id[participants$source_dataset == "control"])
-  group_ids <- unique(participants$poll_id[participants$source_dataset == "historical"])
   out <- registry |>
     dplyr::filter(poll_id %in% item_ids) |>
     dplyr::mutate(
       control_group = poll_id %in% control_ids,
-      analysis_sample = dplyr::case_when(
-        control_group ~ "Gain and control comparison",
-        poll_id %in% group_ids ~ "Gain and group model",
-        .default = "Gain only"
-      ),
+      group_model = poll_id %in% group_ids,
       mode = dplyr::recode(mode, "face-to-face" = "Face to face", online = "Online")
     ) |>
     dplyr::arrange(year, title) |>
     dplyr::transmute(poll = title, year, topic, mode, control_group,
-                     analysis_sample)
+                     group_model)
   stopifnot(nrow(out) == length(item_ids))
   out
 }

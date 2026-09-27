@@ -2,6 +2,22 @@
 # with random intercepts for small group and poll. Every regressor is measured
 # before deliberation. Minority status is missing for whole polls (EU, China,
 # Greece), so it enters only in a robustness model.
+core_formula <- k2 ~ k1 + group_k1 + group_size + online + poll_k1 +
+  (1 | group) + (1 | pollid)
+
+core_group_frame <- function(attendees) {
+  attendees |>
+    dplyr::filter(!is.na(group)) |>
+    dplyr::mutate(
+      group_size = dplyr::n(),
+      group_k1 = (sum(k1) - k1) / (group_size - 1),
+      .by = group
+    ) |>
+    dplyr::filter(group_size > 1L) |>
+    dplyr::mutate(poll_k1 = mean(k1), .by = poll_id) |>
+    dplyr::mutate(pollid = poll_id)
+}
+
 main_formula <- k2 ~ k1 * education + age_decades + extremity + group_size + group_k1 +
   heterogeneity + female * p_female + online + poll_k1 + (1 | group) + (1 | pollid)
 
@@ -20,7 +36,9 @@ briefing_formula <- stats::update(
 )
 
 fit_knowledge <- function(frame, formula = main_formula) {
-  frame <- dplyr::mutate(frame, age_decades = age / 10)
+  if ("age" %in% names(frame)) {
+    frame <- dplyr::mutate(frame, age_decades = age / 10)
+  }
   fit <- lme4::lmer(
     formula, data = frame, REML = FALSE,
     control = lme4::lmerControl(

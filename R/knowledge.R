@@ -54,7 +54,11 @@ leave_one_out <- function(x, by) {
 }
 
 assignment_check <- function(frame, covariates = c("k1", "female", "age", "education_ba")) {
-  frame <- dplyr::mutate(frame, education_ba = as.numeric(education == "BA or more"))
+  if ("education" %in% names(frame)) {
+    frame <- dplyr::mutate(
+      frame, education_ba = as.numeric(education == "BA or more")
+    )
+  }
   purrr::map(covariates, \(covariate) {
     polls <- frame |>
       dplyr::filter(!is.na(.data[[covariate]])) |>

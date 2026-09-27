@@ -31,14 +31,23 @@ test_that("appendix poll coverage comes from upstream data", {
   polls <- appendix_polls()
   expect_equal(nrow(polls), 31L)
   expect_equal(sum(polls$control_group), 4L)
-  expect_equal(sum(polls$analysis_sample == "Gain and group model"), 21L)
-  expect_equal(sum(polls$analysis_sample == "Gain only"), 6L)
-  expect_equal(sum(polls$analysis_sample == "Gain and control comparison"), 4L)
+  expect_equal(sum(polls$group_model), 28L)
+  expect_false(polls$group_model[polls$poll == "Vermont Energy"])
+  expect_true(polls$group_model[polls$poll == "Michigan"])
   expect_false(anyDuplicated(polls$poll) > 0L)
   expect_false(any(polls$poll == "Marousi, Greece"))
   expect_false(any(polls$poll == "Tanzania"))
   expect_true(polls$control_group[polls$poll == "America in One Room"])
   expect_true(any(polls$poll == "Bulgarian National Crime Poll" & polls$year == 2002L))
+})
+
+test_that("one canonical attendee panel supplies gains and group models", {
+  panel <- attendee_panel()
+  expect_equal(nrow(panel), 10598L)
+  expect_equal(dplyr::n_distinct(panel$poll_id), 31L)
+  expect_equal(dplyr::n_distinct(panel$poll_id[!is.na(panel$group)]), 28L)
+  expect_equal(nrow(core_group_frame(panel)), 8800L)
+  expect_equal(nrow(poll_gains(panel)), 31L)
 })
 
 test_that("control analyses include only polls with respondent item answers", {
