@@ -1,15 +1,12 @@
 read_out <- \(name) readr::read_csv(file.path("tabs", name), show_col_types = FALSE)
 
 read_item_catalog <- function(root = Sys.getenv("DP_DATA_ROOT", unset = "../dp-data")) {
-  readr::read_csv(
-    file.path(root, "metadata", "items.csv"),
-    col_types = readr::cols(.default = readr::col_character())
-  )
+  arrow::read_parquet(file.path(root, "output", "analysis", "analysis_items.parquet"))
 }
 
 item_appendix_markdown <- function(root = Sys.getenv("DP_DATA_ROOT", unset = "../dp-data")) {
   items <- read_item_catalog(root)
-  polls <- readr::read_csv(file.path(root, "metadata", "polls.csv"), show_col_types = FALSE)
+  polls <- arrow::read_parquet(file.path(root, "output", "analysis", "analysis_polls.parquet"))
   items <- dplyr::left_join(
     items, dplyr::select(polls, "poll_id", "title", "year"),
     by = "poll_id", relationship = "many-to-one"
@@ -30,7 +27,11 @@ item_appendix_markdown <- function(root = Sys.getenv("DP_DATA_ROOT", unset = "..
       if (!is.na(item$answer_choices)) {
         detail <- c(detail, paste0("Choices: ", item$answer_choices, "."))
       }
-      key <- paste0(item$correct_answer, " [", item$correct_codes, "].")
+      key <- if (item$correct_answer == "Answer text not recovered") {
+        paste0("Code ", item$correct_codes, " (answer text not recovered).")
+      } else {
+        paste0(item$correct_answer, " [", item$correct_codes, "].")
+      }
       detail <- c(detail, paste("Scored correct:", key))
       if (!is.na(item$coding_note)) detail <- c(detail, item$coding_note)
       lines <- c(lines, paste0("- ", paste(detail, collapse = " "), "\n"))
@@ -74,7 +75,7 @@ term_labels <- c(
   "k1:educationBA or more" = "T1 x BA or more",
   age_decades = "Age (decades)",
   extremity = "Attitude extremity",
-  group_size = "Group size",
+  group_size = "Paired respondents in group",
   group_k1 = "Groupmates' mean T1",
   group_k1_items = "Groupmates' T1 on missed questions",
   heterogeneity = "Opinion heterogeneity",

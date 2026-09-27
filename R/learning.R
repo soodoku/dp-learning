@@ -1,68 +1,73 @@
-# Item matrices keep don't-know as NA so the latent class model can treat it
-# as its own response; the percent-correct scores count it as wrong.
-read_items <- function(path) {
-  data <- readr::read_csv(path, na = c("", "NA"), show_col_types = FALSE)
-  items <- setdiff(names(data), "female")
-  half <- length(items) / 2L
-  as_int <- \(names) dplyr::mutate(data[names], dplyr::across(dplyr::everything(), as.integer))
-  pre <- as_int(items[seq_len(half)])
-  post <- as_int(items[half + seq_len(half)])
-  names(post) <- names(pre)
-  list(pre = pre, post = post)
-}
-
-# Starting values from guess-replication, where the default start fails to
-# converge for one NIC item.
-fit_item_model <- function(pre, post) {
-  starts <- list(
-    NULL,
-    c(gg = .2, gk = .2, gd = .1, kk = .1, dg = .1, dk = .1, dd = .2, gamma = .2),
-    c(gg = .3, gk = .1, gd = .1, kk = .1, dg = .1, dk = .1, dd = .2, gamma = .25)
-  )
-  attempt <- function(start) {
-    tryCatch(
-      guess::fit_item_lca(pre, post, na_as = "dk", start = start),
-      error = \(e) NULL
+# One paired attendee record per person, selected from the canonical dp-data
+# participant and score tables. Overlapping historical and Cor--Sood source
+# rows represent the same poll, so the historical linkage takes priority.
+attendee_panel <- function(
+  participants = read_analysis_participants(),
+  scores = read_analysis_scores(),
+  polls = read_poll_registry()
+) {
+  paired <- scores |>
+    dplyr::filter(wave %in% c("t1", "t2"), scale == "proportion_correct") |>
+    dplyr::select("poll_id", "source_dataset", "respondent_id", "wave", "score") |>
+    tidyr::pivot_wider(names_from = wave, values_from = score) |>
+    dplyr::filter(!is.na(t1), !is.na(t2))
+  available <- participants |>
+    dplyr::inner_join(
+      paired, by = c("poll_id", "source_dataset", "respondent_id"),
+      relationship = "one-to-one"
     )
-  }
-  fit <- purrr::detect(purrr::map(starts, attempt), Negate(is.null))
-  if (is.null(fit)) stop("fit_item_lca failed for every starting value.")
-  fit
-}
-
-poll_learning <- function(file_key, data_dir) {
-  poll <- read_items(file.path(data_dir, paste0(file_key, ".csv")))
-  fit <- fit_item_model(poll$pre, poll$post)
-  score <- \(x) as.matrix(dplyr::mutate(x, dplyr::across(dplyr::everything(), \(v) dplyr::coalesce(v, 0L))))
-  raw_gain <- rowMeans(score(poll$post) - score(poll$pre))
-  tibble::tibble(
-    file_key = file_key,
-    respondents = nrow(poll$pre),
-    items = ncol(poll$pre),
-    k1 = mean(score(poll$pre)),
-    k2 = mean(score(poll$post)),
-    raw = mean(raw_gain),
-    raw_se = stats::sd(raw_gain) / sqrt(length(raw_gain)),
-    lca = mean(fit$learning),
-    lca_converged = all(fit$diagnostics$convergence == 0)
+  historical_ids <- unique(available$poll_id[
+    available$source_dataset == "historical" & available$panel
+  ])
+  cor_ids <- unique(available$poll_id[
+    available$source_dataset == "cor_sood" &
+      !available$poll_id %in% historical_ids
+  ])
+  out <- available |>
+    dplyr::filter(
+      (source_dataset == "historical" & panel) |
+        (source_dataset == "cor_sood" & poll_id %in% cor_ids) |
+        (source_dataset == "control" & arm == "attended" &
+           !poll_id %in% c(historical_ids, cor_ids))
+    ) |>
+    dplyr::left_join(
+      dplyr::select(polls, "poll_id", pollname = "title", "mode"),
+      by = "poll_id", relationship = "many-to-one"
+    ) |>
+    dplyr::transmute(
+      poll_id, pollname, source_dataset, respondent_id,
+      k1 = t1, k2 = t2,
+      online = as.integer(mode == "online"),
+      female, ba,
+      group = dplyr::if_else(
+        is.na(small_group_id), NA_character_,
+        paste(poll_id, small_group_id, sep = "_")
+      )
+    )
+  stopifnot(
+    dplyr::n_distinct(out$poll_id) == 31L,
+    !anyDuplicated(out[c("poll_id", "respondent_id")]),
+    !anyNA(out$pollname), !anyNA(out$online),
+    all(out$k1 >= 0 & out$k1 <= 1),
+    all(out$k2 >= 0 & out$k2 <= 1)
   )
+  out
 }
 
-# Participant-level mean gain (T2 - T1 proportion correct) by poll.
-poll_gains <- function(frame) {
-  se <- \(x) stats::sd(x, na.rm = TRUE) / sqrt(sum(!is.na(x)))
-  frame |>
+poll_gains <- function(panel) {
+  se <- \(x) stats::sd(x) / sqrt(length(x))
+  panel |>
     dplyr::mutate(raw_gain = k2 - k1) |>
     dplyr::summarise(
       respondents = dplyr::n(),
       online = dplyr::first(online),
-      k1_mean = mean(k1, na.rm = TRUE),
-      k2_mean = mean(k2, na.rm = TRUE),
-      raw = mean(raw_gain, na.rm = TRUE),
-      raw_se = se(raw_gain),
-      k1_sd = stats::sd(k1, na.rm = TRUE),
-      .by = c(dpnum, pollname)
+      k1_mean = mean(k1), k2_mean = mean(k2),
+      raw = mean(raw_gain), raw_se = se(raw_gain),
+      k1_sd = stats::sd(k1),
+      .by = c(poll_id, pollname)
     ) |>
-    dplyr::mutate(raw_sd = raw / k1_sd, raw_sd_se = raw_se / k1_sd) |>
+    dplyr::mutate(
+      raw_sd = raw / k1_sd, raw_sd_se = raw_se / k1_sd
+    ) |>
     dplyr::arrange(dplyr::desc(raw))
 }

@@ -1,8 +1,7 @@
-# Groups are composed as if at random within polls (assignment_check()), so the
-# other members' pre-deliberation characteristics are as good as randomly
-# assigned. Within each poll we regress T2 knowledge on the group's
+# Within each poll we regress T2 knowledge on the group's
 # leave-one-out mean, own value and the poll's leave-one-out mean (Guryan, Kroft
 # and Notowidigdo 2009), clustering by group, and pool the poll estimates.
+# Assignment balance is checked separately; peer coefficients are associations.
 peer_effect <- function(poll, peer) {
   poll <- poll |>
     dplyr::filter(!is.na(k1), !is.na(k2), !is.na(.data[[peer]])) |>
@@ -23,21 +22,8 @@ peer_effect <- function(poll, peer) {
   )
 }
 
-a1r_group_frame <- function(path) {
-  data <- readr::read_tsv(path, show_col_types = FALSE) |>
-    dplyr::filter(CONDITION == 1, POST == 1)
-  tibble::tibble(
-    pollid = "a1r2019",
-    pollname = "America in One Room 2019",
-    group = paste0("a1r_", data$GROUP),
-    k1 = score_battery(data, paste0("PK", 1:7), a1r_key),
-    k2 = score_battery(data, paste0("T2PK", 1:7), a1r_key),
-    female = dplyr::if_else(data$GENDER %in% 1:2, as.numeric(data$GENDER == 2), NA_real_)
-  )
-}
-
-peer_effects <- function(frame, a1r) {
-  polls <- c(split(frame, frame$pollname), list("America in One Room 2019" = a1r))
+peer_effects <- function(frame) {
+  polls <- split(frame, frame$pollname)
   tidyr::expand_grid(poll = names(polls), peer = c("k1", "female")) |>
     purrr::pmap(\(poll, peer) {
       data <- polls[[poll]]
