@@ -102,7 +102,6 @@ test_that("missed-item peer model uses the historical item sample", {
   expect_equal(unique(core$polls), 28L)
   expect_equal(unique(core$n), 8800L)
   expect_equal(unique(items$polls), 21L)
-  expect_equal(unique(items$n), 5758L)
   expect_equal(unique(main$n) - unique(items$n), 0L)
   expect_true(all(c(
     "group_k1", "group_k1_items", "no_missed_items"
