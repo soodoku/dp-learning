@@ -1,6 +1,6 @@
 phase_fixture <- function() {
   participants <- tibble::tibble(
-    poll_id = "example", source_dataset = "historical", respondent_id = letters[1:7],
+    poll_id = "example", study_id = "example", source_dataset = "historical", respondent_id = letters[1:7],
     attended = c(TRUE, TRUE, TRUE, TRUE, FALSE, FALSE, NA),
     arm = c(rep("participant", 4), "invited_nonattender", "control", "surveyed"),
     small_group_id = c("1", "2", "3", "4", NA, NA, "5")

@@ -166,9 +166,9 @@ phase_comparison_table <- function(data) {
     dplyr::arrange(pollname) |>
     dplyr::transmute(
       Poll = pollname, N = prettyNum(n_people, big.mark = ","),
-      `Before arrival (pp)` = arrival_minus_pre_arrival,
-      `During event (pp)` = post_minus_arrival,
-      `Total (pp)` = post_minus_pre_arrival
+      `Pre-arrival to arrival` = arrival_minus_pre_arrival,
+      `Arrival to exit` = post_minus_arrival,
+      `Pre-arrival to exit` = post_minus_pre_arrival
     ) |>
     stack_intervals()
 }

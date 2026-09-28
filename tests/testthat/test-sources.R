@@ -1,6 +1,6 @@
 test_that("upstream manifests identify available and unchanged files", {
   manifest <- upstream_source_manifest()
-  expect_equal(nrow(manifest), 10L)
+  expect_equal(nrow(manifest), 12L)
   expect_false(anyDuplicated(manifest$source) > 0L)
   expect_true(verify_sources())
   expect_setequal(
@@ -8,7 +8,7 @@ test_that("upstream manifests identify available and unchanged files", {
     c(
       "distortions_responses", "briefing_reading", "polls", "items",
       "participants", "item_responses", "scores", "attitudes",
-      "phase_participants", "phase_scores"
+      "phase_participants", "phase_scores", "studies", "survey_waves"
     )
   )
 })
@@ -32,7 +32,7 @@ test_that("both score waves are rebuilt from respondent item answers", {
 
 test_that("appendix poll coverage comes from upstream data", {
   polls <- appendix_polls()
-  expect_equal(nrow(polls), 28L)
+  expect_equal(nrow(polls), 27L)
   expect_equal(sum(polls$control_group), 3L)
   expect_false("Vermont Energy" %in% polls$poll)
   expect_true("Michigan" %in% polls$poll)
@@ -45,10 +45,18 @@ test_that("appendix poll coverage comes from upstream data", {
 
 test_that("one canonical attendee panel supplies gains and group models", {
   panel <- attendee_panel()
-  expect_equal(nrow(panel), 10598L)
-  expect_equal(dplyr::n_distinct(panel$poll_id), 31L)
-  expect_equal(dplyr::n_distinct(panel$poll_id[!is.na(panel$group)]), 28L)
-  expect_equal(nrow(core_group_frame(panel)), 8800L)
+  expect_equal(nrow(panel), 10292L)
+  expect_equal(dplyr::n_distinct(panel$poll_id), 30L)
+  expect_equal(dplyr::n_distinct(panel$poll_id[!is.na(panel$group)]), 27L)
+  expect_equal(nrow(core_group_frame(panel)), 8506L)
+  primaries <- dplyr::filter(panel, study_id == "btp-primaries-2004")
+  expect_identical(unique(primaries$poll_id), "btp-online-primaries-2004")
+  expect_equal(nrow(primaries), 239L)
+  evidence <- read_phase_participants() |>
+    dplyr::filter(poll_id == "btp-online-primaries-2004", source_dataset == "cor_sood")
+  evidence <- evidence[match(primaries$respondent_id, evidence$respondent_id), ]
+  expect_true(all(evidence$attendance_status == "attended"))
+  expect_true(all(evidence$sessions_attended >= 1L))
   expect_setequal(unique(core_group_frame(panel)$poll_id), read_output("poll_gains.csv")$poll_id)
 })
 
@@ -68,7 +76,7 @@ test_that("item appendix renders every question for the analyzed polls", {
   catalog <- read_item_catalog() |>
     dplyr::filter(poll_id %in% read_output("poll_gains.csv")$poll_id)
   appendix <- item_appendix_markdown(items = catalog)
-  expect_equal(dplyr::n_distinct(catalog$poll_id), 28L)
+  expect_equal(dplyr::n_distinct(catalog$poll_id), 27L)
   expect_equal(lengths(regmatches(appendix, gregexpr("\\n- \\*\\*", appendix))), nrow(catalog))
   headings <- gregexpr("## ", appendix, fixed = TRUE)
   expect_equal(lengths(regmatches(appendix, headings)), dplyr::n_distinct(catalog$poll_id))
@@ -172,7 +180,8 @@ test_that("matched models use identical common regressors", {
     dplyr::left_join(
       dplyr::select(read_respondent_sources(), poll_id, dpnum),
       by = "dpnum", relationship = "many-to-one"
-    )
+    ) |>
+    dplyr::filter(poll_id != "btp-presidential-primaries-2004")
   joined <- dplyr::inner_join(
     core_group_frame(attendee_panel()), historical,
     by = c("poll_id", "historical_respondent_id"),
