@@ -1,271 +1,271 @@
-poll_id,pollname,source_dataset,battery_id,contrast,estimate,std_error,lower,upper,inference,n_people,n_known_groups,n_unknown_group,sample,n_incompatible_denominator,n_attendees_total,n_unknown_attendance
-a1r-climate-2021,America in One Room: Climate,control,a1r-climate-2021:control:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,962,0
-a1r-climate-2021,America in One Room: Climate,control,a1r-climate-2021:control:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,962,0
-a1r-climate-2021,America in One Room: Climate,control,a1r-climate-2021:control:knowledge,post_minus_pre_arrival,0.12201143451143454,0.00689955394344442,0.10856405808302057,0.13571721369240017,group_bootstrap,962,58,0,available_paired_attendees,0,962,0
-a1r-climate-2021,America in One Room: Climate,control,a1r-climate-2021:control:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,962,0
-a1r-climate-2021,America in One Room: Climate,control,a1r-climate-2021:control:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,962,0
-a1r-climate-2021,America in One Room: Climate,control,a1r-climate-2021:control:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,962,0
-america-in-one-room-2019,America in One Room,control,america-in-one-room-2019:control:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,526,0
-america-in-one-room-2019,America in One Room,control,america-in-one-room-2019:control:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,526,0
-america-in-one-room-2019,America in One Room,control,america-in-one-room-2019:control:knowledge,post_minus_pre_arrival,0.14285714285714285,0.009229882284141774,0.12482156193321244,0.1621257243748947,group_bootstrap,523,40,0,available_paired_attendees,0,526,0
-america-in-one-room-2019,America in One Room,control,america-in-one-room-2019:control:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,526,0
-america-in-one-room-2019,America in One Room,control,america-in-one-room-2019:control:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,526,0
-america-in-one-room-2019,America in One Room,control,america-in-one-room-2019:control:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,526,0
-australia-republic-1999,Australia Republic Referendum,cor_sood,australia-republic-1999:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,347
-australia-republic-1999,Australia Republic Referendum,cor_sood,australia-republic-1999:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,347
-australia-republic-1999,Australia Republic Referendum,cor_sood,australia-republic-1999:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,347
-australia-republic-1999,Australia Republic Referendum,cor_sood,australia-republic-1999:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,347
-australia-republic-1999,Australia Republic Referendum,cor_sood,australia-republic-1999:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,347
-australia-republic-1999,Australia Republic Referendum,cor_sood,australia-republic-1999:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,347
-australia-republic-1999,Australia Republic Referendum,historical,australia-republic-1999:historical:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,347,4312
-australia-republic-1999,Australia Republic Referendum,historical,australia-republic-1999:historical:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,347,4312
-australia-republic-1999,Australia Republic Referendum,historical,australia-republic-1999:historical:knowledge,post_minus_pre_arrival,0.23967339097022095,0.010210639821060968,0.21879874976272237,0.2579190056134723,group_bootstrap,347,24,0,available_paired_attendees,0,347,4312
-australia-republic-1999,Australia Republic Referendum,historical,australia-republic-1999:historical:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,347,4312
-australia-republic-1999,Australia Republic Referendum,historical,australia-republic-1999:historical:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,347,4312
-australia-republic-1999,Australia Republic Referendum,historical,australia-republic-1999:historical:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,347,4312
-btp-2007,By the People 2007,cor_sood,btp-2007:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,301
-btp-2007,By the People 2007,cor_sood,btp-2007:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,301
-btp-2007,By the People 2007,cor_sood,btp-2007:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,301
-btp-2007,By the People 2007,cor_sood,btp-2007:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,301
-btp-2007,By the People 2007,cor_sood,btp-2007:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,301
-btp-2007,By the People 2007,cor_sood,btp-2007:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,301
-btp-general-election-2004,By the People 2004 US General Election,cor_sood,btp-general-election-2004:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,250
-btp-general-election-2004,By the People 2004 US General Election,cor_sood,btp-general-election-2004:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,250
-btp-general-election-2004,By the People 2004 US General Election,cor_sood,btp-general-election-2004:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,250
-btp-general-election-2004,By the People 2004 US General Election,cor_sood,btp-general-election-2004:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,250
-btp-general-election-2004,By the People 2004 US General Election,cor_sood,btp-general-election-2004:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,250
-btp-general-election-2004,By the People 2004 US General Election,cor_sood,btp-general-election-2004:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,250
-btp-general-election-2004,By the People 2004 US General Election,historical,btp-general-election-2004:historical:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,248,51
-btp-general-election-2004,By the People 2004 US General Election,historical,btp-general-election-2004:historical:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,248,51
-btp-general-election-2004,By the People 2004 US General Election,historical,btp-general-election-2004:historical:knowledge,post_minus_pre_arrival,0.0689964157706093,0.011150181523014288,0.048636200221488735,0.09247611940298504,group_bootstrap,248,15,0,available_paired_attendees,0,248,51
-btp-general-election-2004,By the People 2004 US General Election,historical,btp-general-election-2004:historical:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,248,51
-btp-general-election-2004,By the People 2004 US General Election,historical,btp-general-election-2004:historical:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,248,51
-btp-general-election-2004,By the People 2004 US General Election,historical,btp-general-election-2004:historical:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,248,51
-btp-health-education-2005,By the People: Health and Education,cor_sood,btp-health-education-2005:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,454
-btp-health-education-2005,By the People: Health and Education,cor_sood,btp-health-education-2005:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,454
-btp-health-education-2005,By the People: Health and Education,cor_sood,btp-health-education-2005:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,454
-btp-health-education-2005,By the People: Health and Education,cor_sood,btp-health-education-2005:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,454
-btp-health-education-2005,By the People: Health and Education,cor_sood,btp-health-education-2005:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,454
-btp-health-education-2005,By the People: Health and Education,cor_sood,btp-health-education-2005:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,454
-btp-health-education-2005,By the People: Health and Education,historical,btp-health-education-2005:historical:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,454,0
-btp-health-education-2005,By the People: Health and Education,historical,btp-health-education-2005:historical:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,454,0
-btp-health-education-2005,By the People: Health and Education,historical,btp-health-education-2005:historical:knowledge,post_minus_pre_arrival,0.05910425844346547,0.013920796561355878,0.030997472212742325,0.08664528414674462,group_bootstrap,454,30,0,available_paired_attendees,0,454,0
-btp-health-education-2005,By the People: Health and Education,historical,btp-health-education-2005:historical:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,454,0
-btp-health-education-2005,By the People: Health and Education,historical,btp-health-education-2005:historical:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,454,0
-btp-health-education-2005,By the People: Health and Education,historical,btp-health-education-2005:historical:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,454,0
-btp-national-2003,By the People: National,historical,btp-national-2003:historical:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,245,0
-btp-national-2003,By the People: National,historical,btp-national-2003:historical:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,245,0
-btp-national-2003,By the People: National,historical,btp-national-2003:historical:knowledge,post_minus_pre_arrival,0.03450834879406309,0.009249275707728653,0.016587835578669056,0.05303857350800582,group_bootstrap,245,15,0,available_paired_attendees,0,245,0
-btp-national-2003,By the People: National,historical,btp-national-2003:historical:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,245,0
-btp-national-2003,By the People: National,historical,btp-national-2003:historical:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,245,0
-btp-national-2003,By the People: National,historical,btp-national-2003:historical:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,245,0
-btp-online-primaries-2004,By the People 2004 Online Primaries,cor_sood,btp-online-primaries-2004:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,328
-btp-online-primaries-2004,By the People 2004 Online Primaries,cor_sood,btp-online-primaries-2004:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,328
-btp-online-primaries-2004,By the People 2004 Online Primaries,cor_sood,btp-online-primaries-2004:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,328
-btp-online-primaries-2004,By the People 2004 Online Primaries,cor_sood,btp-online-primaries-2004:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,328
-btp-online-primaries-2004,By the People 2004 Online Primaries,cor_sood,btp-online-primaries-2004:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,328
-btp-online-primaries-2004,By the People 2004 Online Primaries,cor_sood,btp-online-primaries-2004:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,328
-btp-presidential-primaries-2004,By the People 2004 US Presidential Primaries,historical,btp-presidential-primaries-2004:historical:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,217,1072
-btp-presidential-primaries-2004,By the People 2004 US Presidential Primaries,historical,btp-presidential-primaries-2004:historical:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,217,1072
-btp-presidential-primaries-2004,By the People 2004 US Presidential Primaries,historical,btp-presidential-primaries-2004:historical:knowledge,post_minus_pre_arrival,0.1184990125082291,0.014068412678758177,0.0925553319919517,0.14727012840941042,group_bootstrap,217,16,0,available_paired_attendees,0,217,1072
-btp-presidential-primaries-2004,By the People 2004 US Presidential Primaries,historical,btp-presidential-primaries-2004:historical:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,217,1072
-btp-presidential-primaries-2004,By the People 2004 US Presidential Primaries,historical,btp-presidential-primaries-2004:historical:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,217,1072
-btp-presidential-primaries-2004,By the People 2004 US Presidential Primaries,historical,btp-presidential-primaries-2004:historical:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,217,1072
-california-whats-next-2011,California What's Next,cor_sood,california-whats-next-2011:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,396
-california-whats-next-2011,California What's Next,cor_sood,california-whats-next-2011:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,396
-california-whats-next-2011,California What's Next,cor_sood,california-whats-next-2011:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,396
-california-whats-next-2011,California What's Next,cor_sood,california-whats-next-2011:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,396
-california-whats-next-2011,California What's Next,cor_sood,california-whats-next-2011:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,396
-california-whats-next-2011,California What's Next,cor_sood,california-whats-next-2011:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,396
-cpl-1996,Central Power & Light,cor_sood,cpl-1996:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,216
-cpl-1996,Central Power & Light,cor_sood,cpl-1996:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,216
-cpl-1996,Central Power & Light,cor_sood,cpl-1996:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,216
-cpl-1996,Central Power & Light,cor_sood,cpl-1996:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,216
-cpl-1996,Central Power & Light,cor_sood,cpl-1996:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,216
-cpl-1996,Central Power & Light,cor_sood,cpl-1996:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,216
-cpl-1996,Central Power & Light,historical,cpl-1996:historical:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,216,1030
-cpl-1996,Central Power & Light,historical,cpl-1996:historical:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,216,1030
-cpl-1996,Central Power & Light,historical,cpl-1996:historical:knowledge,post_minus_pre_arrival,0.1607142857142857,0.01311382898087718,0.13585371648659467,0.18726007278638857,group_bootstrap,216,16,0,available_paired_attendees,0,216,1030
-cpl-1996,Central Power & Light,historical,cpl-1996:historical:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,216,1030
-cpl-1996,Central Power & Light,historical,cpl-1996:historical:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,216,1030
-cpl-1996,Central Power & Light,historical,cpl-1996:historical:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,216,1030
-denmark-euro-2000,Denmark: Euro,cor_sood,denmark-euro-2000:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,359
-denmark-euro-2000,Denmark: Euro,cor_sood,denmark-euro-2000:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,359
-denmark-euro-2000,Denmark: Euro,cor_sood,denmark-euro-2000:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,359
-denmark-euro-2000,Denmark: Euro,cor_sood,denmark-euro-2000:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,359
-denmark-euro-2000,Denmark: Euro,cor_sood,denmark-euro-2000:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,359
-denmark-euro-2000,Denmark: Euro,cor_sood,denmark-euro-2000:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,359
-europolis-2009,Europolis,cor_sood,europolis-2009:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,348
-europolis-2009,Europolis,cor_sood,europolis-2009:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,348
-europolis-2009,Europolis,cor_sood,europolis-2009:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,348
-europolis-2009,Europolis,cor_sood,europolis-2009:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,348
-europolis-2009,Europolis,cor_sood,europolis-2009:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,348
-europolis-2009,Europolis,cor_sood,europolis-2009:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,348
-europolis-2009,Europolis,historical,europolis-2009:historical:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,348,4036
-europolis-2009,Europolis,historical,europolis-2009:historical:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,348,4036
-europolis-2009,Europolis,historical,europolis-2009:historical:knowledge,post_minus_pre_arrival,0.16570881226053638,0.0189209452060699,0.1285741913577513,0.20220801767676766,group_bootstrap,348,25,0,available_paired_attendees,0,348,4036
-europolis-2009,Europolis,historical,europolis-2009:historical:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,348,4036
-europolis-2009,Europolis,historical,europolis-2009:historical:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,348,4036
-europolis-2009,Europolis,historical,europolis-2009:historical:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,348,4036
-marousi-2006,"Marousi, Greece",score_only,marousi-2006:score_only:knowledge,post_minus_arrival,0.022556390977443625,,,,descriptive_unknown_groups,133,15,4,available_paired_attendees,0,159,1116
-marousi-2006,"Marousi, Greece",score_only,marousi-2006:score_only:knowledge,arrival_minus_pre_arrival,0.04545453617933286,,,,descriptive_unknown_groups,154,15,8,available_paired_attendees,0,159,1116
-marousi-2006,"Marousi, Greece",score_only,marousi-2006:score_only:knowledge,post_minus_pre_arrival,0.0672877753003043,,,,descriptive_unknown_groups,138,15,9,available_paired_attendees,0,159,1116
-marousi-2006,"Marousi, Greece",score_only,marousi-2006:score_only:knowledge,post_minus_arrival,0.022556390977443625,,,,descriptive_unknown_groups,133,15,4,all_three_observed_attendees,0,159,1116
-marousi-2006,"Marousi, Greece",score_only,marousi-2006:score_only:knowledge,arrival_minus_pre_arrival,0.050483341503860336,,,,descriptive_unknown_groups,133,15,4,all_three_observed_attendees,0,159,1116
-marousi-2006,"Marousi, Greece",score_only,marousi-2006:score_only:knowledge,post_minus_pre_arrival,0.07303973248130395,,,,descriptive_unknown_groups,133,15,4,all_three_observed_attendees,0,159,1116
-michigan-2009,Michigan,cor_sood,michigan-2009:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,310
-michigan-2009,Michigan,cor_sood,michigan-2009:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,310
-michigan-2009,Michigan,cor_sood,michigan-2009:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,310
-michigan-2009,Michigan,cor_sood,michigan-2009:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,310
-michigan-2009,Michigan,cor_sood,michigan-2009:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,310
-michigan-2009,Michigan,cor_sood,michigan-2009:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,310
-new-haven-2004,"New Haven, CT",historical,new-haven-2004:historical:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,132,0
-new-haven-2004,"New Haven, CT",historical,new-haven-2004:historical:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,132,0
-new-haven-2004,"New Haven, CT",historical,new-haven-2004:historical:knowledge,post_minus_pre_arrival,0.22253787878787878,0.018582279001509702,0.1861878812676685,0.2595419847328244,group_bootstrap,132,16,0,available_paired_attendees,0,132,0
-new-haven-2004,"New Haven, CT",historical,new-haven-2004:historical:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,132,0
-new-haven-2004,"New Haven, CT",historical,new-haven-2004:historical:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,132,0
-new-haven-2004,"New Haven, CT",historical,new-haven-2004:historical:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,132,0
-nic-1996,National Issues Convention,cor_sood,nic-1996:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,466
-nic-1996,National Issues Convention,cor_sood,nic-1996:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,466
-nic-1996,National Issues Convention,cor_sood,nic-1996:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,466
-nic-1996,National Issues Convention,cor_sood,nic-1996:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,466
-nic-1996,National Issues Convention,cor_sood,nic-1996:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,466
-nic-1996,National Issues Convention,cor_sood,nic-1996:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,466
-nic-1996,National Issues Convention,historical,nic-1996:historical:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,466,445
-nic-1996,National Issues Convention,historical,nic-1996:historical:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,466,445
-nic-1996,National Issues Convention,historical,nic-1996:historical:knowledge,post_minus_pre_arrival,0.08114035087719298,0.00838679951700791,0.06518572286744093,0.09750468557990682,group_bootstrap,456,30,0,available_paired_attendees,0,466,445
-nic-1996,National Issues Convention,historical,nic-1996:historical:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,466,445
-nic-1996,National Issues Convention,historical,nic-1996:historical:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,466,445
-nic-1996,National Issues Convention,historical,nic-1996:historical:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,466,445
-nic2-2003,National Issues Convention 2,historical,nic2-2003:historical:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,340,1153
-nic2-2003,National Issues Convention 2,historical,nic2-2003:historical:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,340,1153
-nic2-2003,National Issues Convention 2,historical,nic2-2003:historical:knowledge,post_minus_pre_arrival,0.12299465240641712,0.010917567284872694,0.10065256141982486,0.14327688651218065,group_bootstrap,340,24,0,available_paired_attendees,0,340,1153
-nic2-2003,National Issues Convention 2,historical,nic2-2003:historical:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,340,1153
-nic2-2003,National Issues Convention 2,historical,nic2-2003:historical:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,340,1153
-nic2-2003,National Issues Convention 2,historical,nic2-2003:historical:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,340,1153
-northern-ireland-2007,Northern Ireland,cor_sood,northern-ireland-2007:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,124
-northern-ireland-2007,Northern Ireland,cor_sood,northern-ireland-2007:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,124
-northern-ireland-2007,Northern Ireland,cor_sood,northern-ireland-2007:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,124
-northern-ireland-2007,Northern Ireland,cor_sood,northern-ireland-2007:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,124
-northern-ireland-2007,Northern Ireland,cor_sood,northern-ireland-2007:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,124
-northern-ireland-2007,Northern Ireland,cor_sood,northern-ireland-2007:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,124
-san-mateo-2008,"San Mateo, CA",cor_sood,san-mateo-2008:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,239
-san-mateo-2008,"San Mateo, CA",cor_sood,san-mateo-2008:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,239
-san-mateo-2008,"San Mateo, CA",cor_sood,san-mateo-2008:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,239
-san-mateo-2008,"San Mateo, CA",cor_sood,san-mateo-2008:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,239
-san-mateo-2008,"San Mateo, CA",cor_sood,san-mateo-2008:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,239
-san-mateo-2008,"San Mateo, CA",cor_sood,san-mateo-2008:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,239
-san-mateo-2008,"San Mateo, CA",historical,san-mateo-2008:historical:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,239,1567
-san-mateo-2008,"San Mateo, CA",historical,san-mateo-2008:historical:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,239,1567
-san-mateo-2008,"San Mateo, CA",historical,san-mateo-2008:historical:knowledge,post_minus_pre_arrival,0.1727941176470588,0.01902904258036406,0.1358428192399863,0.21059124080412292,group_bootstrap,238,26,0,available_paired_attendees,0,239,1567
-san-mateo-2008,"San Mateo, CA",historical,san-mateo-2008:historical:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,239,1567
-san-mateo-2008,"San Mateo, CA",historical,san-mateo-2008:historical:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,239,1567
-san-mateo-2008,"San Mateo, CA",historical,san-mateo-2008:historical:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,239,1567
-swepco-1996,Southwestern Electric Power,cor_sood,swepco-1996:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,232
-swepco-1996,Southwestern Electric Power,cor_sood,swepco-1996:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,232
-swepco-1996,Southwestern Electric Power,cor_sood,swepco-1996:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,232
-swepco-1996,Southwestern Electric Power,cor_sood,swepco-1996:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,232
-swepco-1996,Southwestern Electric Power,cor_sood,swepco-1996:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,232
-swepco-1996,Southwestern Electric Power,cor_sood,swepco-1996:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,232
-swepco-1996,Southwestern Electric Power,historical,swepco-1996:historical:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,232,1246
-swepco-1996,Southwestern Electric Power,historical,swepco-1996:historical:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,232,1246
-swepco-1996,Southwestern Electric Power,historical,swepco-1996:historical:knowledge,post_minus_pre_arrival,0.20258620689655174,0.019697684497409197,0.1672348659003832,0.24168417366946776,group_bootstrap,232,14,0,available_paired_attendees,0,232,1246
-swepco-1996,Southwestern Electric Power,historical,swepco-1996:historical:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,232,1246
-swepco-1996,Southwestern Electric Power,historical,swepco-1996:historical:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,232,1246
-swepco-1996,Southwestern Electric Power,historical,swepco-1996:historical:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,232,1246
-tomorrows-europe-2007,Tomorrow's Europe (EU),cor_sood,tomorrows-europe-2007:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,359
-tomorrows-europe-2007,Tomorrow's Europe (EU),cor_sood,tomorrows-europe-2007:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,359
-tomorrows-europe-2007,Tomorrow's Europe (EU),cor_sood,tomorrows-europe-2007:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,359
-tomorrows-europe-2007,Tomorrow's Europe (EU),cor_sood,tomorrows-europe-2007:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,359
-tomorrows-europe-2007,Tomorrow's Europe (EU),cor_sood,tomorrows-europe-2007:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,359
-tomorrows-europe-2007,Tomorrow's Europe (EU),cor_sood,tomorrows-europe-2007:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,359
-tomorrows-europe-2007,Tomorrow's Europe (EU),historical,tomorrows-europe-2007:historical:knowledge,post_minus_arrival,0.078039430449069,0.01185103501296961,0.05589585709880147,0.10272577345720083,group_bootstrap,332,18,0,available_paired_attendees,0,344,3206
-tomorrows-europe-2007,Tomorrow's Europe (EU),historical,tomorrows-europe-2007:historical:knowledge,arrival_minus_pre_arrival,0.10089020771513353,0.01592394388062632,0.0710238316105663,0.13295444077652666,group_bootstrap,337,18,0,available_paired_attendees,0,344,3206
-tomorrows-europe-2007,Tomorrow's Europe (EU),historical,tomorrows-europe-2007:historical:knowledge,post_minus_pre_arrival,0.18181818181818182,0.012366837017636401,0.1574572697417525,0.20519636052570187,group_bootstrap,335,18,0,available_paired_attendees,0,344,3206
-tomorrows-europe-2007,Tomorrow's Europe (EU),historical,tomorrows-europe-2007:historical:knowledge,post_minus_arrival,0.078039430449069,0.011823432627347774,0.05589585709880147,0.10229401362326432,group_bootstrap,332,18,0,all_three_observed_attendees,0,344,3206
-tomorrows-europe-2007,Tomorrow's Europe (EU),historical,tomorrows-europe-2007:historical:knowledge,arrival_minus_pre_arrival,0.10432639649507121,0.014886063413636574,0.07706294649425381,0.1341807112598104,group_bootstrap,332,18,0,all_three_observed_attendees,0,344,3206
-tomorrows-europe-2007,Tomorrow's Europe (EU),historical,tomorrows-europe-2007:historical:knowledge,post_minus_pre_arrival,0.1823658269441402,0.01254186901510156,0.15746182334485087,0.20645799002105647,group_bootstrap,332,18,0,all_three_observed_attendees,0,344,3206
-uk-crime-1994,UK Crime,cor_sood,uk-crime-1994:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,299
-uk-crime-1994,UK Crime,cor_sood,uk-crime-1994:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,299
-uk-crime-1994,UK Crime,cor_sood,uk-crime-1994:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,299
-uk-crime-1994,UK Crime,cor_sood,uk-crime-1994:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,299
-uk-crime-1994,UK Crime,cor_sood,uk-crime-1994:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,299
-uk-crime-1994,UK Crime,cor_sood,uk-crime-1994:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,299
-uk-crime-1994,UK Crime,historical,uk-crime-1994:historical:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,299,570
-uk-crime-1994,UK Crime,historical,uk-crime-1994:historical:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,299,570
-uk-crime-1994,UK Crime,historical,uk-crime-1994:historical:knowledge,post_minus_pre_arrival,0.09460105112279028,0.011127992583887221,0.07238490146625061,0.11628703408728895,group_bootstrap,299,20,0,available_paired_attendees,0,299,570
-uk-crime-1994,UK Crime,historical,uk-crime-1994:historical:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,299,570
-uk-crime-1994,UK Crime,historical,uk-crime-1994:historical:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,299,570
-uk-crime-1994,UK Crime,historical,uk-crime-1994:historical:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,299,570
-uk-eu-1995,UK EU,cor_sood,uk-eu-1995:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,224
-uk-eu-1995,UK EU,cor_sood,uk-eu-1995:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,224
-uk-eu-1995,UK EU,cor_sood,uk-eu-1995:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,224
-uk-eu-1995,UK EU,cor_sood,uk-eu-1995:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,224
-uk-eu-1995,UK EU,cor_sood,uk-eu-1995:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,224
-uk-eu-1995,UK EU,cor_sood,uk-eu-1995:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,224
-uk-eu-1995,UK EU,historical,uk-eu-1995:historical:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,238,662
-uk-eu-1995,UK EU,historical,uk-eu-1995:historical:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,238,662
-uk-eu-1995,UK EU,historical,uk-eu-1995:historical:knowledge,post_minus_pre_arrival,0.20267857142857143,0.01845416063242026,0.17051502419149484,0.24266722454672243,group_bootstrap,224,16,0,available_paired_attendees,0,238,662
-uk-eu-1995,UK EU,historical,uk-eu-1995:historical:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,238,662
-uk-eu-1995,UK EU,historical,uk-eu-1995:historical:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,238,662
-uk-eu-1995,UK EU,historical,uk-eu-1995:historical:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,238,662
-uk-general-election-1997,UK General Election,cor_sood,uk-general-election-1997:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,275
-uk-general-election-1997,UK General Election,cor_sood,uk-general-election-1997:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,275
-uk-general-election-1997,UK General Election,cor_sood,uk-general-election-1997:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,275
-uk-general-election-1997,UK General Election,cor_sood,uk-general-election-1997:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,275
-uk-general-election-1997,UK General Election,cor_sood,uk-general-election-1997:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,275
-uk-general-election-1997,UK General Election,cor_sood,uk-general-election-1997:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,275
-uk-general-election-1997,UK General Election,historical,uk-general-election-1997:historical:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,275,935
-uk-general-election-1997,UK General Election,historical,uk-general-election-1997:historical:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,275,935
-uk-general-election-1997,UK General Election,historical,uk-general-election-1997:historical:knowledge,post_minus_pre_arrival,0.10278787878787879,0.01133689828239032,0.0794018160769843,0.12553794949714198,group_bootstrap,275,15,0,available_paired_attendees,0,275,935
-uk-general-election-1997,UK General Election,historical,uk-general-election-1997:historical:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,275,935
-uk-general-election-1997,UK General Election,historical,uk-general-election-1997:historical:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,275,935
-uk-general-election-1997,UK General Election,historical,uk-general-election-1997:historical:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,275,935
-uk-health-1998,UK Health,cor_sood,uk-health-1998:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,230
-uk-health-1998,UK Health,cor_sood,uk-health-1998:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,230
-uk-health-1998,UK Health,cor_sood,uk-health-1998:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,230
-uk-health-1998,UK Health,cor_sood,uk-health-1998:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,230
-uk-health-1998,UK Health,cor_sood,uk-health-1998:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,230
-uk-health-1998,UK Health,cor_sood,uk-health-1998:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,230
-uk-health-1998,UK Health,historical,uk-health-1998:historical:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,230,0
-uk-health-1998,UK Health,historical,uk-health-1998:historical:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,230,0
-uk-health-1998,UK Health,historical,uk-health-1998:historical:knowledge,post_minus_pre_arrival,0.08479532163742692,0.015331026094730818,0.05528498852835138,0.11611443909478844,group_bootstrap,228,15,0,available_paired_attendees,0,230,0
-uk-health-1998,UK Health,historical,uk-health-1998:historical:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,230,0
-uk-health-1998,UK Health,historical,uk-health-1998:historical:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,230,0
-uk-health-1998,UK Health,historical,uk-health-1998:historical:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,230,0
-uk-monarchy-1996,UK Monarchy,cor_sood,uk-monarchy-1996:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,258
-uk-monarchy-1996,UK Monarchy,cor_sood,uk-monarchy-1996:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,258
-uk-monarchy-1996,UK Monarchy,cor_sood,uk-monarchy-1996:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,258
-uk-monarchy-1996,UK Monarchy,cor_sood,uk-monarchy-1996:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,258
-uk-monarchy-1996,UK Monarchy,cor_sood,uk-monarchy-1996:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,258
-uk-monarchy-1996,UK Monarchy,cor_sood,uk-monarchy-1996:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,258
-uk-monarchy-1996,UK Monarchy,historical,uk-monarchy-1996:historical:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,258,599
-uk-monarchy-1996,UK Monarchy,historical,uk-monarchy-1996:historical:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,258,599
-uk-monarchy-1996,UK Monarchy,historical,uk-monarchy-1996:historical:knowledge,post_minus_pre_arrival,0.14556416881998277,0.008278297232095928,0.13053567923781392,0.1635814620394673,group_bootstrap,258,15,0,available_paired_attendees,0,258,599
-uk-monarchy-1996,UK Monarchy,historical,uk-monarchy-1996:historical:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,258,599
-uk-monarchy-1996,UK Monarchy,historical,uk-monarchy-1996:historical:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,258,599
-uk-monarchy-1996,UK Monarchy,historical,uk-monarchy-1996:historical:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,258,599
-vermont-energy-2007,Vermont Energy,cor_sood,vermont-energy-2007:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,146
-vermont-energy-2007,Vermont Energy,cor_sood,vermont-energy-2007:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,146
-vermont-energy-2007,Vermont Energy,cor_sood,vermont-energy-2007:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,146
-vermont-energy-2007,Vermont Energy,cor_sood,vermont-energy-2007:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,146
-vermont-energy-2007,Vermont Energy,cor_sood,vermont-energy-2007:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,146
-vermont-energy-2007,Vermont Energy,cor_sood,vermont-energy-2007:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,146
-wtu-1996,West Texas Utilities,cor_sood,wtu-1996:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,230
-wtu-1996,West Texas Utilities,cor_sood,wtu-1996:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,230
-wtu-1996,West Texas Utilities,cor_sood,wtu-1996:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,230
-wtu-1996,West Texas Utilities,cor_sood,wtu-1996:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,230
-wtu-1996,West Texas Utilities,cor_sood,wtu-1996:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,230
-wtu-1996,West Texas Utilities,cor_sood,wtu-1996:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,230
-wtu-1996,West Texas Utilities,historical,wtu-1996:historical:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,230,1000
-wtu-1996,West Texas Utilities,historical,wtu-1996:historical:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,230,1000
-wtu-1996,West Texas Utilities,historical,wtu-1996:historical:knowledge,post_minus_pre_arrival,0.2878260869565218,0.023123269160290543,0.24139644810588157,0.3333734939759036,group_bootstrap,230,14,0,available_paired_attendees,0,230,1000
-wtu-1996,West Texas Utilities,historical,wtu-1996:historical:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,230,1000
-wtu-1996,West Texas Utilities,historical,wtu-1996:historical:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,230,1000
-wtu-1996,West Texas Utilities,historical,wtu-1996:historical:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,230,1000
-zeguo-2005,Zeguo Township,historical,zeguo-2005:historical:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,233,36
-zeguo-2005,Zeguo Township,historical,zeguo-2005:historical:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,233,36
-zeguo-2005,Zeguo Township,historical,zeguo-2005:historical:knowledge,post_minus_pre_arrival,0.1163793103448276,0.02807830394730445,0.06193588448261337,0.16913456805316274,group_bootstrap,232,16,0,available_paired_attendees,0,233,36
-zeguo-2005,Zeguo Township,historical,zeguo-2005:historical:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,233,36
-zeguo-2005,Zeguo Township,historical,zeguo-2005:historical:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,233,36
-zeguo-2005,Zeguo Township,historical,zeguo-2005:historical:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,233,36
+poll_id,study_id,pollname,source_dataset,battery_id,contrast,estimate,std_error,lower,upper,inference,n_people,n_known_groups,n_unknown_group,sample,n_incompatible_denominator,n_attendees_total,n_unknown_attendance
+a1r-climate-2021,a1r-climate-2021,America in One Room: Climate,control,a1r-climate-2021:control:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,962,0
+a1r-climate-2021,a1r-climate-2021,America in One Room: Climate,control,a1r-climate-2021:control:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,962,0
+a1r-climate-2021,a1r-climate-2021,America in One Room: Climate,control,a1r-climate-2021:control:knowledge,post_minus_pre_arrival,0.12201143451143454,0.00689955394344442,0.10856405808302057,0.13571721369240017,group_bootstrap,962,58,0,available_paired_attendees,0,962,0
+a1r-climate-2021,a1r-climate-2021,America in One Room: Climate,control,a1r-climate-2021:control:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,962,0
+a1r-climate-2021,a1r-climate-2021,America in One Room: Climate,control,a1r-climate-2021:control:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,962,0
+a1r-climate-2021,a1r-climate-2021,America in One Room: Climate,control,a1r-climate-2021:control:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,962,0
+america-in-one-room-2019,america-in-one-room-2019,America in One Room,control,america-in-one-room-2019:control:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,526,0
+america-in-one-room-2019,america-in-one-room-2019,America in One Room,control,america-in-one-room-2019:control:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,526,0
+america-in-one-room-2019,america-in-one-room-2019,America in One Room,control,america-in-one-room-2019:control:knowledge,post_minus_pre_arrival,0.14285714285714285,0.009229882284141774,0.12482156193321244,0.1621257243748947,group_bootstrap,523,40,0,available_paired_attendees,0,526,0
+america-in-one-room-2019,america-in-one-room-2019,America in One Room,control,america-in-one-room-2019:control:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,526,0
+america-in-one-room-2019,america-in-one-room-2019,America in One Room,control,america-in-one-room-2019:control:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,526,0
+america-in-one-room-2019,america-in-one-room-2019,America in One Room,control,america-in-one-room-2019:control:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,526,0
+australia-republic-1999,australia-republic-1999,Australia Republic Referendum,cor_sood,australia-republic-1999:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,347
+australia-republic-1999,australia-republic-1999,Australia Republic Referendum,cor_sood,australia-republic-1999:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,347
+australia-republic-1999,australia-republic-1999,Australia Republic Referendum,cor_sood,australia-republic-1999:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,347
+australia-republic-1999,australia-republic-1999,Australia Republic Referendum,cor_sood,australia-republic-1999:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,347
+australia-republic-1999,australia-republic-1999,Australia Republic Referendum,cor_sood,australia-republic-1999:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,347
+australia-republic-1999,australia-republic-1999,Australia Republic Referendum,cor_sood,australia-republic-1999:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,347
+australia-republic-1999,australia-republic-1999,Australia Republic Referendum,historical,australia-republic-1999:historical:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,347,4312
+australia-republic-1999,australia-republic-1999,Australia Republic Referendum,historical,australia-republic-1999:historical:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,347,4312
+australia-republic-1999,australia-republic-1999,Australia Republic Referendum,historical,australia-republic-1999:historical:knowledge,post_minus_pre_arrival,0.23967339097022095,0.010210639821060968,0.21879874976272237,0.2579190056134723,group_bootstrap,347,24,0,available_paired_attendees,0,347,4312
+australia-republic-1999,australia-republic-1999,Australia Republic Referendum,historical,australia-republic-1999:historical:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,347,4312
+australia-republic-1999,australia-republic-1999,Australia Republic Referendum,historical,australia-republic-1999:historical:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,347,4312
+australia-republic-1999,australia-republic-1999,Australia Republic Referendum,historical,australia-republic-1999:historical:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,347,4312
+btp-2007,btp-2007,By the People 2007,cor_sood,btp-2007:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,301,0
+btp-2007,btp-2007,By the People 2007,cor_sood,btp-2007:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,301,0
+btp-2007,btp-2007,By the People 2007,cor_sood,btp-2007:cor_sood:knowledge,post_minus_pre_arrival,0.11212624584717609,0.009761689537333702,0.09212736606340936,0.12990196078431374,group_bootstrap,301,20,0,available_paired_attendees,0,301,0
+btp-2007,btp-2007,By the People 2007,cor_sood,btp-2007:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,301,0
+btp-2007,btp-2007,By the People 2007,cor_sood,btp-2007:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,301,0
+btp-2007,btp-2007,By the People 2007,cor_sood,btp-2007:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,301,0
+btp-general-election-2004,btp-general-election-2004,By the People 2004 US General Election,cor_sood,btp-general-election-2004:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,250
+btp-general-election-2004,btp-general-election-2004,By the People 2004 US General Election,cor_sood,btp-general-election-2004:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,250
+btp-general-election-2004,btp-general-election-2004,By the People 2004 US General Election,cor_sood,btp-general-election-2004:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,250
+btp-general-election-2004,btp-general-election-2004,By the People 2004 US General Election,cor_sood,btp-general-election-2004:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,250
+btp-general-election-2004,btp-general-election-2004,By the People 2004 US General Election,cor_sood,btp-general-election-2004:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,250
+btp-general-election-2004,btp-general-election-2004,By the People 2004 US General Election,cor_sood,btp-general-election-2004:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,250
+btp-general-election-2004,btp-general-election-2004,By the People 2004 US General Election,historical,btp-general-election-2004:historical:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,248,51
+btp-general-election-2004,btp-general-election-2004,By the People 2004 US General Election,historical,btp-general-election-2004:historical:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,248,51
+btp-general-election-2004,btp-general-election-2004,By the People 2004 US General Election,historical,btp-general-election-2004:historical:knowledge,post_minus_pre_arrival,0.0689964157706093,0.011150181523014288,0.048636200221488735,0.09247611940298504,group_bootstrap,248,15,0,available_paired_attendees,0,248,51
+btp-general-election-2004,btp-general-election-2004,By the People 2004 US General Election,historical,btp-general-election-2004:historical:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,248,51
+btp-general-election-2004,btp-general-election-2004,By the People 2004 US General Election,historical,btp-general-election-2004:historical:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,248,51
+btp-general-election-2004,btp-general-election-2004,By the People 2004 US General Election,historical,btp-general-election-2004:historical:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,248,51
+btp-health-education-2005,btp-health-education-2005,By the People: Health and Education,cor_sood,btp-health-education-2005:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,454
+btp-health-education-2005,btp-health-education-2005,By the People: Health and Education,cor_sood,btp-health-education-2005:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,454
+btp-health-education-2005,btp-health-education-2005,By the People: Health and Education,cor_sood,btp-health-education-2005:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,454
+btp-health-education-2005,btp-health-education-2005,By the People: Health and Education,cor_sood,btp-health-education-2005:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,454
+btp-health-education-2005,btp-health-education-2005,By the People: Health and Education,cor_sood,btp-health-education-2005:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,454
+btp-health-education-2005,btp-health-education-2005,By the People: Health and Education,cor_sood,btp-health-education-2005:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,454
+btp-health-education-2005,btp-health-education-2005,By the People: Health and Education,historical,btp-health-education-2005:historical:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,454,0
+btp-health-education-2005,btp-health-education-2005,By the People: Health and Education,historical,btp-health-education-2005:historical:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,454,0
+btp-health-education-2005,btp-health-education-2005,By the People: Health and Education,historical,btp-health-education-2005:historical:knowledge,post_minus_pre_arrival,0.05910425844346547,0.013920796561355878,0.030997472212742325,0.08664528414674462,group_bootstrap,454,30,0,available_paired_attendees,0,454,0
+btp-health-education-2005,btp-health-education-2005,By the People: Health and Education,historical,btp-health-education-2005:historical:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,454,0
+btp-health-education-2005,btp-health-education-2005,By the People: Health and Education,historical,btp-health-education-2005:historical:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,454,0
+btp-health-education-2005,btp-health-education-2005,By the People: Health and Education,historical,btp-health-education-2005:historical:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,454,0
+btp-national-2003,btp-national-2003,By the People: National,historical,btp-national-2003:historical:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,245,0
+btp-national-2003,btp-national-2003,By the People: National,historical,btp-national-2003:historical:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,245,0
+btp-national-2003,btp-national-2003,By the People: National,historical,btp-national-2003:historical:knowledge,post_minus_pre_arrival,0.03450834879406309,0.009249275707728653,0.016587835578669056,0.05303857350800582,group_bootstrap,245,15,0,available_paired_attendees,0,245,0
+btp-national-2003,btp-national-2003,By the People: National,historical,btp-national-2003:historical:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,245,0
+btp-national-2003,btp-national-2003,By the People: National,historical,btp-national-2003:historical:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,245,0
+btp-national-2003,btp-national-2003,By the People: National,historical,btp-national-2003:historical:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,245,0
+btp-online-primaries-2004,btp-primaries-2004,By the People 2004 Online Primaries,cor_sood,btp-online-primaries-2004:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,250,0
+btp-online-primaries-2004,btp-primaries-2004,By the People 2004 Online Primaries,cor_sood,btp-online-primaries-2004:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,250,0
+btp-online-primaries-2004,btp-primaries-2004,By the People 2004 Online Primaries,cor_sood,btp-online-primaries-2004:cor_sood:knowledge,post_minus_pre_arrival,0.1105797967722654,,,,descriptive_unknown_groups,239,16,1,available_paired_attendees,0,250,0
+btp-online-primaries-2004,btp-primaries-2004,By the People 2004 Online Primaries,cor_sood,btp-online-primaries-2004:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,250,0
+btp-online-primaries-2004,btp-primaries-2004,By the People 2004 Online Primaries,cor_sood,btp-online-primaries-2004:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,250,0
+btp-online-primaries-2004,btp-primaries-2004,By the People 2004 Online Primaries,cor_sood,btp-online-primaries-2004:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,250,0
+btp-presidential-primaries-2004,btp-primaries-2004,By the People 2004 US Presidential Primaries,historical,btp-presidential-primaries-2004:historical:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,217,1072
+btp-presidential-primaries-2004,btp-primaries-2004,By the People 2004 US Presidential Primaries,historical,btp-presidential-primaries-2004:historical:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,217,1072
+btp-presidential-primaries-2004,btp-primaries-2004,By the People 2004 US Presidential Primaries,historical,btp-presidential-primaries-2004:historical:knowledge,post_minus_pre_arrival,0.1184990125082291,0.014068412678758177,0.0925553319919517,0.14727012840941042,group_bootstrap,217,16,0,available_paired_attendees,0,217,1072
+btp-presidential-primaries-2004,btp-primaries-2004,By the People 2004 US Presidential Primaries,historical,btp-presidential-primaries-2004:historical:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,217,1072
+btp-presidential-primaries-2004,btp-primaries-2004,By the People 2004 US Presidential Primaries,historical,btp-presidential-primaries-2004:historical:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,217,1072
+btp-presidential-primaries-2004,btp-primaries-2004,By the People 2004 US Presidential Primaries,historical,btp-presidential-primaries-2004:historical:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,217,1072
+california-whats-next-2011,california-whats-next-2011,California What's Next,cor_sood,california-whats-next-2011:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,396,0
+california-whats-next-2011,california-whats-next-2011,California What's Next,cor_sood,california-whats-next-2011:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,396,0
+california-whats-next-2011,california-whats-next-2011,California What's Next,cor_sood,california-whats-next-2011:cor_sood:knowledge,post_minus_pre_arrival,0.2,0.012150043085310976,0.17770428232279983,0.22396260245901636,group_bootstrap,386,25,0,available_paired_attendees,0,396,0
+california-whats-next-2011,california-whats-next-2011,California What's Next,cor_sood,california-whats-next-2011:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,396,0
+california-whats-next-2011,california-whats-next-2011,California What's Next,cor_sood,california-whats-next-2011:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,396,0
+california-whats-next-2011,california-whats-next-2011,California What's Next,cor_sood,california-whats-next-2011:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,396,0
+cpl-1996,cpl-1996,Central Power & Light,cor_sood,cpl-1996:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,216
+cpl-1996,cpl-1996,Central Power & Light,cor_sood,cpl-1996:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,216
+cpl-1996,cpl-1996,Central Power & Light,cor_sood,cpl-1996:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,216
+cpl-1996,cpl-1996,Central Power & Light,cor_sood,cpl-1996:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,216
+cpl-1996,cpl-1996,Central Power & Light,cor_sood,cpl-1996:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,216
+cpl-1996,cpl-1996,Central Power & Light,cor_sood,cpl-1996:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,216
+cpl-1996,cpl-1996,Central Power & Light,historical,cpl-1996:historical:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,216,1030
+cpl-1996,cpl-1996,Central Power & Light,historical,cpl-1996:historical:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,216,1030
+cpl-1996,cpl-1996,Central Power & Light,historical,cpl-1996:historical:knowledge,post_minus_pre_arrival,0.1607142857142857,0.01311382898087718,0.13585371648659467,0.18726007278638857,group_bootstrap,216,16,0,available_paired_attendees,0,216,1030
+cpl-1996,cpl-1996,Central Power & Light,historical,cpl-1996:historical:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,216,1030
+cpl-1996,cpl-1996,Central Power & Light,historical,cpl-1996:historical:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,216,1030
+cpl-1996,cpl-1996,Central Power & Light,historical,cpl-1996:historical:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,216,1030
+denmark-euro-2000,denmark-euro-2000,Denmark: Euro,cor_sood,denmark-euro-2000:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,359,0
+denmark-euro-2000,denmark-euro-2000,Denmark: Euro,cor_sood,denmark-euro-2000:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,359,0
+denmark-euro-2000,denmark-euro-2000,Denmark: Euro,cor_sood,denmark-euro-2000:cor_sood:knowledge,post_minus_pre_arrival,0.21974620860414731,,,,descriptive_unknown_groups,359,0,359,available_paired_attendees,0,359,0
+denmark-euro-2000,denmark-euro-2000,Denmark: Euro,cor_sood,denmark-euro-2000:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,359,0
+denmark-euro-2000,denmark-euro-2000,Denmark: Euro,cor_sood,denmark-euro-2000:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,359,0
+denmark-euro-2000,denmark-euro-2000,Denmark: Euro,cor_sood,denmark-euro-2000:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,359,0
+europolis-2009,europolis-2009,Europolis,cor_sood,europolis-2009:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,348
+europolis-2009,europolis-2009,Europolis,cor_sood,europolis-2009:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,348
+europolis-2009,europolis-2009,Europolis,cor_sood,europolis-2009:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,348
+europolis-2009,europolis-2009,Europolis,cor_sood,europolis-2009:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,348
+europolis-2009,europolis-2009,Europolis,cor_sood,europolis-2009:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,348
+europolis-2009,europolis-2009,Europolis,cor_sood,europolis-2009:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,348
+europolis-2009,europolis-2009,Europolis,historical,europolis-2009:historical:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,348,4036
+europolis-2009,europolis-2009,Europolis,historical,europolis-2009:historical:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,348,4036
+europolis-2009,europolis-2009,Europolis,historical,europolis-2009:historical:knowledge,post_minus_pre_arrival,0.16570881226053638,0.0189209452060699,0.1285741913577513,0.20220801767676766,group_bootstrap,348,25,0,available_paired_attendees,0,348,4036
+europolis-2009,europolis-2009,Europolis,historical,europolis-2009:historical:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,348,4036
+europolis-2009,europolis-2009,Europolis,historical,europolis-2009:historical:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,348,4036
+europolis-2009,europolis-2009,Europolis,historical,europolis-2009:historical:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,348,4036
+marousi-2006,marousi-2006,"Marousi, Greece",score_only,marousi-2006:score_only:knowledge,post_minus_arrival,0.022556390977443625,,,,descriptive_unknown_groups,133,15,4,available_paired_attendees,0,159,1116
+marousi-2006,marousi-2006,"Marousi, Greece",score_only,marousi-2006:score_only:knowledge,arrival_minus_pre_arrival,0.04545453617933286,,,,descriptive_unknown_groups,154,15,8,available_paired_attendees,0,159,1116
+marousi-2006,marousi-2006,"Marousi, Greece",score_only,marousi-2006:score_only:knowledge,post_minus_pre_arrival,0.0672877753003043,,,,descriptive_unknown_groups,138,15,9,available_paired_attendees,0,159,1116
+marousi-2006,marousi-2006,"Marousi, Greece",score_only,marousi-2006:score_only:knowledge,post_minus_arrival,0.022556390977443625,,,,descriptive_unknown_groups,133,15,4,all_three_observed_attendees,0,159,1116
+marousi-2006,marousi-2006,"Marousi, Greece",score_only,marousi-2006:score_only:knowledge,arrival_minus_pre_arrival,0.050483341503860336,,,,descriptive_unknown_groups,133,15,4,all_three_observed_attendees,0,159,1116
+marousi-2006,marousi-2006,"Marousi, Greece",score_only,marousi-2006:score_only:knowledge,post_minus_pre_arrival,0.07303973248130395,,,,descriptive_unknown_groups,133,15,4,all_three_observed_attendees,0,159,1116
+michigan-2009,michigan-2009,Michigan,cor_sood,michigan-2009:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,310,0
+michigan-2009,michigan-2009,Michigan,cor_sood,michigan-2009:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,310,0
+michigan-2009,michigan-2009,Michigan,cor_sood,michigan-2009:cor_sood:knowledge,post_minus_pre_arrival,0.09784946236559142,0.013512045902237122,0.07395694783926761,0.12492681009922388,group_bootstrap,310,16,0,available_paired_attendees,0,310,0
+michigan-2009,michigan-2009,Michigan,cor_sood,michigan-2009:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,310,0
+michigan-2009,michigan-2009,Michigan,cor_sood,michigan-2009:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,310,0
+michigan-2009,michigan-2009,Michigan,cor_sood,michigan-2009:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,310,0
+new-haven-2004,new-haven-2004,"New Haven, CT",historical,new-haven-2004:historical:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,132,0
+new-haven-2004,new-haven-2004,"New Haven, CT",historical,new-haven-2004:historical:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,132,0
+new-haven-2004,new-haven-2004,"New Haven, CT",historical,new-haven-2004:historical:knowledge,post_minus_pre_arrival,0.22253787878787878,0.018582279001509702,0.1861878812676685,0.2595419847328244,group_bootstrap,132,16,0,available_paired_attendees,0,132,0
+new-haven-2004,new-haven-2004,"New Haven, CT",historical,new-haven-2004:historical:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,132,0
+new-haven-2004,new-haven-2004,"New Haven, CT",historical,new-haven-2004:historical:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,132,0
+new-haven-2004,new-haven-2004,"New Haven, CT",historical,new-haven-2004:historical:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,132,0
+nic-1996,nic-1996,National Issues Convention,cor_sood,nic-1996:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,466
+nic-1996,nic-1996,National Issues Convention,cor_sood,nic-1996:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,466
+nic-1996,nic-1996,National Issues Convention,cor_sood,nic-1996:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,466
+nic-1996,nic-1996,National Issues Convention,cor_sood,nic-1996:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,466
+nic-1996,nic-1996,National Issues Convention,cor_sood,nic-1996:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,466
+nic-1996,nic-1996,National Issues Convention,cor_sood,nic-1996:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,466
+nic-1996,nic-1996,National Issues Convention,historical,nic-1996:historical:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,466,445
+nic-1996,nic-1996,National Issues Convention,historical,nic-1996:historical:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,466,445
+nic-1996,nic-1996,National Issues Convention,historical,nic-1996:historical:knowledge,post_minus_pre_arrival,0.08114035087719298,0.00838679951700791,0.06518572286744093,0.09750468557990682,group_bootstrap,456,30,0,available_paired_attendees,0,466,445
+nic-1996,nic-1996,National Issues Convention,historical,nic-1996:historical:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,466,445
+nic-1996,nic-1996,National Issues Convention,historical,nic-1996:historical:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,466,445
+nic-1996,nic-1996,National Issues Convention,historical,nic-1996:historical:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,466,445
+nic2-2003,nic2-2003,National Issues Convention 2,historical,nic2-2003:historical:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,340,1153
+nic2-2003,nic2-2003,National Issues Convention 2,historical,nic2-2003:historical:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,340,1153
+nic2-2003,nic2-2003,National Issues Convention 2,historical,nic2-2003:historical:knowledge,post_minus_pre_arrival,0.12299465240641712,0.010917567284872694,0.10065256141982486,0.14327688651218065,group_bootstrap,340,24,0,available_paired_attendees,0,340,1153
+nic2-2003,nic2-2003,National Issues Convention 2,historical,nic2-2003:historical:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,340,1153
+nic2-2003,nic2-2003,National Issues Convention 2,historical,nic2-2003:historical:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,340,1153
+nic2-2003,nic2-2003,National Issues Convention 2,historical,nic2-2003:historical:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,340,1153
+northern-ireland-2007,northern-ireland-2007,Northern Ireland,cor_sood,northern-ireland-2007:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,124,0
+northern-ireland-2007,northern-ireland-2007,Northern Ireland,cor_sood,northern-ireland-2007:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,124,0
+northern-ireland-2007,northern-ireland-2007,Northern Ireland,cor_sood,northern-ireland-2007:cor_sood:knowledge,post_minus_pre_arrival,0.2857142857142857,0.021691440394803682,0.2448481831757093,0.3301577082445881,group_bootstrap,124,20,0,available_paired_attendees,0,124,0
+northern-ireland-2007,northern-ireland-2007,Northern Ireland,cor_sood,northern-ireland-2007:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,124,0
+northern-ireland-2007,northern-ireland-2007,Northern Ireland,cor_sood,northern-ireland-2007:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,124,0
+northern-ireland-2007,northern-ireland-2007,Northern Ireland,cor_sood,northern-ireland-2007:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,124,0
+san-mateo-2008,san-mateo-2008,"San Mateo, CA",cor_sood,san-mateo-2008:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,239
+san-mateo-2008,san-mateo-2008,"San Mateo, CA",cor_sood,san-mateo-2008:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,239
+san-mateo-2008,san-mateo-2008,"San Mateo, CA",cor_sood,san-mateo-2008:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,239
+san-mateo-2008,san-mateo-2008,"San Mateo, CA",cor_sood,san-mateo-2008:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,239
+san-mateo-2008,san-mateo-2008,"San Mateo, CA",cor_sood,san-mateo-2008:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,239
+san-mateo-2008,san-mateo-2008,"San Mateo, CA",cor_sood,san-mateo-2008:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,239
+san-mateo-2008,san-mateo-2008,"San Mateo, CA",historical,san-mateo-2008:historical:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,239,1567
+san-mateo-2008,san-mateo-2008,"San Mateo, CA",historical,san-mateo-2008:historical:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,239,1567
+san-mateo-2008,san-mateo-2008,"San Mateo, CA",historical,san-mateo-2008:historical:knowledge,post_minus_pre_arrival,0.1727941176470588,0.01902904258036406,0.1358428192399863,0.21059124080412292,group_bootstrap,238,26,0,available_paired_attendees,0,239,1567
+san-mateo-2008,san-mateo-2008,"San Mateo, CA",historical,san-mateo-2008:historical:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,239,1567
+san-mateo-2008,san-mateo-2008,"San Mateo, CA",historical,san-mateo-2008:historical:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,239,1567
+san-mateo-2008,san-mateo-2008,"San Mateo, CA",historical,san-mateo-2008:historical:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,239,1567
+swepco-1996,swepco-1996,Southwestern Electric Power,cor_sood,swepco-1996:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,232
+swepco-1996,swepco-1996,Southwestern Electric Power,cor_sood,swepco-1996:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,232
+swepco-1996,swepco-1996,Southwestern Electric Power,cor_sood,swepco-1996:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,232
+swepco-1996,swepco-1996,Southwestern Electric Power,cor_sood,swepco-1996:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,232
+swepco-1996,swepco-1996,Southwestern Electric Power,cor_sood,swepco-1996:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,232
+swepco-1996,swepco-1996,Southwestern Electric Power,cor_sood,swepco-1996:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,232
+swepco-1996,swepco-1996,Southwestern Electric Power,historical,swepco-1996:historical:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,232,1246
+swepco-1996,swepco-1996,Southwestern Electric Power,historical,swepco-1996:historical:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,232,1246
+swepco-1996,swepco-1996,Southwestern Electric Power,historical,swepco-1996:historical:knowledge,post_minus_pre_arrival,0.20258620689655174,0.019697684497409197,0.1672348659003832,0.24168417366946776,group_bootstrap,232,14,0,available_paired_attendees,0,232,1246
+swepco-1996,swepco-1996,Southwestern Electric Power,historical,swepco-1996:historical:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,232,1246
+swepco-1996,swepco-1996,Southwestern Electric Power,historical,swepco-1996:historical:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,232,1246
+swepco-1996,swepco-1996,Southwestern Electric Power,historical,swepco-1996:historical:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,232,1246
+tomorrows-europe-2007,tomorrows-europe-2007,Tomorrow's Europe (EU),cor_sood,tomorrows-europe-2007:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,359
+tomorrows-europe-2007,tomorrows-europe-2007,Tomorrow's Europe (EU),cor_sood,tomorrows-europe-2007:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,359
+tomorrows-europe-2007,tomorrows-europe-2007,Tomorrow's Europe (EU),cor_sood,tomorrows-europe-2007:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,359
+tomorrows-europe-2007,tomorrows-europe-2007,Tomorrow's Europe (EU),cor_sood,tomorrows-europe-2007:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,359
+tomorrows-europe-2007,tomorrows-europe-2007,Tomorrow's Europe (EU),cor_sood,tomorrows-europe-2007:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,359
+tomorrows-europe-2007,tomorrows-europe-2007,Tomorrow's Europe (EU),cor_sood,tomorrows-europe-2007:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,359
+tomorrows-europe-2007,tomorrows-europe-2007,Tomorrow's Europe (EU),historical,tomorrows-europe-2007:historical:knowledge,post_minus_arrival,0.078039430449069,0.01185103501296961,0.05589585709880147,0.10272577345720083,group_bootstrap,332,18,0,available_paired_attendees,0,344,3206
+tomorrows-europe-2007,tomorrows-europe-2007,Tomorrow's Europe (EU),historical,tomorrows-europe-2007:historical:knowledge,arrival_minus_pre_arrival,0.10089020771513353,0.01592394388062632,0.0710238316105663,0.13295444077652666,group_bootstrap,337,18,0,available_paired_attendees,0,344,3206
+tomorrows-europe-2007,tomorrows-europe-2007,Tomorrow's Europe (EU),historical,tomorrows-europe-2007:historical:knowledge,post_minus_pre_arrival,0.18181818181818182,0.012366837017636401,0.1574572697417525,0.20519636052570187,group_bootstrap,335,18,0,available_paired_attendees,0,344,3206
+tomorrows-europe-2007,tomorrows-europe-2007,Tomorrow's Europe (EU),historical,tomorrows-europe-2007:historical:knowledge,post_minus_arrival,0.078039430449069,0.011823432627347774,0.05589585709880147,0.10229401362326432,group_bootstrap,332,18,0,all_three_observed_attendees,0,344,3206
+tomorrows-europe-2007,tomorrows-europe-2007,Tomorrow's Europe (EU),historical,tomorrows-europe-2007:historical:knowledge,arrival_minus_pre_arrival,0.10432639649507121,0.014886063413636574,0.07706294649425381,0.1341807112598104,group_bootstrap,332,18,0,all_three_observed_attendees,0,344,3206
+tomorrows-europe-2007,tomorrows-europe-2007,Tomorrow's Europe (EU),historical,tomorrows-europe-2007:historical:knowledge,post_minus_pre_arrival,0.1823658269441402,0.01254186901510156,0.15746182334485087,0.20645799002105647,group_bootstrap,332,18,0,all_three_observed_attendees,0,344,3206
+uk-crime-1994,uk-crime-1994,UK Crime,cor_sood,uk-crime-1994:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,299
+uk-crime-1994,uk-crime-1994,UK Crime,cor_sood,uk-crime-1994:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,299
+uk-crime-1994,uk-crime-1994,UK Crime,cor_sood,uk-crime-1994:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,299
+uk-crime-1994,uk-crime-1994,UK Crime,cor_sood,uk-crime-1994:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,299
+uk-crime-1994,uk-crime-1994,UK Crime,cor_sood,uk-crime-1994:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,299
+uk-crime-1994,uk-crime-1994,UK Crime,cor_sood,uk-crime-1994:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,299
+uk-crime-1994,uk-crime-1994,UK Crime,historical,uk-crime-1994:historical:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,299,570
+uk-crime-1994,uk-crime-1994,UK Crime,historical,uk-crime-1994:historical:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,299,570
+uk-crime-1994,uk-crime-1994,UK Crime,historical,uk-crime-1994:historical:knowledge,post_minus_pre_arrival,0.09460105112279028,0.011127992583887221,0.07238490146625061,0.11628703408728895,group_bootstrap,299,20,0,available_paired_attendees,0,299,570
+uk-crime-1994,uk-crime-1994,UK Crime,historical,uk-crime-1994:historical:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,299,570
+uk-crime-1994,uk-crime-1994,UK Crime,historical,uk-crime-1994:historical:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,299,570
+uk-crime-1994,uk-crime-1994,UK Crime,historical,uk-crime-1994:historical:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,299,570
+uk-eu-1995,uk-eu-1995,UK EU,cor_sood,uk-eu-1995:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,224
+uk-eu-1995,uk-eu-1995,UK EU,cor_sood,uk-eu-1995:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,224
+uk-eu-1995,uk-eu-1995,UK EU,cor_sood,uk-eu-1995:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,224
+uk-eu-1995,uk-eu-1995,UK EU,cor_sood,uk-eu-1995:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,224
+uk-eu-1995,uk-eu-1995,UK EU,cor_sood,uk-eu-1995:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,224
+uk-eu-1995,uk-eu-1995,UK EU,cor_sood,uk-eu-1995:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,224
+uk-eu-1995,uk-eu-1995,UK EU,historical,uk-eu-1995:historical:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,238,662
+uk-eu-1995,uk-eu-1995,UK EU,historical,uk-eu-1995:historical:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,238,662
+uk-eu-1995,uk-eu-1995,UK EU,historical,uk-eu-1995:historical:knowledge,post_minus_pre_arrival,0.20267857142857143,0.01845416063242026,0.17051502419149484,0.24266722454672243,group_bootstrap,224,16,0,available_paired_attendees,0,238,662
+uk-eu-1995,uk-eu-1995,UK EU,historical,uk-eu-1995:historical:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,238,662
+uk-eu-1995,uk-eu-1995,UK EU,historical,uk-eu-1995:historical:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,238,662
+uk-eu-1995,uk-eu-1995,UK EU,historical,uk-eu-1995:historical:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,238,662
+uk-general-election-1997,uk-general-election-1997,UK General Election,cor_sood,uk-general-election-1997:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,275
+uk-general-election-1997,uk-general-election-1997,UK General Election,cor_sood,uk-general-election-1997:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,275
+uk-general-election-1997,uk-general-election-1997,UK General Election,cor_sood,uk-general-election-1997:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,275
+uk-general-election-1997,uk-general-election-1997,UK General Election,cor_sood,uk-general-election-1997:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,275
+uk-general-election-1997,uk-general-election-1997,UK General Election,cor_sood,uk-general-election-1997:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,275
+uk-general-election-1997,uk-general-election-1997,UK General Election,cor_sood,uk-general-election-1997:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,275
+uk-general-election-1997,uk-general-election-1997,UK General Election,historical,uk-general-election-1997:historical:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,275,935
+uk-general-election-1997,uk-general-election-1997,UK General Election,historical,uk-general-election-1997:historical:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,275,935
+uk-general-election-1997,uk-general-election-1997,UK General Election,historical,uk-general-election-1997:historical:knowledge,post_minus_pre_arrival,0.10278787878787879,0.01133689828239032,0.0794018160769843,0.12553794949714198,group_bootstrap,275,15,0,available_paired_attendees,0,275,935
+uk-general-election-1997,uk-general-election-1997,UK General Election,historical,uk-general-election-1997:historical:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,275,935
+uk-general-election-1997,uk-general-election-1997,UK General Election,historical,uk-general-election-1997:historical:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,275,935
+uk-general-election-1997,uk-general-election-1997,UK General Election,historical,uk-general-election-1997:historical:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,275,935
+uk-health-1998,uk-health-1998,UK Health,cor_sood,uk-health-1998:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,230
+uk-health-1998,uk-health-1998,UK Health,cor_sood,uk-health-1998:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,230
+uk-health-1998,uk-health-1998,UK Health,cor_sood,uk-health-1998:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,230
+uk-health-1998,uk-health-1998,UK Health,cor_sood,uk-health-1998:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,230
+uk-health-1998,uk-health-1998,UK Health,cor_sood,uk-health-1998:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,230
+uk-health-1998,uk-health-1998,UK Health,cor_sood,uk-health-1998:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,230
+uk-health-1998,uk-health-1998,UK Health,historical,uk-health-1998:historical:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,230,0
+uk-health-1998,uk-health-1998,UK Health,historical,uk-health-1998:historical:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,230,0
+uk-health-1998,uk-health-1998,UK Health,historical,uk-health-1998:historical:knowledge,post_minus_pre_arrival,0.08479532163742692,0.015331026094730818,0.05528498852835138,0.11611443909478844,group_bootstrap,228,15,0,available_paired_attendees,0,230,0
+uk-health-1998,uk-health-1998,UK Health,historical,uk-health-1998:historical:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,230,0
+uk-health-1998,uk-health-1998,UK Health,historical,uk-health-1998:historical:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,230,0
+uk-health-1998,uk-health-1998,UK Health,historical,uk-health-1998:historical:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,230,0
+uk-monarchy-1996,uk-monarchy-1996,UK Monarchy,cor_sood,uk-monarchy-1996:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,258
+uk-monarchy-1996,uk-monarchy-1996,UK Monarchy,cor_sood,uk-monarchy-1996:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,258
+uk-monarchy-1996,uk-monarchy-1996,UK Monarchy,cor_sood,uk-monarchy-1996:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,258
+uk-monarchy-1996,uk-monarchy-1996,UK Monarchy,cor_sood,uk-monarchy-1996:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,258
+uk-monarchy-1996,uk-monarchy-1996,UK Monarchy,cor_sood,uk-monarchy-1996:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,258
+uk-monarchy-1996,uk-monarchy-1996,UK Monarchy,cor_sood,uk-monarchy-1996:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,258
+uk-monarchy-1996,uk-monarchy-1996,UK Monarchy,historical,uk-monarchy-1996:historical:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,258,599
+uk-monarchy-1996,uk-monarchy-1996,UK Monarchy,historical,uk-monarchy-1996:historical:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,258,599
+uk-monarchy-1996,uk-monarchy-1996,UK Monarchy,historical,uk-monarchy-1996:historical:knowledge,post_minus_pre_arrival,0.14556416881998277,0.008278297232095928,0.13053567923781392,0.1635814620394673,group_bootstrap,258,15,0,available_paired_attendees,0,258,599
+uk-monarchy-1996,uk-monarchy-1996,UK Monarchy,historical,uk-monarchy-1996:historical:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,258,599
+uk-monarchy-1996,uk-monarchy-1996,UK Monarchy,historical,uk-monarchy-1996:historical:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,258,599
+uk-monarchy-1996,uk-monarchy-1996,UK Monarchy,historical,uk-monarchy-1996:historical:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,258,599
+vermont-energy-2007,vermont-energy-2007,Vermont Energy,cor_sood,vermont-energy-2007:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,146,0
+vermont-energy-2007,vermont-energy-2007,Vermont Energy,cor_sood,vermont-energy-2007:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,146,0
+vermont-energy-2007,vermont-energy-2007,Vermont Energy,cor_sood,vermont-energy-2007:cor_sood:knowledge,post_minus_pre_arrival,0.3622526636225266,,,,descriptive_unknown_groups,146,0,146,available_paired_attendees,0,146,0
+vermont-energy-2007,vermont-energy-2007,Vermont Energy,cor_sood,vermont-energy-2007:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,146,0
+vermont-energy-2007,vermont-energy-2007,Vermont Energy,cor_sood,vermont-energy-2007:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,146,0
+vermont-energy-2007,vermont-energy-2007,Vermont Energy,cor_sood,vermont-energy-2007:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,146,0
+wtu-1996,wtu-1996,West Texas Utilities,cor_sood,wtu-1996:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,230
+wtu-1996,wtu-1996,West Texas Utilities,cor_sood,wtu-1996:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,230
+wtu-1996,wtu-1996,West Texas Utilities,cor_sood,wtu-1996:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,0,230
+wtu-1996,wtu-1996,West Texas Utilities,cor_sood,wtu-1996:cor_sood:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,230
+wtu-1996,wtu-1996,West Texas Utilities,cor_sood,wtu-1996:cor_sood:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,230
+wtu-1996,wtu-1996,West Texas Utilities,cor_sood,wtu-1996:cor_sood:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,0,230
+wtu-1996,wtu-1996,West Texas Utilities,historical,wtu-1996:historical:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,230,1000
+wtu-1996,wtu-1996,West Texas Utilities,historical,wtu-1996:historical:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,230,1000
+wtu-1996,wtu-1996,West Texas Utilities,historical,wtu-1996:historical:knowledge,post_minus_pre_arrival,0.2878260869565218,0.023123269160290543,0.24139644810588157,0.3333734939759036,group_bootstrap,230,14,0,available_paired_attendees,0,230,1000
+wtu-1996,wtu-1996,West Texas Utilities,historical,wtu-1996:historical:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,230,1000
+wtu-1996,wtu-1996,West Texas Utilities,historical,wtu-1996:historical:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,230,1000
+wtu-1996,wtu-1996,West Texas Utilities,historical,wtu-1996:historical:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,230,1000
+zeguo-2005,zeguo-2005,Zeguo Township,historical,zeguo-2005:historical:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,233,36
+zeguo-2005,zeguo-2005,Zeguo Township,historical,zeguo-2005:historical:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,available_paired_attendees,0,233,36
+zeguo-2005,zeguo-2005,Zeguo Township,historical,zeguo-2005:historical:knowledge,post_minus_pre_arrival,0.1163793103448276,0.02807830394730445,0.06193588448261337,0.16913456805316274,group_bootstrap,232,16,0,available_paired_attendees,0,233,36
+zeguo-2005,zeguo-2005,Zeguo Township,historical,zeguo-2005:historical:knowledge,post_minus_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,233,36
+zeguo-2005,zeguo-2005,Zeguo Township,historical,zeguo-2005:historical:knowledge,arrival_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,233,36
+zeguo-2005,zeguo-2005,Zeguo Township,historical,zeguo-2005:historical:knowledge,post_minus_pre_arrival,,,,,no_eligible_pairs,0,0,0,all_three_observed_attendees,0,233,36

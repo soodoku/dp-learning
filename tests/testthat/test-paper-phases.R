@@ -6,13 +6,13 @@ test_that("phase exhibits keep scores, sample sizes and unsupported intervals", 
   expect_true(all(vapply(table, is.character, logical(1))))
   marousi <- table[grepl("Marousi", table$Poll), ]
   expect_equal(unname(marousi$N), "133")
-  expect_equal(unname(marousi$`During event (pp)`), "2.3")
-  expect_equal(unname(marousi$`Before arrival (pp)`), "5.0")
-  expect_equal(unname(marousi$`Total (pp)`), "7.3")
+  expect_equal(unname(marousi$`Arrival to exit`), "2.3")
+  expect_equal(unname(marousi$`Pre-arrival to arrival`), "5.0")
+  expect_equal(unname(marousi$`Pre-arrival to exit`), "7.3")
   europe <- table[grepl("Europe", table$Poll), ]
   expect_equal(unname(europe$N), "332")
-  expect_match(europe$`During event (pp)`, "7.8", fixed = TRUE)
-  expect_match(europe$`During event (pp)`, "[5.6, 10.2]", fixed = TRUE)
+  expect_match(europe$`Arrival to exit`, "7.8", fixed = TRUE)
+  expect_match(europe$`Arrival to exit`, "[5.6, 10.2]", fixed = TRUE)
   changed <- balanced
   changed$n_people[1] <- changed$n_people[1] - 1L
   expect_error(phase_comparison_table(changed))

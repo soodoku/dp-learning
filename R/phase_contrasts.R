@@ -9,7 +9,7 @@ phase_score_frame <- function(participants, scores, polls) {
   ids <- c("poll_id", "source_dataset", "respondent_id")
   required <- c(ids, "wave", "score", "scale", "n_items", "wave_observed", "battery_id")
   if (!all(required %in% names(scores))) stop("Phase scores lack required phase or battery metadata.")
-  if (!all(c(ids, "attended", "arm", "small_group_id") %in% names(participants))) {
+  if (!all(c(ids, "study_id", "attended", "arm", "small_group_id") %in% names(participants))) {
     stop("Participants lack explicit attendance or identity metadata.")
   }
   if (anyNA(participants[ids]) || anyDuplicated(participants[ids])) {
@@ -178,7 +178,7 @@ phase_contrasts <- function(
   strata <- dplyr::group_split(frame, poll_id, source_dataset, battery_id, .keep = TRUE)
   results <- lapply(seq_along(strata), function(index) {
     people <- strata[[index]]
-    metadata <- dplyr::distinct(people, poll_id, pollname, source_dataset, battery_id)
+    metadata <- dplyr::distinct(people, poll_id, study_id, pollname, source_dataset, battery_id)
     attendees <- people[people$attended %in% TRUE, ]
     balanced <- Reduce(`&`, lapply(c("t0", "t1", "t2"), function(phase) phase_has_score(attendees, phase))) &
       phase_same_denominator(attendees, c("t0", "t1", "t2"))

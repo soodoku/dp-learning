@@ -59,24 +59,4 @@ peers <- peer_effects(core_frame)
 write_output(dplyr::select(peers, -draws), "peer_effects.csv")
 write_output(pool_peer_effects(peers), "peer_effects_pooled.csv")
 
-provenance <- list(
-  data_commit = system2("git", c("-C", shQuote(dp_data_root()), "rev-parse", "HEAD"), stdout = TRUE),
-  guess_version = as.character(utils::packageVersion("guess")),
-  bootstrap_replicates = bootstrap_replicates(),
-  sources = upstream_source_manifest()
-)
-jsonlite::write_json(provenance, "tabs/provenance.json", pretty = TRUE, auto_unbox = TRUE)
-phase_provenance <- list(
-  data_commit = provenance$data_commit,
-  bootstrap_replicates = provenance$bootstrap_replicates,
-  sources = dplyr::filter(
-    provenance$sources, source %in% c("polls", "phase_participants", "phase_scores")
-  )
-)
-jsonlite::write_json(phase_provenance, "tabs/phase_provenance.json", pretty = TRUE, auto_unbox = TRUE)
-
-writeLines(c(
-  "@misc{dpdata,", "  author = {Sood, Gaurav},", "  title = {Deliberative Poll Data},",
-  "  year = {2026},", paste0("  note = {Revision ", provenance$data_commit, "},"),
-  paste0("  url = {https://github.com/soodoku/dp-data/tree/", provenance$data_commit, "}"), "}"
-), "ms/data-version.bib")
+write_results_provenance()

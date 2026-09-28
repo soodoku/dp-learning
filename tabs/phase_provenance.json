@@ -1,5 +1,5 @@
 {
-  "data_commit": "1495dc5b8c29a2a63d68177420c50b260887f29c",
+  "data_commit": "c6beaf492943d5459c866c76555591918ab99f45",
   "bootstrap_replicates": 999,
   "sources": [
     {
@@ -10,12 +10,22 @@
     {
       "source": "phase_participants",
       "path": "output/analysis/analysis_phase_participants.parquet",
-      "sha256": "3f99ce971b4449036e91ac2175af9a78e280d58f64f03bfd821789a9f7fe231b"
+      "sha256": "ffdcd64fd5bdc55a8a37b72d5510e0f5df1eb55b48f563b2ad1a853b093714fe"
     },
     {
       "source": "phase_scores",
       "path": "output/analysis/analysis_phase_scores.parquet",
-      "sha256": "c12993b861d67759229a45bd1dd0e505ddf0be4e54c7f19e08f3ea2ff3297784"
+      "sha256": "8a5ccb6ec3441c208bd8285d561adf4b094a9f3175127f3f26e71a541fdc5a92"
+    },
+    {
+      "source": "studies",
+      "path": "output/analysis/analysis_studies.parquet",
+      "sha256": "e9329db5f475d69be1ca0504ee1c088f7d1ee1d3ef92e275c98167509cbae1d6"
+    },
+    {
+      "source": "survey_waves",
+      "path": "output/analysis/analysis_survey_waves.parquet",
+      "sha256": "ab7f46caab4da55781b455d8d35df5dad82b4e1f613b289b070738e07fa82051"
     }
   ]
 }

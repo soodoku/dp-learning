@@ -61,15 +61,26 @@ changes preserve the authored source merge, whose sixteen conflicting exit IDs
 remain an upstream linkage limitation.
 
 The phase estimates are unweighted sample changes, without guessing adjustment.
-All current Cor-Sood cohorts have unverified attendance in the canonical
-participant export. They contribute coverage but no attendee contrasts until
-attendance can be established from source evidence; a hardcoded participant arm
-is insufficient. Historical counterparts supply comparisons for many of these
-polls. The current verified exports support all three comparisons for Marousi
-and Tomorrow's Europe, and pre-arrival to exit for 23 polls.
+Seven Cor-Sood cohorts now have source-verified attendance in the phase
+participant export. Other cohorts retain unresolved attendance and contribute
+coverage; historical counterparts supply comparisons where available.
+A hardcoded participant arm or an online post survey alone is insufficient
+evidence of attendance. The current score exports support all three comparisons for Marousi and
+Tomorrow's Europe. The upstream wave catalog separately identifies retained
+arrival sources for California, Europolis, Denmark, Vermont and a partial
+Michigan battery; those measurements have not yet entered these comparisons.
+Counts refer to underlying studies, so the two Primaries catalog IDs do not
+count twice.
 
 The manuscript presents the common three-wave decomposition and pre-arrival
 selection gaps in the main text. Its phase appendix reports available paired
 estimates and exit attrition. The broader selected-wave models retain their
 study-specific interview windows; they are not all arrival-to-exit estimates.
 All manuscript numbers and phase exhibits read the generated replication tables.
+
+Wave timing, original survey labels, questionnaire presence, attendance evidence,
+session counts and study identities are read from typed `dp-data` Parquet tables.
+This repository selects analysis samples and estimates learning; it does not
+reconstruct those source facts. The approved 2004 Primaries analysis includes one
+study with 239 observed paired attendees (238 with known groups), excluding the
+overlapping historical subset and people with no recorded discussion attendance.

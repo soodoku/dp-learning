@@ -16,7 +16,9 @@ upstream_source_ids <- c(
   scores = "analysis_scores_parquet",
   attitudes = "analysis_attitude_responses_parquet",
   phase_participants = "analysis_phase_participants_parquet",
-  phase_scores = "analysis_phase_scores_parquet"
+  phase_scores = "analysis_phase_scores_parquet",
+  studies = "analysis_studies_parquet",
+  survey_waves = "analysis_survey_waves_parquet"
 )
 
 upstream_source_manifest <- function(root = dp_data_root()) {
@@ -144,4 +146,36 @@ read_phase_participants <- function(root = dp_data_root()) {
 
 read_analysis_phase_scores <- function(root = dp_data_root()) {
   arrow::read_parquet(source_path("phase_scores", root = root))
+}
+
+read_analysis_studies <- function(root = dp_data_root()) {
+  arrow::read_parquet(source_path("studies", root = root))
+}
+
+read_analysis_survey_waves <- function(root = dp_data_root()) {
+  arrow::read_parquet(source_path("survey_waves", root = root))
+}
+
+write_results_provenance <- function() {
+  provenance <- list(
+    data_commit = system2("git", c("-C", shQuote(dp_data_root()), "rev-parse", "HEAD"), stdout = TRUE),
+    guess_version = as.character(utils::packageVersion("guess")),
+    bootstrap_replicates = bootstrap_replicates(),
+    sources = upstream_source_manifest()
+  )
+  jsonlite::write_json(provenance, "tabs/provenance.json", pretty = TRUE, auto_unbox = TRUE)
+  phase_provenance <- list(
+    data_commit = provenance$data_commit,
+    bootstrap_replicates = provenance$bootstrap_replicates,
+    sources = dplyr::filter(
+      provenance$sources, source %in% c("polls", "phase_participants", "phase_scores", "studies", "survey_waves")
+    )
+  )
+  jsonlite::write_json(phase_provenance, "tabs/phase_provenance.json", pretty = TRUE, auto_unbox = TRUE)
+
+  writeLines(c(
+    "@misc{dpdata,", "  author = {Sood, Gaurav},", "  title = {Deliberative Poll Data},",
+    "  year = {2026},", paste0("  note = {Revision ", provenance$data_commit, "},"),
+    paste0("  url = {https://github.com/soodoku/dp-data/tree/", provenance$data_commit, "}"), "}"
+  ), "ms/data-version.bib")
 }

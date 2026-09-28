@@ -34,11 +34,16 @@ forest <- function(data, x_label) {
 }
 
 # One scale and one hierarchical-bootstrap interval throughout Figure 1.
-prepost_panel <- "A. Attendees: selected\ninterview comparison"
+prepost_panel <- "A. Before event to exit\n(exceptions marked)"
 controlled_panel <- "B. Attendee gain minus\ncontrol gain"
 prepost <- read_output("poll_gains.csv") |>
   dplyr::transmute(
-    panel = prepost_panel, label = pollname,
+    panel = prepost_panel,
+    label = dplyr::case_when(
+      poll_id == "nic-1996" ~ paste0(pollname, " [follow-up]"),
+      poll_id == "bulgaria-crime-2002" ~ paste0(pollname, " [timing unverified]"),
+      TRUE ~ pollname
+    ),
     estimate = 100 * raw, lower = 100 * raw_lower,
     upper = 100 * raw_upper, pooled = FALSE
   )
@@ -74,7 +79,7 @@ learning <- dplyr::bind_rows(
   )
 )
 p <- forest(learning, "Knowledge difference (percentage points; 95% confidence interval)")
-save_evidence(p, "figs/learning", width = 6.5, height = 7.5)
+save_evidence(p, "figs/learning", width = 6.5, height = 7.0)
 
 # Figure 2. Within-poll association with groupmates' initial knowledge.
 peers <- read_output("peer_effects.csv") |>
