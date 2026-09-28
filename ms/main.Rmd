@@ -90,6 +90,18 @@ The main sample comprises `r size("core", "polls")` polls and `r count(size("cor
 
 America in One Room and the climate poll interviewed separate samples who were never invited to deliberate [@fishkin2021]. We compare changes in their scores with changes among attendees in the main sample, using the same questions in both arms. These comparisons may reflect selection into attendance as well as deliberation. Additional control comparisons and follow-ups appear in Appendix \ref{app:controls}.
 
+## Additional participant characteristics
+
+Age, education, and gender are harmonized for all `r size("core", "polls")` polls.
+
+*Education*. Education, qua years of schooling, is distinct from, and only moderately correlated with, political knowledge. Controlling for cognitive ability, with which it is more strongly correlated, its effect on knowledge appears negligible [@luskin1990]. But absent a separate measure of cognitive ability, it can roughly proxy the latter. Naturally, we expect it to have a positive effect. There may, however, be some mutual substitution with initial knowledge. People who know enough already may not need to be as bright to learn a lot, and people who are bright enough may not need to know as much to do so. We measure education as comparably as possible across polls in three categories: below secondary completion, secondary/some college, and a degree or higher.
+
+*Gender and age*. These demographic variables exhibit real-world political knowledge gaps, with men knowing more than women and older people more than younger ones [@dellicarpini1996]. Age is measured in decades and gender as a dummy scored 1 for women.
+
+*Proportion of women*. Whether from greater comfort, more widely shared cognitive or communication style, or lower stereotype threat [@steele1997], women may learn more in small groups containing more women. We calculate the proportion excluding the participant herself.
+
+*Reading the briefing materials*. One of the main information vectors is the briefing document sent to participants shortly after recruitment, normally well in advance of the on-site deliberations. It provides some background facts and lays out the major arguments for and against given policy options, which embed additional facts congenial to each argument. Respondent-linked reading reports are available for `r sum(coverage$reading > 0)` polls. They describe reading before discussion, recalled in the post-deliberation questionnaire. We score their ordered categories from zero to one using the source-specific response scales and add them to the demographic specification in the third column of Table \ref{tab:models}.
+
 # Measuring Learning
 
 We measure knowledge by closed-ended knowledge questions, mostly multiple choice, in some cases extracted from party or candidate placements, and in a few cases true-false [@luskin1987; @luskin2005; @price1999; @mondak1999; @mondak2001]. Appendix \ref{app:items} lists the items. Correct responses are scored as 1, incorrect responses and "don't knows" as 0 [@luskin2011], and these scores are then averaged across items to give the proportion answered correctly.
@@ -116,7 +128,7 @@ figure("learning")
 
 ## Regressors and hypotheses
 
-Table \ref{tab:models} begins with initial knowledge, groupmates' initial knowledge, group size, mode, and the poll's mean initial score. Its second column adds education, age, gender, and the gender composition of the group. These variables are available in all `r size("core", "polls")` polls. Education may improve the acquisition of new information [@luskin1990]; we allow its association with gain to vary with initial knowledge. The interaction between gender and the proportion of female groupmates tests whether that association varies with group composition. Appendix \ref{app:further} develops the additional hypotheses about attitudes and briefing reading.
+Table \ref{tab:models} begins with initial knowledge, groupmates' initial knowledge, group size, and mode. Its second column adds education, age, gender, and the gender composition of the group. These variables are available in all `r size("core", "polls")` polls. Education may improve the acquisition of new information [@luskin1990]; we allow its association with gain to vary with initial knowledge. The interaction between gender and the proportion of female groupmates tests whether that association varies with group composition. Its third column adds reported reading of the briefing materials in the `r size("briefing", "polls")` polls where this was measured.
 
 *Initial knowledge* ($K_1$). The information-rich tend to get information-richer. The more one knows going in, the more one tends to learn and thus know going out. Absent ceiling effects, this predicts a positive association with gain; bounded scores can instead produce a negative association. Prior knowledge on a particular topic improves people's ability to comprehend new information, enabling them to extract the central elements of a message and draw appropriate inferences efficiently [@eckhardt1991; @recht1988]. Prior knowledge also enhances people's ability to store new information on that topic and retrieve it later [@cooke1993; @fiske1990; @hambrick2003; @mcgraw1990; @recht1988; @schneider1993]. So the less political information individuals have stored in memory, the more difficult it is for them to acquire new information.
 
@@ -124,15 +136,13 @@ Table \ref{tab:models} begins with initial knowledge, groupmates' initial knowle
 
 *Group size*. We count group members with both baseline and follow-up answers. This is a lower bound on actual group size when a member lacks one of the interviews. Larger groups may offer more perspectives but give each participant less time to speak [@latane1979].
 
-*Group knowledge*. Participants may learn more from the other members of their small group when the latter know more. The other members' mean T1 score measures their overall knowledge. Their mean correctness on the particular items a participant missed at T1 measures knowledge that could fill that participant's gaps. We add this targeted measure alongside the overall group mean in a supplementary model. Participants who missed no T1 items receive zero on the targeted measure and a separate indicator for having no missed items.
-
-*Initial knowledge in the poll*. We include the poll's mean T1 score to account for differences in baseline knowledge across events. It reflects both attendees' knowledge and the difficulty of the question battery. It is a contextual control; we do not interpret it as a direct measure of issue salience.
+*Group knowledge*. Participants may learn more from the other members of their small group when the latter know more. The other members' mean T1 score measures their overall knowledge. A supplementary model also measures their knowledge of the particular questions the participant missed at T1 (Appendix \ref{app:item-peers}).
 
 ## Model {#sec:model}
 
 Let $G_{igd}=K_{igd2}-K_{igd1}$ denote the change in proportion correct for participant $i$ in discussion group $g$ and poll $d$. We fit a hierarchical linear model [@raudenbush2002]:
 $$G_{igd}=\beta_0+\beta_1K_{igd1}+\mathbf{z}_{igd}'\boldsymbol{\beta}_z+\alpha_{gd}+\gamma_d+\varepsilon_{igd},$$
-where $\mathbf{z}_{igd}$ contains groupmates' mean initial knowledge, group size, mode, and the poll's mean initial score. The second specification adds education, age, gender, the proportion of female groupmates, and the education-by-T1 and gender-by-group-composition interactions. The $\beta$ coefficients are fixed regression parameters. For fitting, we assume
+where $\mathbf{z}_{igd}$ contains groupmates' mean initial knowledge, group size, and mode. The second specification adds education, age, gender, the proportion of female groupmates, and the education-by-T1 and gender-by-group-composition interactions. The third specification adds reported briefing reading. The $\beta$ coefficients are fixed regression parameters. For fitting, we assume
 $$\alpha_{gd}\sim N(0,\sigma_g^2),\qquad \gamma_d\sim N(0,\sigma_p^2),\qquad \varepsilon_{igd}\sim N(0,\sigma_e^2),$$
 with these components mutually independent conditional on the regressors and independent across distinct groups, polls, and individuals, respectively. The group and poll random intercepts allow outcomes to covary within discussion groups and across groups in the same poll. Their variances, $\sigma_g^2$ and $\sigma_p^2$, measure residual variation at those levels; $\sigma_e^2$ measures individual residual variation. We estimate the coefficients and variance components by maximum likelihood [@bates2015] and obtain confidence intervals from the hierarchical bootstrap.
 
@@ -140,29 +150,30 @@ Adding $K_{igd1}$ to both sides gives the equivalent post-deliberation equation:
 $$K_{igd2}=\beta_0+(1+\beta_1)K_{igd1}+\mathbf{z}_{igd}'\boldsymbol{\beta}_z+\alpha_{gd}+\gamma_d+\varepsilon_{igd}.$$
 Thus using gain instead of T2 shifts the coefficient on T1 down by one and leaves the other coefficients and fitted residuals unchanged. We report gain because it directly expresses the change the paper seeks to explain. Conditioning on T1 compares that change among participants with the same measured starting knowledge.
 
-The analysis includes `r count(size("core", "n"))` participants in `r size("core", "groups")` groups and `r size("core", "polls")` polls. The demographic model retains `r count(size("demographic", "n"))` participants and all `r size("demographic", "polls")` polls; `r count(size("core", "n") - size("demographic", "n"))` participants have missing covariates. Appendix Table \ref{tab:sample-comparison} distinguishes changes due to sample restrictions from changes due to added controls.
+The analysis includes `r count(size("core", "n"))` participants in `r size("core", "groups")` groups and `r size("core", "polls")` polls. The demographic model retains `r count(size("demographic", "n"))` participants and all `r size("demographic", "polls")` polls; `r count(size("core", "n") - size("demographic", "n"))` participants have missing covariates. The reading model includes `r count(size("briefing", "n"))` participants in `r size("briefing", "polls")` polls.
 
 ## Who gains more?
 
 ```{r models, results="asis"}
-table_1 <- model_table(models, c("core", "demographic"), c("Baseline", "Demographic controls"))
-separators <- rep("", nrow(table_1))
+table_1 <- model_table(models, c("core", "demographic", "briefing"), c("Baseline", "Demographics", "+ Reading"))
+table_1 <- stack_intervals(table_1)
+separators <- rep("\\addlinespace[0.15em]", nrow(table_1))
 summary_start <- match("Participants", table_1[[1]])
 separators[summary_start - 1L] <- "\\midrule"
 separators[summary_start:(nrow(table_1) - 1L)] <- "\\addlinespace[0.25em]"
 table_tex <- knitr::kable(
-  table_1, format = "latex", booktabs = TRUE, position = "!htb", align = "lrr",
+  table_1, format = "latex", booktabs = TRUE, position = "!htb", align = "lrrr", escape = FALSE,
   linesep = separators,
-  caption = sprintf("Change in proportion correct (T2 minus T1), conditional on T1, in %s polls. Coefficients with 95 percent hierarchical-bootstrap confidence intervals.", size("core", "polls"))
+  caption = "Change in proportion correct (T2 minus T1), conditional on T1. Coefficients with 95 percent hierarchical-bootstrap confidence intervals below."
 )
-cat(sub("\\end{table}", paste0("\\par\\medskip\\noindent{\\footnotesize\\raggedright\\emph{Notes.} Groupmates' mean T1 excludes the respondent herself; both that mean and group size use members with baseline and follow-up answers. Both models have poll and small-group random intercepts. Education is coded as below secondary completion, secondary/some college, or degree or higher; the first category is the reference. Marginal $R^2$ covers fixed effects; conditional $R^2$ includes random intercepts. The models with additional attitude measures and reading reports appear in Appendix Table \\ref{tab:historical-models}.\\par}", "\n\\end{table}"), table_tex, fixed = TRUE))
+cat(sub("\\end{table}", paste0("\\par\\medskip\\noindent{\\footnotesize\\raggedright\\emph{Notes.} Groupmates' mean T1 excludes the respondent herself; both that mean and group size use members with baseline and follow-up answers. All models have poll and small-group random intercepts. Education is coded as below secondary completion, secondary/some college, or degree or higher; the first category is the reference. Marginal $R^2$ covers fixed effects; conditional $R^2$ includes random intercepts. The third column adds reported briefing reading (0--1); its smaller sample reflects availability of these reports.\\par}", "\n\\end{table}"), table_tex, fixed = TRUE))
 ```
 
-Table \ref{tab:models} compares gains conditional on measured initial knowledge. The T1 coefficient in the baseline model is `r term("core", "k1")`. Because scores have a ceiling and contain measurement error, this should not be read as a causal effect of prior knowledge. The second column brings the education, age, and gender hypotheses into the same set of polls. Appendix Table \ref{tab:historical-models} adds attitude extremity and opinion heterogeneity in `r size("historical", "polls")` polls and examines briefing-material reading in `r size("briefing", "polls")` polls. Appendix Table \ref{tab:sample-comparison} fits the baseline specification again on each restricted sample before adding covariates, making the source of any coefficient change explicit. Appendix Table \ref{tab:hetero} examines whether attendee--control differences vary with initial knowledge or education.
+Table \ref{tab:models} compares gains conditional on measured initial knowledge. The T1 coefficient in the baseline model is `r term("core", "k1")`. Because scores have a ceiling and contain measurement error, this should not be read as a causal effect of prior knowledge. The second column brings the education, age, and gender hypotheses into the same set of polls. The third column adds briefing reading. Appendix Table \ref{tab:hetero} examines whether attendee--control differences vary with initial knowledge or education.
 
-At the reference initial score of zero, both education categories have larger estimated gains than the below-secondary group; the education-by-T1 interactions allow these gaps to vary with starting knowledge. The age estimate is `r term("demographic", "age_decades")` per decade. The intervals for age, gender, and the gender-by-group-composition interaction include zero. The gender coefficient compares women with men when the share of female groupmates is zero; the interaction shows how that difference changes as the share increases.
+At the reference initial score of zero, both education categories have larger estimated gains than the below-secondary group; the education-by-T1 interactions allow these gaps to vary with starting knowledge. The age estimate is `r term("demographic", "age_decades")` per decade. The intervals for age, gender, and the gender-by-group-composition interaction include zero. The gender coefficient compares women with men when the share of female groupmates is zero; the interaction shows how that difference changes as the share increases. Appendix Table \ref{tab:attitudes} adds baseline attitude extremity and policy disagreement on a common sample. The peer-knowledge coefficient changes from `r coef_text(models$estimate[models$model == "demographic_attitude_sample" & models$term == "group_k1"])` to `r coef_text(models$estimate[models$model == "attitudes" & models$term == "group_k1"])`; the intervals for both added attitude measures include zero.
 
-Reported reading of the briefing materials is also associated with larger gains. Across `r size("briefing", "polls")` polls, the difference between the lowest and highest reading categories is `r pp(reading$estimate)` percentage points (95\% interval `r pp(reading$lower)` to `r pp(reading$upper)`), conditional on initial knowledge, demographics, and poll fixed effects. These reports were collected after deliberation, so the association need not reflect the effect of reading alone.
+Reported reading of the briefing materials is also associated with larger gains. Across `r size("briefing", "polls")` polls, the difference between the lowest and highest reading categories is `r pp(reading$estimate)` percentage points (95\% interval `r pp(reading$lower)` to `r pp(reading$upper)`), conditional on initial knowledge, demographics, group characteristics, and mode, with poll and small-group random intercepts. These reports were collected after deliberation, so the association need not reflect the effect of reading alone.
 
 ## Group composition and learning
 
@@ -179,7 +190,12 @@ Participants' factual knowledge increases across the polls we study. Reporting a
 \FloatBarrier
 # References {-}
 
+\begingroup
+\small
+
 <div id="refs"></div>
+
+\endgroup
 
 \clearpage
 \appendix
@@ -266,78 +282,37 @@ hetero |>
 
 Table \ref{tab:hetero} reports changes in the attendee--control difference, not changes in everyone's knowledge. N is the regression sample size. Degree compares a bachelor’s degree with no degree. A negative entry means the attendee advantage is smaller for people with higher initial knowledge or a bachelor’s degree. For example, the America in One Room initial-knowledge estimate of `r num(10 * het("America in One Room 2019", "k1")$interaction, 1)` percentage points compares two people whose starting scores differ by ten percentage points. Each regression includes attendance, initial score, the listed characteristic, and its interaction with attendance. Centering initial scores at their sample mean does not change the reported interaction. All intervals use the hierarchical bootstrap. Selection into attendance and score ceilings limit causal interpretation.
 
-## Additional participant characteristics
+## Additional attitude measures
 
-Age, education, and gender are harmonized for all `r size("core", "polls")` polls. The attitude models require additional indices, which are harmonized for `r size("historical", "polls")` polls.
+Table \ref{tab:attitudes} checks whether adding baseline attitude extremity and opinion heterogeneity changes the demographic model in Table \ref{tab:models}. All columns use the same `r count(size("attitudes", "n"))` participants in `r size("attitudes", "polls")` polls. These measures are supplementary because the policy batteries differ in content and aggregation across polls.
 
-*Education*. Education, qua years of schooling, is distinct from, and only moderately correlated with, political knowledge. Controlling for cognitive ability, with which it is more strongly correlated, its effect on knowledge appears negligible [@luskin1990]. But absent a separate measure of cognitive ability, it can roughly proxy the latter. Naturally, we expect it to have a positive effect. There may, however, be some mutual substitution with initial knowledge. People who know enough already may not need to be as bright to learn a lot, and people who are bright enough may not need to know as much to do so. We measure education as comparably as possible across polls in three categories: below secondary completion, secondary/some college, and a degree or higher.
+We scale each policy measure to 0--1 using its response endpoints. The earlier polls retain their existing policy indices; the additional polls use individual policy preferences. Extremity is the participant's mean absolute distance from the midpoint, $E_i=J_i^{-1}\sum_j |A_{ij}-.5|$, over observed measures. Opinion heterogeneity is the average absolute difference between group members' responses:
+$$H_g=\frac{1}{J_g}\sum_{j=1}^{J_g}\frac{2}{n_{gj}(n_{gj}-1)}\sum_{i<k}|A_{ij}-A_{kj}|.$$
+Here $n_{gj}$ counts group members with an observed response to measure $j$, and $J_g$ counts measures with at least two such responses. A difference of .10 in $H_g$ means the average pairwise gap is ten percent of the response scale larger. Reversing a scale leaves both $E_i$ and $H_g$ unchanged. The third column replaces pairwise disagreement with the average within-group standard deviation across policy measures. Neither dispersion summary requires a covariance determinant. Missing responses are excluded, not assigned the midpoint.
 
-*Gender and age*. These demographic variables exhibit real-world political knowledge gaps, with men knowing more than women and older people more than younger ones [@dellicarpini1996]. Age is measured in decades and gender as a dummy scored 1 for women.
-
-*Proportion of women*. Whether from greater comfort, more widely shared cognitive or communication style, or lower stereotype threat [@steele1997], women may learn more in small groups containing more women. We calculate the proportion excluding the participant herself.
-
-*Heterogeneity of opinion*. In the real world, people often know congenial but not uncongenial facts---those commonly cited by those sharing their views but not those commonly cited by those holding opposing views. Part of deliberation's effect on learning may consist in getting people to note and accept (if, in many cases, still argue around) uncongenial facts. This can be expected to occur mainly on site. Participants learn a great deal in anticipation of the event, but the learning at that stage is mainly of congenial facts [@hansen2004]. On site, the participants find it harder to avoid confronting the uncongenial ones. This may happen more, the more opposing points of view are represented and argued in the small group---the more attitudinally heterogeneous the group is. We gauge this as the generalized variance, the determinant of the covariance matrix, of the group's policy attitudes [@anderson2003].
-
-*Attitude extremity*. Participants starting with more extreme views may have shuttered out more uncongenial facts, leaving them with more ground for deliberation to make up. We measure extremity as the mean, across attitude indices $j$, of $|A_{ij} - .5|$, where $A_{ij}$ is the $i$th respondent's score on the $j$th index.
-
-*Reading the briefing materials*. One of the main information vectors is the briefing document sent to participants shortly after recruitment, normally well in advance of the on-site deliberations. It provides some background facts and lays out the major arguments for and against given policy options, which embed additional facts congenial to each argument. Respondent-linked reading reports are available for `r sum(coverage$reading > 0)` polls. They describe reading before discussion, recalled in the post-deliberation questionnaire. We score their ordered categories from zero to one using the source-specific response scales and analyze them in a separate model. The reading model uses the demographic specification with poll fixed effects and a small-group random intercept.
-
-\clearpage
-## Models with additional controls
-
-```{r historical-models}
-historical_models <- model_table(
-  models, c("historical", "briefing"),
-  c("Additional controls", "Reading reports")
-)
-separators <- rep("", nrow(historical_models))
-summary_start <- match("Participants", historical_models[[1]])
+```{r attitudes, results="asis"}
+attitude_table <- model_table(models,
+  c("demographic_attitude_sample", "attitudes", "attitude_sd"),
+  c("Demographics", "+ Attitudes", "SD alternative")) |>
+  stack_intervals()
+separators <- rep("\\addlinespace[0.15em]", nrow(attitude_table))
+summary_start <- match("Participants", attitude_table[[1]])
 separators[summary_start - 1L] <- "\\midrule"
-separators[summary_start:(nrow(historical_models) - 1L)] <- "\\addlinespace[0.25em]"
-knitr::kable(
-  historical_models, format = "latex", booktabs = TRUE,
-  longtable = TRUE, align = "lrr",
-  linesep = separators,
-  caption = "Change in proportion correct (T2 minus T1) with additional controls. Coefficients with 95 percent hierarchical-bootstrap confidence intervals."
-)
+separators[summary_start:(nrow(attitude_table) - 1L)] <- "\\addlinespace[0.25em]"
+attitude_tex <- knitr::kable(attitude_table, format = "latex", booktabs = TRUE, position = "!htbp",
+  escape = FALSE, align = "lrrr", linesep = separators,
+  caption = "Adding attitude measures on the same participants. Coefficients for knowledge gain, with 95 percent hierarchical-bootstrap confidence intervals below.")
+attitude_tex <- sub("\\centering", "\\centering\\small", attitude_tex, fixed = TRUE)
+cat(sub("\\end{table}", paste0("\\par\\medskip\\noindent{\\footnotesize\\raggedright\\emph{Notes.} All specifications condition on T1 knowledge and include poll and small-group random intercepts. Group attitude measures use the main sample's group members; individual missing covariates determine the common regression sample. The final two columns add extremity and alternative measures of group dispersion. Marginal $R^2$ covers fixed effects; conditional $R^2$ includes random intercepts.\\par}", "\n\\end{table}"), attitude_tex, fixed = TRUE))
 ```
 
-\noindent{\footnotesize\raggedright\emph{Notes.} The model with additional controls includes poll and small-group random intercepts; the reading-reports model adds reading to the demographic specification, using poll fixed effects and small-group random intercepts. Attitude measures are omitted from that model. Adding groupmates' T1 correctness on questions the respondent missed to the model with additional controls gives `r term("items", "group_k1_items")` among `r count(size("items", "n"))` participants. Respondents with no missed T1 items receive zero on this measure and a separate indicator (`r term("items", "no_missed_items")`); none is removed for lack of an opportunity to learn. Marginal $R^2$ covers fixed effects; conditional $R^2$ includes random intercepts.\par}
+The peer-knowledge coefficient is `r term("demographic_attitude_sample", "group_k1")` before adding attitudes and `r term("attitudes", "group_k1")` afterward. The disagreement coefficient is `r term("attitudes", "disagreement")`; a .10 difference in disagreement corresponds to `r num(10 * models$estimate[models$model == "attitudes" & models$term == "disagreement"], 2)` percentage points of gain, conditional on the other regressors.
 
-## Matched-sample comparisons
+## Groupmates' knowledge of missed questions {#app:item-peers}
 
-Table \ref{tab:sample-comparison} separates sample restrictions from added covariates. Column 1 repeats the baseline model in all polls. Column 2 restricts it to the polls with the additional attitude measures. Columns 3 and 4 use exactly the same participants: column 3 retains the baseline specification, and column 4 adds the controls shown in Table \ref{tab:historical-models}. Thus the final comparison holds sample composition fixed.
+The demographic specification can also include groupmates' T1 correctness on the particular questions the participant missed at T1. For each missed question, we calculate the proportion of other group members who answered correctly, then average across those questions. This targeted measure enters alongside groupmates' overall initial knowledge. Respondents who answered every T1 question correctly receive zero on the targeted measure and a separate indicator for having no missed questions.
 
-\begin{minipage}{\textwidth}
-\small
-\setlength{\tabcolsep}{3pt}
-
-```{r sample-comparison}
-common_terms <- models$term[models$model == "core"]
-comparison <- model_table(
-  dplyr::filter(models, term %in% common_terms),
-  c("core", "core_21", "core_21_complete", "historical"),
-  c("All polls", "21 polls", "Same cases", "Added controls")
-)
-comparison[-1] <- lapply(comparison[-1], function(column) {
-  vapply(column, function(cell) {
-    parts <- strsplit(cell, " [", fixed = TRUE)[[1]]
-    if (length(parts) == 1L) return(cell)
-    paste0("\\shortstack[r]{", parts[1], " \\\\ {[", parts[2], "}}")
-  }, character(1))
-})
-comparison_lines <- rep("\\addlinespace[0.15em]", nrow(comparison))
-comparison_lines[match("Participants", comparison[[1]]) - 1L] <- "\\midrule"
-knitr::kable(comparison, format = "latex", booktabs = TRUE, position = "H", escape = FALSE,
-  linesep = comparison_lines, align = "lrrrr",
-  caption = "Baseline coefficients under sample restrictions and additional controls. 95 percent hierarchical-bootstrap confidence intervals appear below coefficients.")
-```
-
-\end{minipage}
-
-The peer-knowledge coefficient is `r term("core_21", "group_k1")` in the 21-poll baseline model. Among the complete cases, it is `r term("core_21_complete", "group_k1")` before adding controls and `r term("historical", "group_k1")` afterward. The change from added controls is small relative to the uncertainty in these estimates.
-
-The corresponding check for the demographic model uses its `r count(size("demographic", "n"))` participants. On these same cases, the baseline peer-knowledge coefficient is `r term("core_demographic_sample", "group_k1")`, compared with `r term("demographic", "group_k1")` after adding demographics.
+The targeted peer coefficient is `r term("items", "group_k1_items")` among `r count(size("items", "n"))` participants in `r size("items", "polls")` polls. The coefficient on overall peer knowledge is `r term("items", "group_k1")`, and the no-missed-questions indicator is `r term("items", "no_missed_items")`. All other regressors, random intercepts, and the bootstrap follow Table \ref{tab:models}.
 
 ## Additional control comparisons {#app:controls}
 

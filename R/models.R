@@ -1,8 +1,7 @@
 # Observed knowledge gain conditional on baseline knowledge and covariates,
 # with random intercepts for small group and poll. Core regressors refer to
-# baseline; briefing reading is recalled afterward. Minority status is missing
-# for whole polls, so it enters only in a robustness model.
-core_formula <- I(k2 - k1) ~ k1 + group_k1 + group_size + online + poll_k1 +
+# baseline; briefing reading is recalled afterward.
+core_formula <- I(k2 - k1) ~ k1 + group_k1 + group_size + online +
   (1 | group) + (1 | pollid)
 
 core_group_frame <- function(attendees) {
@@ -23,20 +22,12 @@ core_group_frame <- function(attendees) {
 }
 
 demographic_formula <- I(k2 - k1) ~ k1 * education + age_decades +
-  female * p_female + group_size + group_k1 + online + poll_k1 +
+  female * p_female + group_size + group_k1 + online +
   (1 | group) + (1 | pollid)
 
-main_formula <- I(k2 - k1) ~ k1 * education + age_decades + extremity + group_size + group_k1 +
-  heterogeneity + female * p_female + online + poll_k1 + (1 | group) + (1 | pollid)
+items_formula <- stats::update(demographic_formula, . ~ . + group_k1_items + no_missed_items)
 
-minority_formula <- stats::update(main_formula, . ~ . + minority * p_minority)
-
-# Other members' T1 knowledge of items the participant missed at T1, added
-# alongside their overall T1 knowledge. A separate indicator marks respondents
-# with no missed T1 items, whose targeted opportunity score is zero.
-items_formula <- stats::update(main_formula, . ~ . + group_k1_items + no_missed_items)
-
-fit_knowledge <- function(frame, formula = main_formula, check = TRUE) {
+fit_knowledge <- function(frame, formula = core_formula, check = TRUE) {
   if ("age" %in% names(frame)) {
     frame <- dplyr::mutate(frame, age_decades = age / 10)
   }
@@ -103,23 +94,10 @@ model_complete_cases <- function(frame, formula) {
   stats::complete.cases(frame[all.vars(formula)])
 }
 
-historical_model_sample <- function(core, historical) {
-  keys <- historical |>
-    dplyr::mutate(
-      historical_respondent_id = as.character(caseid),
-      included = model_complete_cases(historical, main_formula)
-    ) |>
-    dplyr::left_join(
-      dplyr::select(read_respondent_sources(), poll_id, dpnum),
-      by = "dpnum", relationship = "many-to-one"
-    ) |>
-    dplyr::select(poll_id, historical_respondent_id, included)
-  core |>
-    dplyr::inner_join(keys, by = c("poll_id", "historical_respondent_id"),
-                      relationship = "one-to-one")
-}
-
 expanded_briefing_formula <- stats::update(
   demographic_formula,
-  . ~ . - online - poll_k1 - (1 | pollid) + factor(pollid) + read_briefing
+  . ~ . + read_briefing
 )
+
+attitude_formula <- stats::update(demographic_formula, . ~ . + extremity + disagreement)
+attitude_sd_formula <- stats::update(attitude_formula, . ~ . - disagreement + attitude_sd)

@@ -1,13 +1,13 @@
 test_that("upstream manifests identify available and unchanged files", {
   manifest <- upstream_source_manifest()
-  expect_equal(nrow(manifest), 7L)
+  expect_equal(nrow(manifest), 8L)
   expect_false(anyDuplicated(manifest$source) > 0L)
   expect_true(verify_sources())
   expect_setequal(
     manifest$source,
     c(
       "distortions_responses", "briefing_reading", "polls", "items",
-      "participants", "item_responses", "scores"
+      "participants", "item_responses", "scores", "attitudes"
     )
   )
 })

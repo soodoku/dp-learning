@@ -77,13 +77,13 @@ test_that("guessing-adjusted pooling uses the same poll samples", {
                      meta$parameter == "mu"), 1L)
 })
 
-test_that("missed-item peer model uses the historical item sample", {
+test_that("missed-item peer model uses the main item sample", {
   items <- read_output("models.csv") |> dplyr::filter(model == "items")
-  main <- read_output("models.csv") |> dplyr::filter(model == "historical")
+  main <- read_output("models.csv") |> dplyr::filter(model == "demographic")
   core <- read_output("models.csv") |> dplyr::filter(model == "core")
   expect_equal(unique(core$polls), 28L)
   expect_equal(unique(core$n), 8800L)
-  expect_equal(unique(items$polls), 21L)
+  expect_equal(unique(items$polls), 28L)
   expect_equal(unique(main$n) - unique(items$n), 0L)
   expect_true(all(c(
     "group_k1", "group_k1_items", "no_missed_items"
@@ -117,9 +117,10 @@ test_that("expanded models retain all polls and comparisons hold cases fixed", {
   row <- function(name) samples[samples$model == name, ]
   expect_equal(row("demographic")$polls, 28L)
   expect_equal(row("demographic")$groups, 592L)
-  expect_equal(row("demographic")$n, 8671L)
+  expect_equal(row("demographic")$n, 8668L)
   expect_equal(row("core_demographic_sample")$n, row("demographic")$n)
-  expect_equal(row("core_21")$n, 5869L)
-  expect_equal(row("core_21_complete")$n, row("historical")$n)
-  expect_equal(row("core_21_complete")$polls, row("historical")$polls)
+  expect_equal(row("attitudes")$polls, 28L)
+  expect_equal(row("attitude_sd")$n, row("attitudes")$n)
+  expect_equal(row("demographic_attitude_sample")$n, row("attitudes")$n)
+  expect_equal(row("demographic_attitude_sample")$polls, row("attitudes")$polls)
 })

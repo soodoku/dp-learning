@@ -1,12 +1,12 @@
 {
-  "data_commit": "22f46c19814202ea6c249109d7c2c3c76517ec9b",
+  "data_commit": "99d1c0a9b1198471b190fd271d74cb083ba7809f",
   "guess_version": "0.8.0",
   "bootstrap_replicates": 999,
   "sources": [
     {
       "source": "distortions_responses",
       "path": "output/polardata/polardata.parquet",
-      "sha256": "e1258c77a2b15f494c1fe4f3a55d63aadbd3f7ebbf4e530accf14575429baf1a"
+      "sha256": "bcddf8fdde1cee20f2dc1efa66b67deb6851e974914b98c33244844f1025ccc5"
     },
     {
       "source": "briefing_reading",
@@ -26,7 +26,7 @@
     {
       "source": "participants",
       "path": "output/analysis/analysis_participants.parquet",
-      "sha256": "004e647bec5acdfe486caf78b8bbd34b088c25af28a2f33272d90681bcd5eae8"
+      "sha256": "0941228637cc4b2749be55c752c5da1bc7764336b44f28b741f42639748c95d6"
     },
     {
       "source": "item_responses",
@@ -37,6 +37,11 @@
       "source": "scores",
       "path": "output/analysis/analysis_scores.parquet",
       "sha256": "223ce4e829af0b6c31a9754c5e8643743e9569d7d19847745a1ec9cad23a0578"
+    },
+    {
+      "source": "attitudes",
+      "path": "output/analysis/analysis_attitude_responses.parquet",
+      "sha256": "37532b103e99d7d3b314b565ade516178c3fe59ac571339f6e09693faf01655e"
     }
   ]
 }
