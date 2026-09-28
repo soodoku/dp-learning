@@ -47,31 +47,15 @@ dplyr::bind_rows(
   write_output("assignment_check.csv")
 responses <- read_analysis_responses()
 main_learning <- learning_estimates(core_frame, responses)
-# Reuse draws only for polls with identical respondent identities and groups.
-unchanged <- vapply(split(attendees, attendees$poll_id), function(x) {
-  main <- core_frame[core_frame$poll_id == x$poll_id[1], ]
-  identical(sort(x$respondent_id), sort(main$respondent_id))
-}, logical(1))
-extra_learning <- learning_estimates(dplyr::filter(attendees, poll_id %in% names(unchanged)[!unchanged]), responses)
-all_learning <- list(
-  summary = dplyr::bind_rows(
-    dplyr::filter(main_learning$summary, poll_id %in% names(unchanged)[unchanged]),
-    extra_learning$summary
-  ),
-  fits = c(main_learning$fits[names(unchanged)[unchanged]], extra_learning$fits)
-)
-gains <- dplyr::mutate(all_learning$summary, group_model = poll_id %in% core_ids)
-main_gains <- main_learning$summary
-write_output(gains, "poll_gains.csv")
-write_output(main_gains, "poll_gains_main.csv")
-write_output(gains, "guessing_gains.csv")
-write_output(main_gains, "guessing_gains_main.csv")
-write_output(dplyr::bind_rows(
-  pooled_learning(main_learning, "pooled"),
-  pooled_learning(all_learning, "all")
-), "meta.csv")
-write_output(control_learning(control_data, core_frame, responses), "control_learning.csv")
-write_output(appendix_polls(group_ids = core_ids), "polls.csv")
+polls <- appendix_polls(group_ids = core_ids)
+main_learning$summary |>
+  dplyr::arrange(match(poll_id, polls$poll_id)) |>
+  write_output("poll_gains.csv")
+write_output(pooled_learning(main_learning, "pooled"), "meta.csv")
+controlled_learning <- control_learning(control_data, core_frame, responses)
+write_output(controlled_learning$summary, "control_learning.csv")
+write_output(controlled_learning$pooled, "control_learning_pooled.csv")
+write_output(polls, "polls.csv")
 
 models <- list(
   historical = main_formula,

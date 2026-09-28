@@ -36,22 +36,22 @@ forest <- function(data, x_label) {
 # One scale and one hierarchical-bootstrap interval throughout Figure 1.
 prepost_panel <- "A. Attendees before\nand after"
 controlled_panel <- "B. Attendee gain minus\ncontrol gain"
-prepost <- read_output("poll_gains_main.csv") |>
+prepost <- read_output("poll_gains.csv") |>
   dplyr::transmute(
     panel = prepost_panel, label = pollname,
     estimate = 100 * raw, lower = 100 * raw_lower,
     upper = 100 * raw_upper, pooled = FALSE
   )
 controlled <- read_output("control_learning.csv") |>
+  dplyr::filter(term == "raw") |>
   dplyr::transmute(
     panel = controlled_panel,
-    label = paste(dplyr::if_else(poll_id == "a1r-climate-2021", "Climate 2021", "America in One Room 2019"),
-      dplyr::if_else(term == "raw", "observed", "guessing adjusted"),
-      sep = ": "
-    ),
+    label = dplyr::if_else(poll_id == "a1r-climate-2021", "Climate 2021", "America in One Room 2019"),
     estimate = 100 * estimate, lower = 100 * lower, upper = 100 * upper, pooled = FALSE
   )
 meta <- read_output("meta.csv") |>
+  dplyr::mutate(dplyr::across(c(estimate, lower, upper), ~ 100 * .x))
+control_pooled <- read_output("control_learning_pooled.csv") |>
   dplyr::mutate(dplyr::across(c(estimate, lower, upper), ~ 100 * .x))
 learning <- dplyr::bind_rows(
   prepost,
@@ -63,7 +63,15 @@ learning <- dplyr::bind_rows(
     dplyr::filter(meta, model == "guessing adjusted, pooled", parameter == "mu"),
     prepost_panel, "Average guessing-adjusted learning"
   ),
-  controlled
+  controlled,
+  pooled_row(
+    dplyr::filter(control_pooled, term == "raw"),
+    controlled_panel, "Average observed difference"
+  ),
+  pooled_row(
+    dplyr::filter(control_pooled, term == "adjusted"),
+    controlled_panel, "Average guessing-adjusted difference"
+  )
 )
 p <- forest(learning, "Knowledge difference (percentage points; 95% confidence interval)")
 save_evidence(p, "figs/learning", width = 6.5, height = 7.5)

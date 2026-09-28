@@ -77,20 +77,22 @@ bootstrap_rows <- function(result) {
 
 # Independent polls define the population of the pooled, equally weighted mean.
 # Each selected poll supplies an independently selected within-poll bootstrap draw.
-pool_bootstrap <- function(estimates, draws, strata = rep(0, length(estimates)), seed = 20260928L) {
+pool_bootstrap <- function(estimates, draws, strata = rep(0, length(estimates)), seed = 20260928L,
+                           weights = rep(1, length(estimates))) {
   stopifnot(
     length(estimates) == length(draws), length(strata) == length(estimates),
-    !anyNA(strata), all(is.finite(estimates))
+    !anyNA(strata), all(is.finite(estimates)),
+    length(weights) == length(estimates), all(is.finite(weights)), all(weights > 0)
   )
   set.seed(seed)
   pooled <- replicate(bootstrap_replicates(), {
     polls <- sample_polls(strata)
-    mean(vapply(polls, function(p) {
+    stats::weighted.mean(vapply(polls, function(p) {
       draws[[p]][sample.int(length(draws[[p]]), 1L)]
-    }, numeric(1)))
+    }, numeric(1)), weights[polls])
   })
   c(
-    estimate = mean(estimates), lower = unname(stats::quantile(pooled, .025)),
+    estimate = stats::weighted.mean(estimates, weights), lower = unname(stats::quantile(pooled, .025)),
     upper = unname(stats::quantile(pooled, .975))
   )
 }

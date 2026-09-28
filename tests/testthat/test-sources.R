@@ -31,11 +31,10 @@ test_that("both score waves are rebuilt from respondent item answers", {
 
 test_that("appendix poll coverage comes from upstream data", {
   polls <- appendix_polls()
-  expect_equal(nrow(polls), 31L)
-  expect_equal(sum(polls$control_group), 4L)
-  expect_equal(sum(polls$group_model), 28L)
-  expect_false(polls$group_model[polls$poll == "Vermont Energy"])
-  expect_true(polls$group_model[polls$poll == "Michigan"])
+  expect_equal(nrow(polls), 28L)
+  expect_equal(sum(polls$control_group), 3L)
+  expect_false("Vermont Energy" %in% polls$poll)
+  expect_true("Michigan" %in% polls$poll)
   expect_false(anyDuplicated(polls$poll) > 0L)
   expect_false(any(polls$poll == "Marousi, Greece"))
   expect_false(any(polls$poll == "Tanzania"))
@@ -49,7 +48,7 @@ test_that("one canonical attendee panel supplies gains and group models", {
   expect_equal(dplyr::n_distinct(panel$poll_id), 31L)
   expect_equal(dplyr::n_distinct(panel$poll_id[!is.na(panel$group)]), 28L)
   expect_equal(nrow(core_group_frame(panel)), 8800L)
-  expect_setequal(unique(panel$poll_id), read_output("poll_gains.csv")$poll_id)
+  expect_setequal(unique(core_group_frame(panel)$poll_id), read_output("poll_gains.csv")$poll_id)
 })
 
 test_that("control analyses include only polls with respondent item answers", {
@@ -57,16 +56,18 @@ test_that("control analyses include only polls with respondent item answers", {
   expect_setequal(
     unique(panel$poll_id),
     c(
-      "america-in-one-room-2019", "a1r-climate-2021", "amr-2024",
+      "america-in-one-room-2019", "a1r-climate-2021",
       "northern-ireland-2007"
     )
   )
   expect_true(all(unique(panel$poll_id) %in% unique(read_analysis_responses()$poll_id)))
 })
 
-test_that("item appendix renders every canonical upstream question", {
-  catalog <- read_item_catalog()
-  appendix <- item_appendix_markdown()
+test_that("item appendix renders every question for the analyzed polls", {
+  catalog <- read_item_catalog() |>
+    dplyr::filter(poll_id %in% read_output("poll_gains.csv")$poll_id)
+  appendix <- item_appendix_markdown(items = catalog)
+  expect_equal(dplyr::n_distinct(catalog$poll_id), 28L)
   expect_equal(lengths(regmatches(appendix, gregexpr("\\n- \\*\\*", appendix))), nrow(catalog))
   headings <- gregexpr("## ", appendix, fixed = TRUE)
   expect_equal(lengths(regmatches(appendix, headings)), dplyr::n_distinct(catalog$poll_id))

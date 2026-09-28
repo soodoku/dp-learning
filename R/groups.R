@@ -1,4 +1,4 @@
-# Within each poll we regress T2 knowledge on the group's
+# Within each poll we regress knowledge gain on the group's
 # leave-one-out mean, own value and the poll's leave-one-out mean (Guryan, Kroft
 # and Notowidigdo 2009), resampling groups, and pool with the same hierarchical bootstrap.
 # Assignment balance is checked separately; peer coefficients are associations.
@@ -15,7 +15,7 @@ peer_effect <- function(poll, peer) {
   statistic <- function(x) {
     x$peer_mean <- leave_one_out(x$own, x$group)
     x$poll_others <- leave_one_out(x$own, x$pollid)
-    fit <- stats::lm(stats::as.formula(paste0("k2 ~ peer_mean + own + poll_others", covariates)), data = x)
+    fit <- stats::lm(stats::as.formula(paste0("I(k2 - k1) ~ peer_mean + own + poll_others", covariates)), data = x)
     c(peer = stats::coef(fit)[["peer_mean"]])
   }
   fit <- bootstrap_stat(poll, statistic, resample_polls = FALSE)

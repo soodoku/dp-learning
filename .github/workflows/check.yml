@@ -9,6 +9,7 @@ jobs:
   check:
     runs-on: ubuntu-latest
     env:
+      DP_BOOT_WORKERS: 4
       DP_DATA_ROOT: ${{ github.workspace }}/build/dp-data
     steps:
       - uses: actions/checkout@v7.0.1

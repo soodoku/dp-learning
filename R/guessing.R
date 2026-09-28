@@ -48,7 +48,7 @@ learning_bootstrap <- function(panel, responses, seed = 20260927L) {
   panel <- panel[match(answers$ids, panel$respondent_id), ]
   panel$.boot_row <- seq_len(nrow(panel))
   panel$pollid <- panel$poll_id
-  panel$group <- ifelse(is.na(panel$group), paste0("person_", panel$respondent_id), panel$group)
+  stopifnot(!anyNA(panel$group))
   statistic <- function(data) {
     rows <- data$.boot_row
     baseline <- mean(data$k1)

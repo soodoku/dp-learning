@@ -32,6 +32,8 @@ control_panel <- function(
       cluster = cluster_id, country
     )
   stopifnot(!anyNA(out$study), !anyDuplicated(out[c("poll_id", "id")]))
+  eligible <- unique(people$poll_id[people$arm == "attended" & !is.na(people$small_group_id)])
+  out <- dplyr::filter(out, poll_id %in% eligible, arm != "attended" | !is.na(group))
   out$pollid <- out$poll_id
   out$group <- ifelse(!is.na(out$group), paste0("discussion_", out$group),
     paste0(out$arm, "_", out$cluster)
@@ -41,9 +43,7 @@ control_panel <- function(
 
 read_a1r <- function(data) dplyr::filter(data, poll_id == "america-in-one-room-2019")
 read_climate <- function(data) dplyr::filter(data, poll_id == "a1r-climate-2021")
-read_amr <- function(data) dplyr::filter(data, poll_id == "amr-2024")
 
-amr_countries <- c("Brazil", "Colombia", "India", "Indonesia", "Nigeria", "Tanzania")
 
 # ANCOVA adjusts attendee-control differences in T2 for T1 knowledge.
 # The gain-score comparison uses a different baseline restriction. Both
@@ -105,22 +105,13 @@ control_effects <- function(data) {
   a1r <- read_a1r(data)
   climate <- read_climate(data)
   climate_t3 <- dplyr::mutate(climate, k2 = k3)
-  amr <- read_amr(data)
-  amr_countries_list <- purrr::map(amr_countries, \(country) {
-    list(
-      dplyr::filter(amr, .data$country == .env$country), "treated", 1, 0, NULL,
-      paste0("Attended vs randomized control: ", country), "percent"
-    )
-  })
-  adjusted <- c(list(
+  adjusted <- list(
     list(a1r, "treated", 1, 0, NULL, "Attended vs uninvited control", "percent"),
     list(a1r, "treated", 1, 0, "weight", "Attended vs uninvited control, weighted", "percent"),
     list(climate, "treated", 1, 0, NULL, "Attended vs uninvited control", "percent"),
     list(climate, "treated", 1, 0, "weight", "Attended vs uninvited control, weighted", "percent"),
-    list(climate_t3, "treated", 1, 0, NULL, "Attended vs control, one year later", "percent"),
-    list(amr, "treated", 1, 0, NULL, "Attended vs randomized control", "percent"),
-    list(amr, "treated", 1, 0, "weight", "Attended vs randomized control, weighted", "percent")
-  ), amr_countries_list) |>
+    list(climate_t3, "treated", 1, 0, NULL, "Attended vs control, one year later", "percent")
+  ) |>
     purrr::map(\(x) {
       effect(x[[1]], x[[2]], x[[3]], x[[4]], x[[5]]) |>
         dplyr::mutate(study = x[[1]]$study[[1]], comparison = x[[6]], scale = x[[7]], .before = 1)
@@ -179,11 +170,9 @@ heterogeneity <- function(data, contrast, treated_value, control_value, moderato
 control_heterogeneity <- function(data) {
   a1r <- read_a1r(data)
   climate <- read_climate(data)
-  amr <- read_amr(data)
   list(
     list(a1r, "treated", 1, 0, "k1"), list(a1r, "treated", 1, 0, "ba"),
-    list(climate, "treated", 1, 0, "k1"), list(climate, "treated", 1, 0, "ba"),
-    list(amr, "treated", 1, 0, "k1"), list(amr, "treated", 1, 0, "ba")
+    list(climate, "treated", 1, 0, "k1"), list(climate, "treated", 1, 0, "ba")
   ) |>
     purrr::map(\(x) {
       heterogeneity(x[[1]], x[[2]], x[[3]], x[[4]], x[[5]]) |>
@@ -195,7 +184,7 @@ control_heterogeneity <- function(data) {
 
 control_learning <- function(data, core, responses) {
   ids <- c("america-in-one-room-2019", "a1r-climate-2021")
-  dplyr::bind_rows(lapply(seq_along(ids), function(i) {
+  results <- lapply(seq_along(ids), function(i) {
     id <- ids[i]
     people <- dplyr::filter(
       data, poll_id == .env$id, arm %in% c("attended", "control"),
@@ -226,11 +215,28 @@ control_learning <- function(data, core, responses) {
     }
     message("Control learning bootstrap: ", id)
     fit <- bootstrap_stat(people, statistic, 20260927L + i * 20000L, resample_polls = FALSE)
-    bootstrap_rows(fit) |>
+    summary <- bootstrap_rows(fit) |>
       dplyr::mutate(
         poll_id = id, study = people$study[1],
         n_treated = sum(people$arm == "attended"),
         n_control = sum(people$arm == "control"), .before = 1
       )
-  }))
+    list(summary = summary, fit = fit)
+  })
+  modes <- core$online[match(ids, core$poll_id)]
+  pooled <- lapply(c("raw", "adjusted"), function(metric) {
+    fit <- pool_bootstrap(
+      vapply(results, function(x) x$fit$estimate[[metric]], numeric(1)),
+      lapply(results, function(x) x$fit$draws[, metric]),
+      strata = modes
+    )
+    tibble::tibble(
+      term = metric, estimate = fit[["estimate"]],
+      lower = fit[["lower"]], upper = fit[["upper"]], polls = length(ids)
+    )
+  })
+  list(
+    summary = dplyr::bind_rows(lapply(results, `[[`, "summary")),
+    pooled = dplyr::bind_rows(pooled)
+  )
 }

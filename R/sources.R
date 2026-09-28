@@ -92,18 +92,16 @@ appendix_polls <- function(
   }
   control_ids <- unique(participants$poll_id[participants$source_dataset == "control"])
   out <- registry |>
-    dplyr::filter(poll_id %in% item_ids) |>
+    dplyr::filter(poll_id %in% item_ids, poll_id %in% group_ids) |>
     dplyr::mutate(
       control_group = poll_id %in% control_ids,
-      group_model = poll_id %in% group_ids,
       mode = dplyr::recode(mode, "face-to-face" = "Face to face", online = "Online")
     ) |>
     dplyr::arrange(year, title) |>
     dplyr::transmute(
-      poll = title, year, topic, mode, control_group,
-      group_model
+      poll_id, poll = title, year, topic, mode, control_group
     )
-  stopifnot(nrow(out) == length(item_ids))
+  stopifnot(nrow(out) == length(intersect(item_ids, group_ids)))
   out
 }
 

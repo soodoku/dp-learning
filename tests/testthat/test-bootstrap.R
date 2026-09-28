@@ -37,7 +37,7 @@ test_that("pooling weights polls equally and is reproducible", {
 })
 
 test_that("absolute and relative summaries use the declared denominator", {
-  x <- read_output("poll_gains_main.csv")
+  x <- read_output("poll_gains.csv")
   expect_equal(x$raw, x$k2_mean - x$k1_mean)
   expect_equal(x$relative, x$raw / x$k1_mean)
   controls <- read_output("control_learning.csv")
@@ -55,5 +55,37 @@ test_that("poll resampling preserves online and in-person composition", {
     out <- resample_hierarchy(data)
     expect_equal(sum(out$online), 2)
     expect_equal(nrow(out), 6)
+  }
+})
+
+
+test_that("pooled control comparisons average the same two studies", {
+  studies <- read_output("control_learning.csv")
+  pooled <- read_output("control_learning_pooled.csv")
+  for (metric in c("raw", "adjusted")) {
+    row <- pooled[pooled$term == metric, ]
+    expect_equal(row$estimate, mean(studies$estimate[studies$term == metric]))
+    expect_equal(row$polls, 2L)
+    expect_lt(row$lower, row$upper)
+  }
+})
+
+
+test_that("precision pooling uses inverse sampling variances", {
+  old <- options(dp.bootstrap.replicates = 99L)
+  on.exit(options(old))
+  estimates <- c(.1, .3)
+  draws <- list(c(.05, .15), c(.2, .4))
+  weights <- 1 / vapply(draws, stats::var, numeric(1))
+  result <- pool_bootstrap(estimates, draws, weights = weights)
+  expect_equal(result[["estimate"]], .14)
+  expect_lt(result[["lower"]], result[["upper"]])
+  gains <- read_output("poll_gains.csv")
+  meta <- read_output("meta.csv")
+  for (metric in c("raw", "adjusted")) {
+    label <- if (metric == "raw") "raw" else "guessing adjusted"
+    row <- meta[meta$model == paste(label, "precision weighted", sep = ", "), ]
+    expect_equal(row$estimate, stats::weighted.mean(gains[[metric]], 1 / gains[[paste0(metric, "_se")]]^2))
+    expect_equal(row$polls, nrow(gains))
   }
 })

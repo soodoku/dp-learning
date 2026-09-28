@@ -1,8 +1,8 @@
-# T2 knowledge on pre-deliberation knowledge and covariates,
+# Observed knowledge gain conditional on baseline knowledge and covariates,
 # with random intercepts for small group and poll. Every regressor is measured
 # before deliberation. Minority status is missing for whole polls (EU, China,
 # Greece), so it enters only in a robustness model.
-core_formula <- k2 ~ k1 + group_k1 + group_size + online + poll_k1 +
+core_formula <- I(k2 - k1) ~ k1 + group_k1 + group_size + online + poll_k1 +
   (1 | group) + (1 | pollid)
 
 core_group_frame <- function(attendees) {
@@ -18,7 +18,7 @@ core_group_frame <- function(attendees) {
     dplyr::mutate(pollid = poll_id)
 }
 
-main_formula <- k2 ~ k1 * education + age_decades + extremity + group_size + group_k1 +
+main_formula <- I(k2 - k1) ~ k1 * education + age_decades + extremity + group_size + group_k1 +
   heterogeneity + female * p_female + online + poll_k1 + (1 | group) + (1 | pollid)
 
 minority_formula <- stats::update(main_formula, . ~ . + minority * p_minority)
@@ -46,6 +46,15 @@ fit_knowledge <- function(frame, formula = main_formula, check = TRUE) {
       optimizer = "bobyqa", optCtrl = list(maxfun = 200000, rhoend = 1e-9)
     )
   )
+  if (fit@optinfo$conv$opt != 0) {
+    fit <- lme4::lmer(
+      formula, data = frame, REML = FALSE,
+      control = lme4::lmerControl(
+        optimizer = "nloptwrap",
+        optCtrl = list(maxeval = 200000, xtol_abs = 1e-9, ftol_abs = 1e-9)
+      )
+    )
+  }
   if (check) stopifnot(is.null(fit@optinfo$conv$lme4$messages))
   stopifnot(fit@optinfo$conv$opt == 0)
   fit
