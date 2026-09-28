@@ -36,10 +36,10 @@ attendee_panel <- function(
       by = "poll_id", relationship = "many-to-one"
     ) |>
     dplyr::transmute(
-      poll_id, pollname, source_dataset, respondent_id,
+      poll_id, pollname, source_dataset, respondent_id, historical_respondent_id,
       k1 = t1, k2 = t2,
       online = as.integer(mode == "online"),
-      female, ba,
+      female, ba, age, education, read_briefing,
       group = dplyr::if_else(
         is.na(small_group_id), NA_character_,
         paste(poll_id, small_group_id, sep = "_")

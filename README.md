@@ -6,11 +6,11 @@ How much do participants in Deliberative Polls learn, does participation cause l
 
 [Manuscript](ms/main.pdf) · [Manuscript source](ms/main.Rmd) · [Results](tabs/) · [Figures](figs/)
 
-The main analysis follows 8,800 participants in 592 discussion groups across 28 polls. It reports absolute gains, gains relative to initial knowledge, and estimates adjusted for guessing using the item model in [guess](https://github.com/soodoku/guess). Figure 1 also compares attendee and control gains in the two main-sample polls with both interviews in both arms. The appendix covers later control interviews and models with additional covariates.
+The main analysis follows 8,800 participants in 592 discussion groups across 28 polls. It reports absolute gains, gains relative to initial knowledge, and estimates adjusted for guessing using the item model in [guess](https://github.com/soodoku/guess). Figure 1 also compares attendee and control gains in the two main-sample polls with both interviews in both arms. Table 1 adds education, age, and gender covariates across all 28 polls. The appendix separates the effects of sample restrictions and added attitude controls, and covers later control interviews.
 
 All confidence intervals use a hierarchical bootstrap: resample polls within mode, then discussion groups, keeping each participant's item responses and interview waves together. Within-poll comparisons hold the poll fixed and resample separately by study arm; independent controls are individual sampling units. Pooled learning estimates weight polls equally. Control comparisons can reflect selection into attendance, and groupmate coefficients are descriptive.
 
-The [dp-data repository](https://github.com/soodoku/dp-data) supplies typed Parquet tables of polls, items, participants, responses, and scores. This repository joins and filters those tables; the poll and item appendices are generated from them. [Build provenance](tabs/provenance.json) records the data revision, input manifests, model package version, and bootstrap replicate count. Self-reported briefing reading is available for nine polls and enters an appendix model.
+The [dp-data repository](https://github.com/soodoku/dp-data) supplies typed Parquet tables of polls, items, participants, responses, and scores. This repository joins and filters those tables; the poll and item appendices are generated from them. [Build provenance](tabs/provenance.json) records the data revision, input manifests, model package version, and bootstrap replicate count. Self-reported briefing reading is available for 12 polls and enters an appendix model.
 
 ## Reproduce
 

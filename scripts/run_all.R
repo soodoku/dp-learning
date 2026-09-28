@@ -40,11 +40,14 @@ control_data <- control_panel()
 attendees <- attendee_panel()
 core_frame <- core_group_frame(attendees)
 core_ids <- unique(core_frame$poll_id)
-dplyr::bind_rows(
-  assignment_check(core_frame, c("k1", "female")),
-  assignment_check(frame, c("age", "education_ba"))
-) |>
-  write_output("assignment_check.csv")
+assignment_check(core_frame) |> write_output("assignment_check.csv")
+core_frame |>
+  dplyr::summarise(
+    participants = dplyr::n(), age = sum(!is.na(age)),
+    education = sum(!is.na(education)), female = sum(!is.na(female)),
+    reading = sum(!is.na(read_briefing)), .by = c(poll_id, pollname)
+  ) |>
+  write_output("covariate_coverage.csv")
 responses <- read_analysis_responses()
 main_learning <- learning_estimates(core_frame, responses)
 polls <- appendix_polls(group_ids = core_ids)
@@ -60,11 +63,19 @@ write_output(polls, "polls.csv")
 models <- list(
   historical = main_formula,
   minority = minority_formula,
-  items = items_formula,
-  briefing = briefing_formula
+  items = items_formula
 )
+core_21 <- historical_model_sample(core_frame, frame)
+reading_frame <- dplyr::filter(core_frame, any(!is.na(read_briefing)), .by = poll_id)
 dplyr::bind_rows(
   bootstrap_model(core_frame, core_formula, "core"),
+  bootstrap_model(core_frame, demographic_formula, "demographic"),
+  bootstrap_model(core_frame, core_formula, "core_demographic_sample",
+    included = model_complete_cases(core_frame, demographic_formula)
+  ),
+  bootstrap_model(core_21, core_formula, "core_21"),
+  bootstrap_model(core_21, core_formula, "core_21_complete", included = core_21$included),
+  bootstrap_model(reading_frame, expanded_briefing_formula, "briefing"),
   purrr::imap(models, \(formula, name) {
     bootstrap_model(frame, formula, name)
   }) |>

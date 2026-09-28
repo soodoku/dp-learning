@@ -93,7 +93,7 @@ test_that("missed-item peer model uses the historical item sample", {
 
 test_that("briefing model uses all source-linked reading reports", {
   briefing <- read_output("models.csv") |> dplyr::filter(model == "briefing")
-  expect_equal(unique(briefing$polls), 9L)
+  expect_equal(unique(briefing$polls), 12L)
   expect_gt(unique(briefing$n), 0L)
 })
 
@@ -108,4 +108,18 @@ test_that("conditional gain and posttest models are equivalent", {
   expect_equal(coefficients, lme4::fixef(posttest), tolerance = 1e-4)
   expect_equal(stats::fitted(gain) + frame$k1, stats::fitted(posttest), tolerance = 1e-4)
   expect_equal(stats::residuals(gain), stats::residuals(posttest), tolerance = 1e-4)
+})
+
+
+test_that("expanded models retain all polls and comparisons hold cases fixed", {
+  models <- read_output("models.csv")
+  samples <- dplyr::distinct(models, model, n, polls, groups)
+  row <- function(name) samples[samples$model == name, ]
+  expect_equal(row("demographic")$polls, 28L)
+  expect_equal(row("demographic")$groups, 592L)
+  expect_equal(row("demographic")$n, 8671L)
+  expect_equal(row("core_demographic_sample")$n, row("demographic")$n)
+  expect_equal(row("core_21")$n, 5869L)
+  expect_equal(row("core_21_complete")$n, row("historical")$n)
+  expect_equal(row("core_21_complete")$polls, row("historical")$polls)
 })

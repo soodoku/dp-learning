@@ -68,9 +68,9 @@ control_row <- \(effects, study, comparison) effects[effects$study == study & ef
 term_labels <- c(
   "(Intercept)" = "Intercept",
   k1 = "T1 knowledge",
-  "educationHigh school" = "High school",
+  "educationHigh school" = "Secondary/some college",
   "educationBA or more" = "BA or more",
-  "k1:educationHigh school" = "T1 x high school",
+  "k1:educationHigh school" = "T1 x secondary/some college",
   "k1:educationBA or more" = "T1 x BA or more",
   age_decades = "Age (decades)",
   extremity = "Attitude extremity",
@@ -85,7 +85,7 @@ term_labels <- c(
   p_minority = "Group share minority",
   "minority:p_minority" = "Minority x group share minority",
   online = "Online",
-  poll_k1 = "Poll mean T1",
+  poll_k1 = "Poll’s mean initial score",
   read_briefing = "Briefing reading"
 )
 
