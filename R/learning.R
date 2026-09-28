@@ -38,8 +38,18 @@ attendee_panel <- function(
       by = c("poll_id", "source_dataset", "respondent_id"), relationship = "one-to-one"
     )
   stopifnot(length(aliases) == 1L, nrow(eligible) == 239L)
+  nic_eligible <- phase_scores |>
+    dplyr::filter(
+      poll_id == "nic-1996", source_dataset == "historical",
+      wave %in% c("t0", "t2"), wave_observed %in% TRUE, is.finite(score)
+    ) |>
+    dplyr::summarise(waves = dplyr::n_distinct(wave), .by = respondent_id) |>
+    dplyr::filter(waves == 2L)
   available <- available |>
     dplyr::filter(
+      poll_id != "nic-1996" | (
+        source_dataset == "historical" & respondent_id %in% nic_eligible$respondent_id
+      ),
       !poll_id %in% aliases,
       poll_id != primaries | (source_dataset == "cor_sood" & respondent_id %in% eligible$respondent_id)
     ) |>
@@ -91,5 +101,7 @@ main_interview_timing <- function(panel, phase_scores = read_analysis_phase_scor
     dplyr::filter(original_score_wave %in% c("t1", "t2")) |>
     dplyr::distinct(poll_id, source_dataset, original_score_wave, wave) |>
     tidyr::pivot_wider(names_from = original_score_wave, values_from = wave, names_prefix = "phase_")
-  dplyr::left_join(frames, timing, by = c("poll_id", "source_dataset"), relationship = "one-to-one")
+  out <- dplyr::left_join(frames, timing, by = c("poll_id", "source_dataset"), relationship = "one-to-one")
+  stopifnot(!anyNA(out), all(out$phase_t1 == "t0"), all(out$phase_t2 == "t2"))
+  out
 }

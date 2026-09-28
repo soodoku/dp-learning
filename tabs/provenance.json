@@ -1,5 +1,5 @@
 {
-  "data_commit": "f0ab0f802dc25a12f18d571b88ab6e42a37b1bbb",
+  "data_commit": "f0879e7a570bf8c0c712089c2420ccb52ab283cb",
   "guess_version": "0.8.0",
   "bootstrap_replicates": 999,
   "sources": [
@@ -31,12 +31,12 @@
     {
       "source": "item_responses",
       "path": "output/analysis/analysis_item_responses.parquet",
-      "sha256": "1b314e8564897c39539cfbc8913ecb56b164101646801a4de1bcfe58b5c1e484"
+      "sha256": "e9c32f2b5c86b5a77fc544e0a1ecba912a5989fdaa4d22476a9c09dc9ccd9ef9"
     },
     {
       "source": "scores",
       "path": "output/analysis/analysis_scores.parquet",
-      "sha256": "1828d1d2b84f9cfae653ceb0091fa92b24edaa610e38f7cd058ffc4726734470"
+      "sha256": "bd33a70ead0db159bfb31c3a55215adae33a41e204be623fd9063f685cc44fed"
     },
     {
       "source": "attitudes",
@@ -51,7 +51,7 @@
     {
       "source": "phase_scores",
       "path": "output/analysis/analysis_phase_scores.parquet",
-      "sha256": "3a8a81716b1179a318907f41b9108b3a64dd40f336deaf31854f08f23f1b0dc3"
+      "sha256": "e018b14bcbd2061e717eab31f39a8af967373cb5b2931e0667e98f4e05a267c4"
     },
     {
       "source": "studies",

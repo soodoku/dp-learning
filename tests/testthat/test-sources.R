@@ -20,7 +20,7 @@ test_that("briefing reports link nine upstream polls to historical participants"
 })
 
 test_that("both score waves are rebuilt from respondent item answers", {
-  source <- read_polardata()
+  source <- dplyr::filter(read_polardata(), pollname != "National Issues Convention")
   scores <- item_scores_for_respondents(read_historical_items(), source)
   expect_equal(nrow(scores), nrow(source))
   frame <- analysis_frame(source, scores)
@@ -45,10 +45,10 @@ test_that("appendix poll coverage comes from upstream data", {
 
 test_that("one canonical attendee panel supplies gains and group models", {
   panel <- attendee_panel()
-  expect_equal(nrow(panel), 10292L)
+  expect_equal(nrow(panel), 10282L)
   expect_equal(dplyr::n_distinct(panel$poll_id), 30L)
   expect_equal(dplyr::n_distinct(panel$poll_id[!is.na(panel$group)]), 27L)
-  expect_equal(nrow(core_group_frame(panel)), 8506L)
+  expect_equal(nrow(core_group_frame(panel)), 8496L)
   primaries <- dplyr::filter(panel, study_id == "btp-primaries-2004")
   expect_identical(unique(primaries$poll_id), "btp-online-primaries-2004")
   expect_equal(nrow(primaries), 239L)
@@ -146,17 +146,17 @@ test_that("baseline items join by respondent ID regardless of input order", {
 })
 
 test_that("NIC age and mode are consumed from corrected upstream values", {
-  source <- read_polardata()
-  frame <- analysis_frame(source, item_scores_for_respondents(read_historical_items(), source))
-  nic <- dplyr::filter(frame, pollname == "National Issues Convention")
-  expect_equal(nrow(nic), 466L)
+  nic <- dplyr::filter(attendee_panel(), poll_id == "nic-1996")
+  upstream <- read_analysis_participants() |>
+    dplyr::filter(poll_id == "nic-1996", source_dataset == "historical")
+  expect_equal(nrow(nic), 456L)
   expect_true(all(nic$online == 0))
-  expect_equal(nic$age[nic$caseid %in% 10000080], 34)
-  expect_equal(sum(!is.na(nic$age)), 454L)
+  expect_equal(nic$age[nic$historical_respondent_id %in% "10000080"], 34)
+  expect_equal(nic$age, upstream$age[match(nic$respondent_id, upstream$respondent_id)])
 })
 
 test_that("participant ages come from upstream without reader recoding", {
-  source <- read_polardata()
+  source <- dplyr::filter(read_polardata(), pollname != "National Issues Convention")
   scores <- item_scores_for_respondents(read_historical_items(), source)
   frame <- analysis_frame(source, scores)
   zeguo <- frame[frame$dpnum == 9 & frame$caseid == 52125, ]
@@ -172,7 +172,7 @@ test_that("participant ages come from upstream without reader recoding", {
 })
 
 test_that("matched models use identical common regressors", {
-  source <- read_polardata()
+  source <- dplyr::filter(read_polardata(), pollname != "National Issues Convention")
   historical <- analysis_frame(
     source, item_scores_for_respondents(read_historical_items(), source)
   ) |>
@@ -181,7 +181,7 @@ test_that("matched models use identical common regressors", {
       dplyr::select(read_respondent_sources(), poll_id, dpnum),
       by = "dpnum", relationship = "many-to-one"
     ) |>
-    dplyr::filter(poll_id != "btp-presidential-primaries-2004")
+    dplyr::filter(!poll_id %in% c("btp-presidential-primaries-2004", "nic-1996"))
   joined <- dplyr::inner_join(
     core_group_frame(attendee_panel()), historical,
     by = c("poll_id", "historical_respondent_id"),
