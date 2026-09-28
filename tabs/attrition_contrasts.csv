@@ -1,0 +1,10 @@
+poll_id,pollname,source_dataset,battery_id,from,to,n_target,n_complete,complete_case,ipw,aipw
+a1r-climate-2021,America in One Room: Climate,control,a1r-climate-2021:control:knowledge,t0,t2,962,845,0.12174556213017751,0.12201143451143459,0.12201143451143459
+a1r-climate-2021,America in One Room: Climate,control,a1r-climate-2021:control:knowledge,t2,t3,962,845,-0.07943786982248502,-0.08012539752439685,-0.07996301251014037
+a1r-climate-2021,America in One Room: Climate,control,a1r-climate-2021:control:knowledge,t0,t3,962,845,0.04230769230769249,0.041886036987037745,0.04204842200129422
+marousi-2006,"Marousi, Greece",score_only,marousi-2006:score_only:knowledge,t0,t1,159,133,0.05048334150386036,0.044698652074176615,0.04471661476711314
+marousi-2006,"Marousi, Greece",score_only,marousi-2006:score_only:knowledge,t1,t2,159,133,0.022556390977443608,0.023204980157687183,0.0231800311399476
+marousi-2006,"Marousi, Greece",score_only,marousi-2006:score_only:knowledge,t0,t2,159,133,0.073039732481303965,0.0679036322318638,0.06789664590706074
+nic-1996,National Issues Convention,historical,nic-1996:historical:knowledge,t0,t2,456,383,0.08355091383812013,0.08114035087719296,0.08114035087719296
+nic-1996,National Issues Convention,historical,nic-1996:historical:knowledge,t2,t3,456,383,0.014004272489912206,0.018367509911012103,0.017951887122969246
+nic-1996,National Issues Convention,historical,nic-1996:historical:knowledge,t0,t3,456,383,0.09755518632803234,0.09950786078820506,0.0990922380001622

@@ -23,6 +23,8 @@ write_output(phases$contrasts, "phase_contrasts.csv")
 write_output(phases$coverage, "phase_coverage.csv")
 write_output(phases$selection, "pre_arrival_selection.csv")
 write_output(retention_estimates(), "retention.csv")
+attrition <- attrition_analysis()
+purrr::iwalk(attrition, \(table, name) write_output(table, paste0("attrition_", name, ".csv")))
 main_learning <- learning_estimates(core_frame, responses)
 polls <- appendix_polls(group_ids = core_ids)
 main_learning$summary |>
