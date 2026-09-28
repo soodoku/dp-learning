@@ -1,6 +1,6 @@
 # Within each poll we regress T2 knowledge on the group's
 # leave-one-out mean, own value and the poll's leave-one-out mean (Guryan, Kroft
-# and Notowidigdo 2009), clustering by group, and pool the poll estimates.
+# and Notowidigdo 2009), resampling groups, and pool with the same hierarchical bootstrap.
 # Assignment balance is checked separately; peer coefficients are associations.
 peer_effect <- function(poll, peer) {
   poll <- poll |>
@@ -12,13 +12,17 @@ peer_effect <- function(poll, peer) {
     ) |>
     dplyr::filter(is.finite(peer_mean))
   covariates <- if (peer == "k1") "" else " + k1"
-  fit <- stats::lm(stats::as.formula(paste0("k2 ~ peer_mean + own + poll_others", covariates)), data = poll)
-  vc <- sandwich::vcovCL(fit, cluster = ~group, type = "HC1")
+  statistic <- function(x) {
+    x$peer_mean <- leave_one_out(x$own, x$group)
+    x$poll_others <- leave_one_out(x$own, x$pollid)
+    fit <- stats::lm(stats::as.formula(paste0("k2 ~ peer_mean + own + poll_others", covariates)), data = x)
+    c(peer = stats::coef(fit)[["peer_mean"]])
+  }
+  fit <- bootstrap_stat(poll, statistic, resample_polls = FALSE)
   tibble::tibble(
-    estimate = stats::coef(fit)[["peer_mean"]],
-    std_error = sqrt(vc["peer_mean", "peer_mean"]),
-    n = nrow(poll),
-    groups = dplyr::n_distinct(poll$group)
+    estimate = fit$estimate[[1]], std_error = fit$se[[1]],
+    lower = fit$lower[[1]], upper = fit$upper[[1]],
+    n = nrow(poll), groups = dplyr::n_distinct(poll$group), draws = list(fit$draws[, 1])
   )
 }
 
@@ -30,7 +34,7 @@ peer_effects <- function(frame) {
       if (sum(!is.na(data[[peer]])) < 50 || dplyr::n_distinct(data$group) < 5) {
         return(NULL)
       }
-      dplyr::mutate(peer_effect(data, peer), poll = poll, peer = peer, .before = 1)
+      dplyr::mutate(peer_effect(data, peer), poll = poll, peer = peer, online = data$online[1], .before = 1)
     }) |>
     purrr::list_rbind()
 }
@@ -40,14 +44,10 @@ pool_peer_effects <- function(effects) {
     dplyr::filter(is.finite(std_error), std_error > 0) |>
     dplyr::group_split(peer) |>
     purrr::map(\(x) {
-      fit <- bayesmeta::bayesmeta(y = x$estimate, sigma = x$std_error, labels = x$poll, tau.prior = tau_prior)
+      fit <- pool_bootstrap(x$estimate, x$draws, x$online)
       tibble::tibble(
-        peer = x$peer[[1]],
-        polls = nrow(x),
-        median = fit$summary["median", "mu"],
-        lower = fit$summary["95% lower", "mu"],
-        upper = fit$summary["95% upper", "mu"],
-        tau = fit$summary["median", "tau"]
+        peer = x$peer[[1]], polls = nrow(x),
+        estimate = fit[["estimate"]], lower = fit[["lower"]], upper = fit[["upper"]]
       )
     }) |>
     purrr::list_rbind()

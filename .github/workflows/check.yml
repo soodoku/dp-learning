@@ -1,6 +1,7 @@
 name: R analysis and manuscript
 on:
   push:
+    branches: [main]
   pull_request:
 permissions:
   contents: read
@@ -11,10 +12,14 @@ jobs:
       DP_DATA_ROOT: ${{ github.workspace }}/build/dp-data
     steps:
       - uses: actions/checkout@v7.0.1
+      - name: Read data revision
+        id: data
+        run: echo "revision=$(jq -r .data_commit tabs/provenance.json)" >> "$GITHUB_OUTPUT"
       - name: Check out data sources
         uses: actions/checkout@v7.0.1
         with:
           repository: soodoku/dp-data
+          ref: ${{ steps.data.outputs.revision }}
           path: build/dp-data
           persist-credentials: false
       - uses: r-lib/actions/setup-r@v2

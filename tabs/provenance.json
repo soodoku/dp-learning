@@ -1,0 +1,42 @@
+{
+  "data_commit": "a8a3cf407077d14d68ad66551d5e2efa23a09b5b",
+  "guess_version": "0.8.0",
+  "bootstrap_replicates": 999,
+  "sources": [
+    {
+      "source": "distortions_responses",
+      "path": "output/polardata/polardata.parquet",
+      "sha256": "0dd64c2dc61de6473fb97ef204c80bf9640f2ccf6a0af9c70e19152c0696121d"
+    },
+    {
+      "source": "briefing_reading",
+      "path": "output/respondent/briefing_reading.parquet",
+      "sha256": "92a0f763310311edb4f460ee45eb2d2a566ffab37eb5c4773067626635ce3dd8"
+    },
+    {
+      "source": "polls",
+      "path": "output/analysis/analysis_polls.parquet",
+      "sha256": "e378b69887098ee33bae2187a235d4913db17961def58f5da2d632884ff1e477"
+    },
+    {
+      "source": "items",
+      "path": "output/analysis/analysis_items.parquet",
+      "sha256": "651951c2998fd6af148301cc6f441705755a738f02bbe0c96de1eb6f25b6f51a"
+    },
+    {
+      "source": "participants",
+      "path": "output/analysis/analysis_participants.parquet",
+      "sha256": "7bec87dbf116ea501b4b442d02cc789edeab7ba841c047004c79f8b0919c36fc"
+    },
+    {
+      "source": "item_responses",
+      "path": "output/analysis/analysis_item_responses.parquet",
+      "sha256": "e321b1a6a149c15bf73ecc6b0aa6f414d0d1e8bfdbcd7130353e045656b51c2f"
+    },
+    {
+      "source": "scores",
+      "path": "output/analysis/analysis_scores.parquet",
+      "sha256": "a6ec560b5d605074ffe31f7429b387a3d46f6901841882004f925aded9055fcf"
+    }
+  ]
+}

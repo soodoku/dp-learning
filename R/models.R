@@ -35,17 +35,19 @@ briefing_formula <- stats::update(
   . ~ . - online - poll_k1 - (1 | pollid) + factor(pollid) + read_briefing
 )
 
-fit_knowledge <- function(frame, formula = main_formula) {
+fit_knowledge <- function(frame, formula = main_formula, check = TRUE) {
   if ("age" %in% names(frame)) {
     frame <- dplyr::mutate(frame, age_decades = age / 10)
   }
   fit <- lme4::lmer(
-    formula, data = frame, REML = FALSE,
+    formula,
+    data = frame, REML = FALSE,
     control = lme4::lmerControl(
       optimizer = "bobyqa", optCtrl = list(maxfun = 200000, rhoend = 1e-9)
     )
   )
-  stopifnot(is.null(fit@optinfo$conv$lme4$messages))
+  if (check) stopifnot(is.null(fit@optinfo$conv$lme4$messages))
+  stopifnot(fit@optinfo$conv$opt == 0)
   fit
 }
 
@@ -60,11 +62,25 @@ tidy_fit <- function(fit, model) {
     model = model,
     term = rownames(est),
     estimate = est[, "Estimate"],
-    std_error = est[, "Std. Error"],
     n = stats::nobs(fit),
     polls = dplyr::n_distinct(lme4::getME(fit, "flist")$group |> sub(pattern = "_.*", replacement = "")),
     groups = lme4::ngrps(fit)[["group"]],
     r2_marginal = fixed_var / total_var,
     r2_conditional = (fixed_var + random_var) / total_var
   )
+}
+
+
+bootstrap_model <- function(frame, formula, model) {
+  if ("age" %in% names(frame)) frame$age_decades <- frame$age / 10
+  fit <- fit_knowledge(frame, formula, check = FALSE)
+  terms <- names(lme4::fixef(fit))
+  terms <- terms[!grepl("factor\\(pollid\\)", terms)]
+  statistic <- function(x) {
+    suppressMessages(lme4::fixef(fit_knowledge(x, formula, check = FALSE)))[terms]
+  }
+  message("Regression bootstrap: ", model)
+  result <- bootstrap_stat(frame, statistic)
+  tidy_fit(fit, model) |>
+    dplyr::inner_join(dplyr::select(bootstrap_rows(result), -estimate), by = "term")
 }

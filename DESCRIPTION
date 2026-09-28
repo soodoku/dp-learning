@@ -13,7 +13,6 @@ Encoding: UTF-8
 Imports:
     arrow,
     assertr,
-    bayesmeta,
     digest,
     dplyr,
     forcats,
@@ -27,7 +26,6 @@ Imports:
     readr,
     rmarkdown,
     rprojroot,
-    sandwich,
     tibble,
     tidyr
 Suggests:

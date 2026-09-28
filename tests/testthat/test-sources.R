@@ -5,8 +5,10 @@ test_that("upstream manifests identify available and unchanged files", {
   expect_true(verify_sources())
   expect_setequal(
     manifest$source,
-    c("distortions_responses", "briefing_reading", "polls", "items",
-      "participants", "item_responses", "scores")
+    c(
+      "distortions_responses", "briefing_reading", "polls", "items",
+      "participants", "item_responses", "scores"
+    )
   )
 })
 
@@ -47,7 +49,7 @@ test_that("one canonical attendee panel supplies gains and group models", {
   expect_equal(dplyr::n_distinct(panel$poll_id), 31L)
   expect_equal(dplyr::n_distinct(panel$poll_id[!is.na(panel$group)]), 28L)
   expect_equal(nrow(core_group_frame(panel)), 8800L)
-  expect_equal(nrow(poll_gains(panel)), 31L)
+  expect_setequal(unique(panel$poll_id), read_output("poll_gains.csv")$poll_id)
 })
 
 test_that("control analyses include only polls with respondent item answers", {

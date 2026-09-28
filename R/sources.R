@@ -69,7 +69,8 @@ read_briefing_scores <- function(path = source_path("briefing_reading"), root = 
     ) |>
     dplyr::filter(!is.na(.data$historical_respondent_id)) |>
     dplyr::transmute(
-      dpnum, caseid = as.numeric(.data$historical_respondent_id),
+      dpnum,
+      caseid = as.numeric(.data$historical_respondent_id),
       read_briefing = reading_score
     )
   stopifnot(!anyNA(out$dpnum), !anyNA(out$caseid), !anyDuplicated(out[c("dpnum", "caseid")]))
@@ -98,8 +99,10 @@ appendix_polls <- function(
       mode = dplyr::recode(mode, "face-to-face" = "Face to face", online = "Online")
     ) |>
     dplyr::arrange(year, title) |>
-    dplyr::transmute(poll = title, year, topic, mode, control_group,
-                     group_model)
+    dplyr::transmute(
+      poll = title, year, topic, mode, control_group,
+      group_model
+    )
   stopifnot(nrow(out) == length(item_ids))
   out
 }
