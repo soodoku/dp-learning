@@ -6,11 +6,11 @@ How much do participants in Deliberative Polls learn, does participation cause l
 
 [Manuscript](ms/main.pdf) · [Manuscript source](ms/main.Rmd) · [Results](tabs/) · [Figures](figs/)
 
-The main analysis follows 8,800 participants in 592 discussion groups across 28 polls. It reports absolute gains, gains relative to initial knowledge, and estimates adjusted for guessing using the item model in [guess](https://github.com/soodoku/guess). Figure 1 also compares attendee and control gains in the two main-sample polls with both interviews in both arms. Table 1 adds education, age, and gender covariates across all 28 polls. The fourth column adds attitude extremity and group disagreement; the table notes report the standard-deviation alternative. The appendix checks groupmates’ knowledge of missed questions in the same 28 polls, and reports poll-specific estimates, precision-weighted averages, and later control interviews.
+The main analysis compares pre-arrival and immediate-exit knowledge among attendees. It reports absolute gains, gains relative to initial knowledge, and estimates adjusted for guessing using the item model in [guess](https://github.com/soodoku/guess). Figure 1 also compares attendee and control gains in the two studies with both interviews in both arms. The regression table adds demographic covariates, then separately adds attitudes and briefing reading. The appendix examines groupmates' knowledge of missed questions, poll-specific estimates, precision-weighted averages, and later control interviews. Current sample sizes and estimates come from the [generated results](tabs/) and appear in the manuscript.
 
 All confidence intervals use a hierarchical bootstrap: resample polls within mode, then discussion groups, keeping each participant's item responses and interview waves together. Within-poll comparisons hold the poll fixed and resample separately by study arm; independent controls are individual sampling units. Pooled learning estimates weight polls equally. Control comparisons can reflect selection into attendance, and groupmate coefficients are descriptive.
 
-The [dp-data repository](https://github.com/soodoku/dp-data) supplies typed Parquet tables of polls, items, participants, responses, and scores. This repository joins and filters those tables; the poll and item appendices are generated from them. [Build provenance](tabs/provenance.json) records the data revision, input manifests, model package version, and bootstrap replicate count. Self-reported briefing reading is available for 12 polls and enters the third column of Table 1.
+The [dp-data repository](https://github.com/soodoku/dp-data) supplies typed Parquet tables of polls, items, participants, responses, and scores. This repository joins and filters those tables; the poll and item appendices are generated from them. [Build provenance](tabs/provenance.json) records the data revision, input manifests, model package version, and bootstrap replicate count. Self-reported briefing reading enters the fourth column of the regression table; attitudes enter the third.
 
 ## Reproduce
 
@@ -41,8 +41,8 @@ presence, attendance and groups. An interim questionnaire is not treated as
 arrival, and a missing arrival wave never falls back to pre-arrival.
 
 `tabs/pre_arrival_selection.csv` reports descriptive pre-arrival knowledge by
-recorded attendance and study arm, separate attendee comparisons with invited
-nonattenders and uninvited controls, and exit attrition among known attendees.
+recorded attendance and study arm, separate attendee comparisons with recruitment
+nonattenders, invited nonattenders and uninvited controls, and exit attrition among known attendees.
 Unknown attendance stays unknown. These comparisons describe selection; they
 do not remove unobserved selection or establish causal deliberation effects.
 The input phases, questionnaire states and source population come from dp-data;
@@ -52,8 +52,8 @@ batteries rather than being pooled as independent studies.
 Scores and changes are proportions correct; multiply a change by 100 for
 percentage points. `tabs/phase_provenance.json` records the upstream revision,
 source checksums and bootstrap count for these tables. They supplement the
-existing selected-wave analyses, whose wave names do not necessarily identify
-arrival and exit. Missing phases mean unavailable comparisons in the verified
+main pre-arrival-to-exit analysis. Original questionnaire numbers are mapped
+explicitly to event stages upstream. Missing phases mean unavailable comparisons in the verified
 export, not proof that a poll never collected that questionnaire. Matching
 batteries and denominators are required; the California eight-item arrival/exit
 battery is not mixed with its five-item telephone/exit battery. Marousi paired
@@ -74,8 +74,8 @@ count twice.
 
 The manuscript presents the common three-wave decomposition and pre-arrival
 selection gaps in the main text. Its phase appendix reports available paired
-estimates and exit attrition. The broader selected-wave models retain their
-study-specific interview windows; they are not all arrival-to-exit estimates.
+estimates and exit attrition. The main models use pre-arrival and exit in every poll. Arrival-to-exit estimates
+remain separate from these combined preparation-and-event gains.
 All manuscript numbers and phase exhibits read the generated replication tables.
 
 Wave timing, original survey labels, questionnaire presence, attendance evidence,
@@ -84,3 +84,11 @@ This repository selects analysis samples and estimates learning; it does not
 reconstruct those source facts. The approved 2004 Primaries analysis includes one
 study with 239 observed paired attendees (238 with known groups), excluding the
 overlapping historical subset and people with no recorded discussion attendance.
+
+`tabs/retention.csv` compares baseline, exit and delayed follow-up among the same
+attendees in NIC 1996 and the 2021 climate poll. It requires observed questionnaires
+and a common battery at all three interviews, reports group-bootstrap intervals,
+and does not impose the guessing model's no-forgetting assumption. NIC's main
+analysis uses its documented exit interviews; the ten-month follow-up is retained
+only for this separate comparison. All source items and interview timing remain
+in dp-data.

@@ -202,7 +202,9 @@ test_that("main interview labels follow stages, not input score numbers", {
     poll_id = rep(c("first", "second"), each = 2L), source_dataset = "historical",
     original_score_wave = rep(c("t1", "t2"), 2L), wave = c("t0", "t2", "t0", "t3")
   )
+  expect_error(main_interview_timing(panel, scores))
+  scores$wave[4] <- "t2"
   timing <- main_interview_timing(panel, scores)
   expect_equal(timing$phase_t1, c("t0", "t0"))
-  expect_equal(timing$phase_t2, c("t2", "t3"))
+  expect_equal(timing$phase_t2, c("t2", "t2"))
 })

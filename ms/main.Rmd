@@ -32,6 +32,7 @@ prose_count <- \(n) if (n %in% 0:9) {
   c("zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine")[n + 1L]
 } else count(n)
 gains <- read_out("poll_gains.csv")
+retention <- read_out("retention.csv")
 meta <- read_out("meta.csv")
 controlled_learning <- read_out("control_learning.csv")
 controlled_pooled <- read_out("control_learning_pooled.csv")
@@ -127,7 +128,15 @@ The online design is intended to be as similar as possible to the face-to-face o
 
 # Theory and hypotheses
 
-Learning requires exposure to information and the ability and motivation to absorb it. These mechanisms motivate the individual and group characteristics in our regressions.
+Learning requires exposure to information and the ability and motivation to absorb it. These mechanisms suggest when participants should learn as well as who should learn most.
+
+*When learning occurs*. We expect some learning before participants arrive. The briefing materials provide information, and the prospect of discussing the issues gives participants a reason to absorb it. Invitation can also prompt them to seek information elsewhere. Thus preparation should raise knowledge between recruitment and arrival, even among some invitees who ultimately do not attend.
+
+We expect further learning during deliberation. Discussion gives participants opportunities to ask questions, encounter facts they missed, and correct misunderstandings. Expert answers and explanations from other participants can make difficult material easier to grasp. Preparation may help participants learn from these exchanges by giving them the background needed to understand them. But it also leaves less room for further gains on a bounded knowledge test. We therefore expect gains both before arrival and during the event, without predicting which will be larger. Smaller gains during the event need not mean that discussion offers little: they may partly reflect what participants have already learned.
+
+After the event, the question becomes how much of the gain lasts. If participants stop encountering or using the information, we expect some of it to be forgotten. Continued attention and discussion may instead sustain knowledge or add to it. Later interviews therefore address the durability of the gains. Changes since exit reflect both forgetting and subsequent learning, rather than forgetting alone.
+
+The same mechanisms motivate our expectations about individual and group differences.
 
 *Initial knowledge*. The information-rich tend to get information-richer. The more one knows going in, the more one tends to learn and thus know going out. Absent ceiling effects, this predicts a positive association with gain; bounded scores can instead produce a negative association. Prior knowledge on a particular topic improves people's ability to comprehend new information, enabling them to extract the central elements of a message and draw appropriate inferences efficiently [@eckhardt1991; @recht1988]. Prior knowledge also enhances people's ability to store new information on that topic and retrieve it later [@cooke1993; @fiske1990; @hambrick2003; @mcgraw1990; @recht1988; @schneider1993]. So the less political information individuals have stored in memory, the more difficult it is for them to acquire new information.
 
@@ -153,7 +162,7 @@ A Deliberative Poll begins by recruiting citizens, usually through a survey cond
 
 These stages distinguish three quantities. The change $K_{t_1}-K_{t_0}$ measures gains before arrival, when participants may read the briefing materials or prepare in other ways. The change $K_{t_2}-K_{t_1}$ measures gains during the event. The change $K_{t_2}-K_{t_0}$ includes both periods. Follow-up measurements at $t_3$ address how much knowledge remains later. Each is a change among the same people answering the same questions. None by itself identifies a causal effect: repeated testing and learning outside the study can also change scores.
 
-Our main pooled estimate is the average within-poll change among attendees, giving each poll equal weight. In `r sum(main_interviews$phase_t1 == "t0" & main_interviews$phase_t2 == "t2", na.rm = TRUE)` of the `r nrow(main_interviews)` polls, it compares pre-arrival and exit ($t_0$ to $t_2$), covering both preparation and the event. The National Issues Convention instead compares pre-arrival with a follow-up about ten months later ($t_0$ to $t_3$). The Bulgarian baseline comes from the national survey conducted before invitations to the event [@kultura2002, p. 5]. Appendix Table \ref{tab:polls} identifies the interview pair for every poll. The pooled estimate therefore summarizes gains over these interview periods; the separate three-wave comparisons isolate changes before arrival and during deliberation.
+Our main pooled estimate is the average within-poll change among attendees, giving each poll equal weight. It compares pre-arrival and exit ($t_0$ to $t_2$), covering both preparation and the event. The separate three-wave comparisons distinguish gains before arrival from gains during deliberation. Later follow-ups address how much knowledge persists and are analyzed separately.
 
 ## Invitation, attendance, and causal effects
 
@@ -165,19 +174,19 @@ Under random assignment, an invitation that increases attendance, no interferenc
 
 ## Model {#sec:model}
 
-Let $K_{igd,t}$ denote the proportion of knowledge questions answered correctly by participant $i$ in group $g$ and poll $d$ at stage $t$. Let $a_d$ and $b_d$ denote the earlier and later interviews used for that poll. For the `r sum(main_interviews$phase_t1 == "t0" & main_interviews$phase_t2 == "t2", na.rm = TRUE)` polls with pre-arrival and exit scores, $a_d=t_0$ and $b_d=t_2$, so the outcome is $G_{igd}=K_{igd,t_2}-K_{igd,t_0}$. More generally, $G_{igd}=K_{igd,b_d}-K_{igd,a_d}$ accommodates the National Issues Convention's later follow-up. We fit a hierarchical linear model [@raudenbush2002]:
-$$G_{igd}=\beta_0+\beta_1K_{igd,a_d}+\mathbf{z}_{igd}'\boldsymbol{\beta}_z+\alpha_{gd}+\gamma_d+\varepsilon_{igd},$$
+Let $K_{igd,t}$ denote the proportion of knowledge questions answered correctly by participant $i$ in group $g$ and poll $d$ at stage $t$. Our outcome is the gain from pre-arrival to exit, $G_{igd}=K_{igd,t_2}-K_{igd,t_0}$. We fit a hierarchical linear model [@raudenbush2002]:
+$$G_{igd}=\beta_0+\beta_1K_{igd,t_0}+\mathbf{z}_{igd}'\boldsymbol{\beta}_z+\alpha_{gd}+\gamma_d+\varepsilon_{igd},$$
 where $\mathbf{z}_{igd}$ contains groupmates' mean initial knowledge, group size, and mode. The second specification adds education, age, gender, the proportion of female groupmates, and the education-by-initial-knowledge and gender-by-group-composition interactions. The third and fourth specifications separately extend the demographic model: the third adds attitude extremity and group disagreement, and the fourth adds reported briefing reading. The $\beta$ coefficients are fixed regression parameters. For fitting, we assume
 $$\alpha_{gd}\sim N(0,\sigma_g^2),\qquad \gamma_d\sim N(0,\sigma_p^2),\qquad \varepsilon_{igd}\sim N(0,\sigma_e^2),$$
 with these components mutually independent conditional on the regressors and independent across distinct groups, polls, and individuals, respectively. The group and poll random intercepts allow outcomes to covary within discussion groups and across groups in the same poll. Their variances, $\sigma_g^2$ and $\sigma_p^2$, measure residual variation at those levels; $\sigma_e^2$ measures individual residual variation. We estimate the coefficients and variance components by maximum likelihood [@bates2015] and obtain confidence intervals from the hierarchical bootstrap.
 
-Adding $K_{igd,a_d}$ to both sides gives the equivalent equation for later knowledge:
-$$K_{igd,b_d}=\beta_0+(1+\beta_1)K_{igd,a_d}+\mathbf{z}_{igd}'\boldsymbol{\beta}_z+\alpha_{gd}+\gamma_d+\varepsilon_{igd}.$$
+Adding $K_{igd,t_0}$ to both sides gives the equivalent equation for later knowledge:
+$$K_{igd,t_2}=\beta_0+(1+\beta_1)K_{igd,t_0}+\mathbf{z}_{igd}'\boldsymbol{\beta}_z+\alpha_{gd}+\gamma_d+\varepsilon_{igd}.$$
 Thus using gain instead of the later score shifts the coefficient on initial knowledge down by one and leaves the other coefficients and fitted residuals unchanged. We report gain because it directly expresses the change the paper seeks to explain. Conditioning on initial knowledge compares that change among participants with the same measured starting knowledge.
 
 An unadjusted change-score model instead constrains the baseline coefficient to zero in the gain equation. These specifications can disagree when groups differ at baseline [@allison1990; @vanbreukelen2006]. Score ceilings, guessing, and measurement error complicate the relationship between observed gains and learning of the underlying facts [@luskin2016]. We therefore treat the initial-knowledge coefficient as an association, not an estimate of how prior knowledge causes learning.
 
-The results follow these distinctions. We first report absolute and relative knowledge gains and compare attendees with controls. We then separate gains before arrival from gains during the event and examine who attends. Finally, we use the model to assess the hypotheses about participants' initial knowledge, education, and other characteristics; the knowledge and composition of their discussion groups; and their attitudes and reading of the briefing materials.
+The comparisons follow these distinctions. We first describe who attends and how attendees differ from the comparison groups before the event. We then report absolute and relative knowledge gains, compare attendees with controls, distinguish gains before arrival from gains during the event, and examine how much knowledge persists at later follow-ups. Finally, we use the model to assess the hypotheses about participants' initial knowledge, education, and other characteristics; the knowledge and composition of their discussion groups; and their attitudes and reading of the briefing materials.
 
 # Data and measures
 
@@ -185,15 +194,34 @@ The main sample comprises `r size("core", "polls")` polls and `r count(size("cor
 
 The two datasets for the 2004 online Primaries describe the same experiment and include overlapping respondents. We include that study once, using attendees with at least one documented discussion session and observed initial and exit questionnaires. This gives 239 paired attendees, of whom 238 have known groups and enter the main models. The 217-person historical sample is an overlapping subset of that study.
 
-Comparisons by interview timing require documented attendance, evidence that respondents answered each questionnaire, and the same knowledge questions and scoring denominator at both interviews. The main analysis follows historical scoring in assigning zeros to some records for which questionnaire completion is uncertain; those records do not enter these comparisons. We include attendees without known discussion groups when their attendance and questionnaire responses are documented. We compare pre-arrival and exit knowledge in `r dplyr::n_distinct(phase_baseline_exit$study_id)` polls and all three measurements in `r prose_count(dplyr::n_distinct(phase_balanced$poll_id))`. Appendix \ref{app:phases} reports the available pairs and their sample sizes.
+Comparisons by interview timing require documented attendance, evidence that respondents answered each questionnaire, and the same knowledge questions and scoring denominator at both interviews. The main analysis follows historical scoring in assigning zeros to some records for which questionnaire completion is uncertain; those records do not enter these comparisons. For the National Issues Convention, both the main analysis and the timing comparisons require observed pre-arrival and exit questionnaires. We include attendees without known discussion groups when their attendance and questionnaire responses are documented. We compare pre-arrival and exit knowledge in `r dplyr::n_distinct(phase_baseline_exit$study_id)` polls and all three measurements in `r prose_count(dplyr::n_distinct(phase_balanced$poll_id))`. Appendix \ref{app:phases} reports the available pairs and their sample sizes.
 
 America in One Room and the climate poll interviewed separate samples who were never invited to deliberate [@fishkin2021]. We compare changes in their scores with changes among attendees in the main sample, using the same questions in both arms. These comparisons may reflect selection into attendance as well as deliberation. Additional control comparisons and follow-ups appear in Appendix \ref{app:controls}.
 
 ## Knowledge
 
-We measure knowledge by closed-ended knowledge questions, mostly multiple choice, in some cases extracted from party or candidate placements, and in a few cases true-false [@luskin1987; @luskin2005; @price1999; @mondak1999; @mondak2001]. Appendix \ref{app:items} lists the items. Correct responses are scored as 1, incorrect responses and "don't knows" as 0 [@luskin2011], and these scores are then averaged across items to give the proportion answered correctly.
+We measure knowledge with factual questions, mostly multiple choice or true-false, along with some numerical estimates and questions about party or candidate positions [@luskin1987; @luskin2005; @price1999; @mondak1999; @mondak2001]. Appendix \ref{app:items} lists the items. Correct responses are scored as 1, incorrect responses and "don't knows" as 0 [@luskin2011], and these scores are then averaged across items to give the proportion answered correctly.
 
 The analysis includes `r count(size("core", "n"))` participants in `r size("core", "groups")` groups and `r size("core", "polls")` polls. The demographic model retains `r count(size("demographic", "n"))` participants and all `r size("demographic", "polls")` polls; `r count(size("core", "n") - size("demographic", "n"))` participants have missing covariates. The reading model includes `r count(size("briefing", "n"))` participants in `r size("briefing", "polls")` polls. The attitude model retains `r count(size("attitudes", "n"))` participants in all `r size("attitudes", "polls")` polls; `r count(size("demographic", "n") - size("attitudes", "n"))` additional participants lack attitude measures.
+
+## Who attends? {#sec:selection}
+
+Participation is voluntary, so attendees may differ from the people invited or recruited to attend. Their initial knowledge helps characterize whom the gain estimates describe. Table \ref{tab:pre-arrival-selection} compares their initial scores with those of nonattenders in the recruitment sample and people not invited to deliberate. A positive gap means that attendees started with more knowledge; it does not measure how much they learned.
+
+Attendees had higher initial scores than both comparison groups in each study. In America in One Room, the pre-arrival gaps are `r pp(a1r_recruitment$estimate)` and `r pp(a1r_baseline_control$estimate)` percentage points, respectively. In the climate poll they are `r pp(climate_invited$estimate)` and `r pp(climate_baseline_control$estimate)` points (Table \ref{tab:pre-arrival-selection}). In 2019, the recruitment sample was subsequently subsampled for invitations, so we cannot identify every nonattender as someone who declined an invitation. In the climate study, baseline respondents in the treatment sample were invited to register [@norc2019, p. 6; @norc2021, p. 4]. These summaries use everyone with verified attendance status and an observed baseline in each sample, including attendees without an observed exit. They therefore have different denominators from the paired gain and group-model samples.
+
+```{r pre-arrival-selection, results="asis"}
+phase_selection_table(phase_selection) |>
+  knitr::kable(
+    format = "latex", booktabs = TRUE, position = "H", linesep = "",
+    align = c(">{\\raggedright\\arraybackslash}p{1.65in}",
+              ">{\\raggedright\\arraybackslash}p{1.2in}", "r", "r", "r"),
+    caption = "Pre-arrival knowledge differences: attendees minus each comparison group. N counts observed baseline scores; gaps are percentage points. Descriptive summaries have no estimated sampling intervals."
+  ) |>
+  print()
+```
+
+The baseline gaps show that attendees began with greater knowledge; they do not by themselves establish bias in the gain estimates. Comparing changes removes fixed differences in initial knowledge. An attendee-control comparison identifies the effect of participation if, without participation, the groups would have experienced the same average change. That assumption can fail if attendance is associated with preparation or learning outside the event.
 
 ## Participant and group characteristics
 
@@ -201,7 +229,7 @@ The analysis includes `r count(size("core", "n"))` participants in `r size("core
 
 *Gender and age*. Gender is coded 1 for women and 0 for men. Age enters in decades. Missing or refused responses remain missing.
 
-*Group composition and mode*. Groupmates' initial knowledge and the proportion of women exclude the participant herself. Group size counts members with both baseline and follow-up answers, so it is a lower bound on actual attendance when members lack an interview. Mode distinguishes online from in-person deliberation.
+*Group composition and mode*. Groupmates' initial knowledge and the proportion of women exclude the participant herself. Group size counts members with both pre-arrival and exit answers, so it is a lower bound on actual attendance when members lack an interview. Mode distinguishes online from in-person deliberation.
 
 *Reading the briefing materials*. Respondent-linked reading reports are available for `r sum(coverage$reading > 0)` polls. They describe reading before discussion, recalled in the post-deliberation questionnaire. We score their ordered categories from zero to one using the source-specific response scales.
 
@@ -211,7 +239,7 @@ Here $n_{gj}$ counts group members with an observed response to measure $j$, and
 
 ## Guessing and uncertainty
 
-A correct answer can reflect knowledge or guessing. We apply the item model of @cor2016 separately to each poll's paired answers. Under the assumption that knowledge is not lost between interviews, it estimates the share who learned each fact. This assumption is stronger when the later interview is a delayed follow-up; the adjusted estimates are not uniformly measures of immediate event learning. We average across questions to obtain learning on a 0--1 scale. In each control study, we fit this model separately to attendees and controls and subtract their estimated learning. Both arms use the same items; their guessing probabilities are estimated separately. Table \ref{tab:models} uses observed individual gains, since the item model estimates learning rates rather than an individual latent outcome.
+A correct answer can reflect knowledge or guessing. We apply the item model of @cor2016 separately to each poll's paired answers. Under the assumption that knowledge is not lost between interviews, it estimates the share who learned each fact. We use this adjustment only for the pre-arrival-to-exit comparisons, not for the later follow-ups. We average across questions to obtain learning on a 0--1 scale. In each control study, we fit this model separately to attendees and controls and subtract their estimated learning. Both arms use the same items; their guessing probabilities are estimated separately. Table \ref{tab:models} uses observed individual gains, since the item model estimates learning rates rather than an individual latent outcome.
 
 We estimate uncertainty using a hierarchical bootstrap. For estimates across polls, we sample polls with replacement separately within online and in-person modes, retaining their observed counts, and then sample whole discussion groups within each selected poll. For an individual poll, we hold the poll fixed and sample its groups. Independently sampled controls are single-person units, sampled separately from attendees. Each sampled participant retains all items and interviews. We refit the models and recompute denominators in each of `r provenance$bootstrap_replicates` draws, using the 2.5th and 97.5th percentiles for 95\% confidence intervals. Thus the same resampling scheme propagates sampling and guessing-model estimation uncertainty. Stratifying by mode preserves support for the online coefficient in every draw. Inference treats each poll's question battery as fixed.
 
@@ -223,7 +251,7 @@ Across the main sample, the average absolute gain is `r pp(pooled("raw, pooled")
 
 A before-and-after gain can include learning from repeated questions or events outside deliberation. Figure \ref{fig:learning} therefore also compares attendees' gains with controls' gains. The observed differences are `r pp(control_gain("america-in-one-room-2019", "raw")$estimate)` percentage points in America in One Room and `r pp(control_gain("a1r-climate-2021", "raw")$estimate)` percentage points in the climate poll. Their equally weighted average is `r pp(control_average("raw")$estimate)` percentage points (95\% interval `r pp(control_average("raw")$lower)` to `r pp(control_average("raw")$upper)`), rising to `r pp(control_average("adjusted")$estimate)` percentage points after guessing adjustment (`r pp(control_average("adjusted")$lower)` to `r pp(control_average("adjusted")$upper)`). Both estimates use the same attendees, controls, and questions. These comparisons do not eliminate selection into attendance.
 
-```{r learning, fig.cap = "Knowledge-score changes in percentage points, with 95\\% hierarchical-bootstrap confidence intervals. A: before-event to exit changes, except the marked National Issues Convention row (pre-event to ten-month follow-up). Before-event means pre-arrival for onsite events or pre-start for online discussions. These are not uniform arrival-to-exit estimates. Rules for including respondents with uncertain questionnaire completion vary across studies. B: observed attendee gain minus control gain in the two polls with common baseline and follow-up interviews. Each panel ends with equally weighted observed and guessing-adjusted averages. Whole discussion groups are resampled within polls; independent controls are resampled individually. Pooled intervals resample polls within mode. With one control study per mode, the pooled control interval is conditional on these two studies. Each draw refits the guessing model, treating question batteries as fixed.", fig.pos = "tbp", out.width = "100%"}
+```{r learning, fig.cap = "Knowledge-score changes in percentage points, with 95\\% hierarchical-bootstrap confidence intervals. A: pre-arrival to exit changes. For online polls, pre-arrival is before the discussion sessions begin. Rules for including respondents with uncertain questionnaire completion vary across studies. B: observed attendee gain minus control gain in the two polls with pre-arrival and exit interviews. Each panel ends with equally weighted observed and guessing-adjusted averages. Whole discussion groups are resampled within polls; independent controls are resampled individually. Pooled intervals resample polls within mode. With one control study per mode, the pooled control interval is conditional on these two studies. Each draw refits the guessing model, treating question batteries as fixed.", fig.pos = "tbp", out.width = "100%"}
 figure("learning")
 ```
 
@@ -249,25 +277,37 @@ These estimates are unweighted changes in proportion correct, without adjustment
 
 Changes before arrival could reflect briefing, preparation, repeated testing, or other events between interviews. Arrival-to-exit changes isolate the event's time window, but do not identify deliberation's causal effect without a credible comparison. Even on a common sample, these estimates describe the attendees with observed questionnaires at all three phases; they do not describe all recruited citizens or all attendees.
 
-## Who attends? {#sec:selection}
+## How much knowledge persists?
 
-This comparison asks whether people who attended already knew more before the event. Table \ref{tab:pre-arrival-selection} compares their initial scores with those of nonattenders in the recruitment sample and people not invited to deliberate. A positive gap means that attendees started with more knowledge; it does not measure how much they learned.
+Later interviews allow us to ask how much of the gain remains after the event. We compare pre-arrival, exit, and follow-up scores among the same attendees answering the same questions at all three interviews. Table \ref{tab:retention} reports the National Issues Convention's follow-up about ten months after the event and the climate poll's follow-up about a year later [@luskinfishkin2005nic, p. 18; @fishkin2025scaling]. Neither follow-up enters the main pre-arrival-to-exit estimate.
 
-Attendees had higher initial scores than both comparison groups in each study. In America in One Room, the pre-arrival gaps are `r pp(a1r_recruitment$estimate)` and `r pp(a1r_baseline_control$estimate)` percentage points, respectively. In the climate poll they are `r pp(climate_invited$estimate)` and `r pp(climate_baseline_control$estimate)` points (Table \ref{tab:pre-arrival-selection}). In 2019, the recruitment sample was subsequently subsampled for invitations, so we cannot identify every nonattender as someone who declined an invitation. In the climate study, baseline respondents in the treatment sample were invited to register [@norc2019, p. 6; @norc2021, p. 4]. These summaries use everyone with verified attendance status and an observed baseline in each sample, including attendees without an observed exit. They therefore have different denominators from the paired gain and group-model samples.
-
-```{r pre-arrival-selection, results="asis"}
-phase_selection_table(phase_selection) |>
+```{r retention, results="asis"}
+retention |>
+  dplyr::mutate(
+    Poll = dplyr::recode(poll_id,
+      `nic-1996` = "National Issues Convention (ten months)",
+      `a1r-climate-2021` = "America in One Room: Climate (one year)"
+    ),
+    value = ifelse(is.finite(lower),
+      paste0(pp(estimate), " [", pp(lower), ", ", pp(upper), "]"), pp(estimate)
+    )
+  ) |>
+  dplyr::select(Poll, N = n_people, contrast, value) |>
+  tidyr::pivot_wider(names_from = contrast, values_from = value) |>
+  dplyr::select(Poll, N, exit_minus_pre_arrival, followup_minus_exit, followup_minus_pre_arrival) |>
   knitr::kable(
-    format = "latex", booktabs = TRUE, position = "H", linesep = "",
-    align = c(">{\\raggedright\\arraybackslash}p{1.65in}",
-              ">{\\raggedright\\arraybackslash}p{1.2in}", "r", "r", "r"),
-    caption = "Pre-arrival knowledge differences: attendees minus each comparison group. N counts observed baseline scores; gaps are percentage points. Descriptive summaries have no estimated sampling intervals."
+    format = "latex", booktabs = TRUE, escape = FALSE, position = "H",
+    align = c(">{\\raggedright\\arraybackslash}p{1.65in}", "r", "r", "r", "r"),
+    col.names = c("Poll and follow-up", "N",
+      "\\shortstack[r]{Pre-arrival \\\\ to exit}",
+      "\\shortstack[r]{Exit to \\\\ follow-up}",
+      "\\shortstack[r]{Pre-arrival \\\\ to follow-up}"),
+    caption = "Knowledge changes among attendees observed at all three interviews. Entries are percentage points; brackets contain 95 percent discussion-group-bootstrap intervals."
   ) |>
   print()
 ```
 
-The baseline gaps show that attendees began with greater knowledge; they do not by themselves establish bias in the gain estimates. Comparing changes removes fixed differences in initial knowledge. An attendee-control comparison identifies the effect of participation if, without participation, the groups would have experienced the same average change. That assumption can fail if attendance is associated with preparation or learning outside the event.
-
+Knowledge remains above baseline at follow-up in both studies. Climate participants lose some of their initial gain after exit, whereas the National Issues Convention shows no clear decline. These comparisons describe returning attendees. Using the same people at each interview keeps changes in sample composition from being mistaken for changes in knowledge, but does not establish that those lost to follow-up had the same experience. Changes after exit can reflect forgetting, further learning, or both. We therefore use observed scores without the guessing model's no-forgetting assumption. The climate poll also permits a comparison with controls at the later interview (Appendix \ref{app:controls}).
 
 # Who Learns?
 
@@ -283,7 +323,7 @@ separators[summary_start:(nrow(table_1) - 1L)] <- "\\addlinespace[0.25em]"
 table_tex <- knitr::kable(
   table_1, format = "latex", booktabs = TRUE, position = "!htb", align = "lrrrr", escape = FALSE,
   linesep = separators,
-  caption = "Change in proportion correct (later minus initial), conditional on initial knowledge. Coefficients with 95 percent hierarchical-bootstrap confidence intervals below."
+  caption = "Change in proportion correct (exit minus pre-arrival), conditional on initial knowledge. Coefficients with 95 percent hierarchical-bootstrap confidence intervals below."
 )
 table_tex <- sub("\\centering", "\\centering\\small\\setlength{\\tabcolsep}{3pt}", table_tex, fixed = TRUE)
 cat(sub("\\end{table}", paste0("\\par\\medskip\\noindent{\\footnotesize\\raggedright\\emph{Notes.} Groupmates' mean initial knowledge excludes the respondent herself; both that mean and group size use members with initial and later scores. All models have poll and small-group random intercepts. Education is coded as below secondary completion, secondary/some college, or degree or higher; the first category is the reference. Marginal $R^2$ covers fixed effects; conditional $R^2$ includes random intercepts. Columns 3 and 4 separately add attitudes and reading (0--1) to column 2. Reading reports are available for fewer polls. Replacing pairwise disagreement with the mean within-group SD gives a dispersion coefficient of ", term("attitude_sd", "attitude_sd"), "; the peer-knowledge coefficient is ", term("attitude_sd", "group_k1"), ".\\par}", "\n\\end{table}"), table_tex, fixed = TRUE))
@@ -305,7 +345,7 @@ Appendix Table \ref{tab:baseline-composition} examines whether participants with
 
 # Conclusion
 
-Participants' factual knowledge increases across the study-specific interview windows we examine. Reporting absolute and relative gains makes the magnitude interpretable, while adjustment for guessing addresses one source of measurement error. In the two polls with common before-and-after control interviews, attendees show larger gains than controls. Interpreting the gain differences causally requires attendees and controls to have comparable changes without participation; the peer regressions are descriptive. The three-wave comparisons show that knowledge can increase before arrival as well as during the event. Generalizing beyond attendees requires assumptions about those who did not attend or complete later questionnaires. The knowledge questions concern facts selected by organizers, so these estimates describe learning about the topics the events emphasized.
+Participants' factual knowledge increases between recruitment and the end of deliberation. Reporting absolute and relative gains makes the magnitude interpretable, while adjustment for guessing addresses one source of measurement error. In the two polls with common before-and-after control interviews, attendees show larger gains than controls. Interpreting the gain differences causally requires attendees and controls to have comparable changes without participation; the peer regressions are descriptive. The three-wave comparisons show that knowledge can increase before arrival as well as during the event. Generalizing beyond attendees requires assumptions about those who did not attend or complete later questionnaires. The knowledge questions concern facts selected by organizers, so these estimates describe learning about the topics the events emphasized.
 
 The gains also need to be considered against how much room there was to learn. Giving each poll equal weight, participants answered `r pp(initial_correct)`\% of questions correctly at the initial interview and `r pp(later_correct)`\% at the later interview. The gain of `r pp(later_correct - initial_correct)` percentage points closed `r pp(headroom_closed)`\% of the initial `r pp(initial_headroom)`-point gap to a perfect score. At the later interview, `r pp(1 - later_correct)`\% of answers were still incorrect or blank. This is a comparison of average scores, not a count of previously unknown facts learned: correct answers can reflect guessing, and net gains can conceal both learning and forgetting.
 
@@ -346,7 +386,7 @@ polls |>
   knitr::kable(
     format = "latex", booktabs = TRUE, longtable = TRUE,
     linesep = "", align = "lclcc",
-    caption = "Polls and interview pairs used in the main analysis. t0 is pre-arrival, t2 exit, and t3 later follow-up."
+    caption = "Polls and interview pairs used in the main analysis. t0 is pre-arrival and t2 exit."
   ) |>
   print()
 ```
@@ -387,7 +427,7 @@ meta |>
     position = "H", caption = "Average learning across polls, with hierarchical-bootstrap confidence intervals.")
 ```
 
-Observed gain is the later score minus the initial score; guessing-adjusted learning estimates the percentage who learned an item, averaged across questions. Equal weighting gives each poll the same weight. Precision weighting uses $w_d=1/\widehat{\mathrm{Var}}(\hat\theta_d)$, with sampling variances estimated by resampling discussion groups within each poll. The weighted average is $\sum_d w_d\hat\theta_d/\sum_d w_d$. These weights are held fixed when resampling polls and groups for its interval. The mode rows split the equal-poll average into in-person and online polls.
+Observed gain is the exit score minus the pre-arrival score; guessing-adjusted learning estimates the percentage who learned an item, averaged across questions. Equal weighting gives each poll the same weight. Precision weighting uses $w_d=1/\widehat{\mathrm{Var}}(\hat\theta_d)$, with sampling variances estimated by resampling discussion groups within each poll. The weighted average is $\sum_d w_d\hat\theta_d/\sum_d w_d$. These weights are held fixed when resampling polls and groups for its interval. The mode rows split the equal-poll average into in-person and online polls.
 
 \end{minipage}
 

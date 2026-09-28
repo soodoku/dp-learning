@@ -40,7 +40,6 @@ prepost <- read_output("poll_gains.csv") |>
   dplyr::transmute(
     panel = prepost_panel,
     label = dplyr::case_when(
-      poll_id == "nic-1996" ~ paste0(pollname, " [follow-up]"),
       TRUE ~ pollname
     ),
     estimate = 100 * raw, lower = 100 * raw_lower,
