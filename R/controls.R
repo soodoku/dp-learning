@@ -121,12 +121,12 @@ control_effects <- function(data) {
   dplyr::bind_rows(adjusted, ni_t3_effect(data))
 }
 
-# Who shows up: T1 knowledge of attendees vs invitees who did not attend.
+# Initial knowledge of attendees and nonattenders in each recruitment frame.
 selection <- function(data) {
   data |>
     dplyr::filter(
       poll_id %in% c("america-in-one-room-2019", "a1r-climate-2021"),
-      arm %in% c("attended", "invited_nonattender")
+      arm %in% c("attended", "invited_nonattender", "recruitment_nonattender")
     ) |>
     dplyr::summarise(
       k1 = mean(k1), n = dplyr::n(),
@@ -135,9 +135,10 @@ selection <- function(data) {
     dplyr::mutate(group = dplyr::recode(
       arm,
       attended = "attended",
-      invited_nonattender = "invited, did not attend"
+      invited_nonattender = "invited, did not attend",
+      recruitment_nonattender = "recruitment sample, did not attend"
     )) |>
-    dplyr::mutate(arm = factor(arm, levels = c("attended", "invited_nonattender"))) |>
+    dplyr::mutate(arm = factor(arm, levels = c("attended", "invited_nonattender", "recruitment_nonattender"))) |>
     dplyr::arrange(study, arm) |>
     dplyr::select(study, group, k1, n)
 }

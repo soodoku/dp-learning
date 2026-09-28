@@ -8,6 +8,7 @@ control_data <- control_panel()
 attendees <- attendee_panel()
 core_frame <- core_group_frame(attendees)
 core_ids <- unique(core_frame$poll_id)
+write_output(main_interview_timing(core_frame), "main_interviews.csv")
 assignment_check(core_frame) |> write_output("assignment_check.csv")
 core_frame |>
   dplyr::summarise(

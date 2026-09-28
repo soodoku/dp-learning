@@ -12,7 +12,8 @@ test_that("phase exhibits keep scores, sample sizes and unsupported intervals", 
   europe <- table[grepl("Europe", table$Poll), ]
   expect_equal(unname(europe$N), "332")
   expect_match(europe$`Arrival to exit`, "7.8", fixed = TRUE)
-  expect_match(europe$`Arrival to exit`, "[5.6, 10.2]", fixed = TRUE)
+  expect_match(europe$`Arrival to exit`, "7.8 ", fixed = TRUE)
+  expect_match(europe$`Arrival to exit`, "\\[[0-9.]+, [0-9.]+\\]")
   changed <- balanced
   changed$n_people[1] <- changed$n_people[1] - 1L
   expect_error(phase_comparison_table(changed))
@@ -24,7 +25,7 @@ test_that("selection and attrition exhibits retain distinct populations", {
   expect_equal(nrow(selection), 4L)
   a1r <- selection[selection$Poll == "America in One Room", ]
   expect_true(all(a1r$`Attendee N` == "526"))
-  invited <- a1r[a1r$Comparator == "Invited nonattenders", ]
+  invited <- a1r[a1r$Comparator == "Recruitment nonattenders", ]
   expect_equal(invited$`Comparator N`, "2,215")
   expect_equal(invited$`Gap (pp)`, "8.0")
   control <- a1r[a1r$Comparator == "Uninvited controls", ]

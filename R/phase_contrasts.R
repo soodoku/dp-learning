@@ -154,7 +154,8 @@ phase_selection <- function(data) {
     phase_selection_summary(attendees[exit_status == category, ], "attendee_exit_attrition", category)
   }))
   selected <- data[data$attended %in% TRUE, ]
-  comparisons <- dplyr::bind_rows(lapply(c("invited_nonattender", "control"), function(arm) {
+  reference_arms <- intersect(c("invited_nonattender", "recruitment_nonattender", "control"), data$arm)
+  comparisons <- dplyr::bind_rows(lapply(reference_arms, function(arm) {
     reference <- data[data$attended %in% FALSE & data$arm %in% arm, ]
     first <- phase_selection_summary(selected, "baseline_selection_difference", paste0("attended_minus_", arm))
     second <- phase_selection_summary(reference, "baseline_selection_difference", arm)

@@ -83,3 +83,13 @@ attendee_panel <- function(
   )
   out
 }
+
+main_interview_timing <- function(panel, phase_scores = read_analysis_phase_scores()) {
+  frames <- dplyr::distinct(panel, poll_id, source_dataset)
+  timing <- phase_scores |>
+    dplyr::semi_join(frames, by = c("poll_id", "source_dataset")) |>
+    dplyr::filter(original_score_wave %in% c("t1", "t2")) |>
+    dplyr::distinct(poll_id, source_dataset, original_score_wave, wave) |>
+    tidyr::pivot_wider(names_from = original_score_wave, values_from = wave, names_prefix = "phase_")
+  dplyr::left_join(frames, timing, by = c("poll_id", "source_dataset"), relationship = "one-to-one")
+}

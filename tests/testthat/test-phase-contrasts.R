@@ -180,3 +180,29 @@ test_that("published phase changes preserve a common three-wave sample", {
   provenance <- jsonlite::read_json(project_file("tabs", "phase_provenance.json"))
   expect_equal(provenance$bootstrap_replicates, 999L)
 })
+
+
+test_that("recruitment nonattenders are not relabeled as verified invitees", {
+  fixture <- phase_fixture()
+  fixture$participants$arm[fixture$participants$respondent_id == "e"] <- "recruitment_nonattender"
+  output <- run_phase_fixture(fixture)
+  selected <- dplyr::filter(output$selection, analysis == "baseline_selection_difference")
+  expect_setequal(selected$category, c("attended_minus_recruitment_nonattender", "attended_minus_control"))
+  row <- dplyr::filter(selected, category == "attended_minus_recruitment_nonattender")
+  expect_equal(row$n_reference_scored, 1L)
+  expect_equal(row$estimate, .4)
+  selected$source_dataset <- "control"
+  expect_true("Recruitment nonattenders" %in% phase_selection_table(selected)$Comparator)
+})
+
+
+test_that("main interview labels follow stages, not input score numbers", {
+  panel <- tibble::tibble(poll_id = c("first", "second"), source_dataset = "historical")
+  scores <- tibble::tibble(
+    poll_id = rep(c("first", "second"), each = 2L), source_dataset = "historical",
+    original_score_wave = rep(c("t1", "t2"), 2L), wave = c("t0", "t2", "t0", "t3")
+  )
+  timing <- main_interview_timing(panel, scores)
+  expect_equal(timing$phase_t1, c("t0", "t0"))
+  expect_equal(timing$phase_t2, c("t2", "t3"))
+})
