@@ -1,12 +1,12 @@
 {
-  "data_commit": "99d1c0a9b1198471b190fd271d74cb083ba7809f",
+  "data_commit": "36f11f26a879b0352ba1c502d4eae79636299933",
   "guess_version": "0.8.0",
   "bootstrap_replicates": 999,
   "sources": [
     {
       "source": "distortions_responses",
       "path": "output/polardata/polardata.parquet",
-      "sha256": "bcddf8fdde1cee20f2dc1efa66b67deb6851e974914b98c33244844f1025ccc5"
+      "sha256": "1093dd8f30a2fb7e6428bebbae704d15d63440a9b4e27af541f45a5a53db63d3"
     },
     {
       "source": "briefing_reading",
@@ -21,12 +21,12 @@
     {
       "source": "items",
       "path": "output/analysis/analysis_items.parquet",
-      "sha256": "04865dd0648e803722617f202a2e541fa090440f9fa648b7e0b3cbcbfe097c53"
+      "sha256": "0f73ba022215f79780162db8fea1e247bb67f88ea88308d3a7482bce0c316f37"
     },
     {
       "source": "participants",
       "path": "output/analysis/analysis_participants.parquet",
-      "sha256": "0941228637cc4b2749be55c752c5da1bc7764336b44f28b741f42639748c95d6"
+      "sha256": "e6d6bddbd3b29a59c18ca228031448880a1a02bb9b06ba6ae4f0ea320b5e1ea8"
     },
     {
       "source": "item_responses",
