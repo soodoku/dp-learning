@@ -67,3 +67,9 @@ attendance can be established from source evidence; a hardcoded participant arm
 is insufficient. Historical counterparts supply comparisons for many of these
 polls. The current verified exports support all three comparisons for Marousi
 and Tomorrow's Europe, and pre-arrival to exit for 23 polls.
+
+The manuscript presents the common three-wave decomposition and pre-arrival
+selection gaps in the main text. Its phase appendix reports available paired
+estimates and exit attrition. The broader selected-wave models retain their
+study-specific interview windows; they are not all arrival-to-exit estimates.
+All manuscript numbers and phase exhibits read the generated replication tables.

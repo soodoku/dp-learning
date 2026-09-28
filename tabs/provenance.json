@@ -1,5 +1,5 @@
 {
-  "data_commit": "36f11f26a879b0352ba1c502d4eae79636299933",
+  "data_commit": "1495dc5b8c29a2a63d68177420c50b260887f29c",
   "guess_version": "0.8.0",
   "bootstrap_replicates": 999,
   "sources": [
@@ -21,12 +21,12 @@
     {
       "source": "items",
       "path": "output/analysis/analysis_items.parquet",
-      "sha256": "0f73ba022215f79780162db8fea1e247bb67f88ea88308d3a7482bce0c316f37"
+      "sha256": "82e92ee93d245ceae78a8b425a4979b7a128c37a0096f2cfa9192d8a872ef350"
     },
     {
       "source": "participants",
       "path": "output/analysis/analysis_participants.parquet",
-      "sha256": "e6d6bddbd3b29a59c18ca228031448880a1a02bb9b06ba6ae4f0ea320b5e1ea8"
+      "sha256": "834d9d1e23282b50f31986862a17cdcc421ed37192cf3c5864346fabca22e808"
     },
     {
       "source": "item_responses",
@@ -36,12 +36,22 @@
     {
       "source": "scores",
       "path": "output/analysis/analysis_scores.parquet",
-      "sha256": "223ce4e829af0b6c31a9754c5e8643743e9569d7d19847745a1ec9cad23a0578"
+      "sha256": "1828d1d2b84f9cfae653ceb0091fa92b24edaa610e38f7cd058ffc4726734470"
     },
     {
       "source": "attitudes",
       "path": "output/analysis/analysis_attitude_responses.parquet",
       "sha256": "37532b103e99d7d3b314b565ade516178c3fe59ac571339f6e09693faf01655e"
+    },
+    {
+      "source": "phase_participants",
+      "path": "output/analysis/analysis_phase_participants.parquet",
+      "sha256": "3f99ce971b4449036e91ac2175af9a78e280d58f64f03bfd821789a9f7fe231b"
+    },
+    {
+      "source": "phase_scores",
+      "path": "output/analysis/analysis_phase_scores.parquet",
+      "sha256": "c12993b861d67759229a45bd1dd0e505ddf0be4e54c7f19e08f3ea2ff3297784"
     }
   ]
 }
