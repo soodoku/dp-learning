@@ -184,7 +184,8 @@ phase_selection_table <- function(data) {
       Poll = pollname,
       Comparator = dplyr::recode(category,
         attended_minus_control = "Uninvited controls",
-        attended_minus_invited_nonattender = "Invited nonattenders"
+        attended_minus_invited_nonattender = "Invited nonattenders",
+        attended_minus_recruitment_nonattender = "Recruitment nonattenders"
       ),
       `Attendee N` = prettyNum(n_scored, big.mark = ","),
       `Comparator N` = prettyNum(n_reference_scored, big.mark = ","),

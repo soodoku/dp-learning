@@ -35,6 +35,12 @@ btp-online-primaries-2004,btp-primaries-2004,By the People 2004 Online Primaries
 btp-presidential-primaries-2004,btp-primaries-2004,By the People 2004 US Presidential Primaries,historical,btp-presidential-primaries-2004:historical:knowledge,t0,1289,217,0,1072,0,69,0,1220,1220,0,16,1072
 btp-presidential-primaries-2004,btp-primaries-2004,By the People 2004 US Presidential Primaries,historical,btp-presidential-primaries-2004:historical:knowledge,t1,1289,217,0,1072,1289,1289,0,0,0,0,16,1072
 btp-presidential-primaries-2004,btp-primaries-2004,By the People 2004 US Presidential Primaries,historical,btp-presidential-primaries-2004:historical:knowledge,t2,1289,217,0,1072,0,544,0,745,745,0,16,1072
+bulgaria-crime-2002,bulgaria-crime-2002,Bulgarian National Crime Poll,cor_sood,bulgaria-crime-2002:cor_sood:knowledge,t0,278,0,0,278,0,0,0,278,278,0,17,0
+bulgaria-crime-2002,bulgaria-crime-2002,Bulgarian National Crime Poll,cor_sood,bulgaria-crime-2002:cor_sood:knowledge,t1,278,0,0,278,278,278,0,0,0,0,17,0
+bulgaria-crime-2002,bulgaria-crime-2002,Bulgarian National Crime Poll,cor_sood,bulgaria-crime-2002:cor_sood:knowledge,t2,278,0,0,278,0,0,0,278,278,0,17,0
+bulgaria-crime-2002,bulgaria-crime-2002,Bulgarian National Crime Poll,historical,bulgaria-crime-2002:historical:knowledge,t0,278,278,0,0,0,0,0,278,278,0,17,0
+bulgaria-crime-2002,bulgaria-crime-2002,Bulgarian National Crime Poll,historical,bulgaria-crime-2002:historical:knowledge,t1,278,278,0,0,278,278,0,0,0,0,17,0
+bulgaria-crime-2002,bulgaria-crime-2002,Bulgarian National Crime Poll,historical,bulgaria-crime-2002:historical:knowledge,t2,278,278,0,0,0,0,0,278,278,0,17,0
 california-whats-next-2011,california-whats-next-2011,California What's Next,cor_sood,california-whats-next-2011:cor_sood:knowledge,t0,396,396,0,0,0,0,10,386,386,0,25,0
 california-whats-next-2011,california-whats-next-2011,California What's Next,cor_sood,california-whats-next-2011:cor_sood:knowledge,t1,396,396,0,0,396,396,0,0,0,0,25,0
 california-whats-next-2011,california-whats-next-2011,California What's Next,cor_sood,california-whats-next-2011:cor_sood:knowledge,t2,396,396,0,0,0,0,0,396,396,0,25,0
