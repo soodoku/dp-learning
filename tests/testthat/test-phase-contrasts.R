@@ -92,15 +92,22 @@ test_that("phase comparisons require the same battery and denominator", {
   expect_equal(pair$n_incompatible_denominator, 1L)
 })
 
-test_that("unknown groups retain estimates without manufactured precision", {
+test_that("common three-wave estimates and intervals exclude the same unknown groups", {
   fixture <- phase_fixture()
   fixture$participants$small_group_id[1] <- NA
+  fixture$scores$wave_observed[fixture$scores$respondent_id == "c" & fixture$scores$wave == "t2"] <- TRUE
   output <- run_phase_fixture(fixture)
   balanced <- dplyr::filter(output$contrasts, sample == "all_three_observed_attendees")
-  expect_equal(balanced$estimate, c(-.1, .2, .1), tolerance = 1e-12)
-  expect_equal(balanced$n_unknown_group, rep(1L, 3))
-  expect_true(all(balanced$inference == "descriptive_unknown_groups"))
-  expect_true(all(is.na(balanced$std_error)))
+  expect_equal(balanced$estimate, c(-.7, .2, -.5), tolerance = 1e-12)
+  expect_equal(balanced$n_people, rep(2L, 3))
+  expect_equal(balanced$n_excluded_unknown_group, rep(1L, 3))
+  expect_equal(balanced$n_unknown_group, rep(0L, 3))
+  expect_true(all(balanced$inference == "group_bootstrap"))
+  expect_true(all(is.finite(balanced$lower) & is.finite(balanced$upper)))
+  paired <- dplyr::filter(output$contrasts, sample == "available_paired_attendees")
+  expect_true(all(paired$inference == "descriptive_unknown_groups"))
+  expect_true(all(is.na(paired$std_error)))
+  expect_equal(output$coverage$n_unknown_group, rep(3L, 3))
 })
 
 test_that("source-local respondent IDs cannot create cross-source phase linkage", {
