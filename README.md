@@ -31,3 +31,39 @@ make check
 - `ms/` contains the manuscript source and PDF.
 - `tabs/` and `figs/` contain generated results.
 - `tests/` checks source contracts and key numerical results.
+
+The phase tables in `tabs/phase_contrasts.csv` distinguish exit minus arrival,
+arrival minus pre-arrival, and exit minus pre-arrival. Each comparison reports
+its available observed-wave sample and a common three-wave sample where one
+exists. All-three contrasts share bootstrap draws; their raw changes add up.
+`tabs/phase_coverage.csv` records missing phases and unknown questionnaire
+presence, attendance and groups. An interim questionnaire is not treated as
+arrival, and a missing arrival wave never falls back to pre-arrival.
+
+`tabs/pre_arrival_selection.csv` reports descriptive pre-arrival knowledge by
+recorded attendance and study arm, separate attendee comparisons with invited
+nonattenders and uninvited controls, and exit attrition among known attendees.
+Unknown attendance stays unknown. These comparisons describe selection; they
+do not remove unobserved selection or establish causal deliberation effects.
+The input phases, questionnaire states and source population come from dp-data;
+this reader performs no respondent recoding. Separate deposits remain separate
+batteries rather than being pooled as independent studies.
+
+Scores and changes are proportions correct; multiply a change by 100 for
+percentage points. `tabs/phase_provenance.json` records the upstream revision,
+source checksums and bootstrap count for these tables. They supplement the
+existing selected-wave analyses, whose wave names do not necessarily identify
+arrival and exit. Missing phases mean unavailable comparisons in the verified
+export, not proof that a poll never collected that questionnaire. Matching
+batteries and denominators are required; the California eight-item arrival/exit
+battery is not mixed with its five-item telephone/exit battery. Marousi paired
+changes preserve the authored source merge, whose sixteen conflicting exit IDs
+remain an upstream linkage limitation.
+
+The phase estimates are unweighted sample changes, without guessing adjustment.
+All current Cor-Sood cohorts have unverified attendance in the canonical
+participant export. They contribute coverage but no attendee contrasts until
+attendance can be established from source evidence; a hardcoded participant arm
+is insufficient. Historical counterparts supply comparisons for many of these
+polls. The current verified exports support all three comparisons for Marousi
+and Tomorrow's Europe, and pre-arrival to exit for 23 polls.

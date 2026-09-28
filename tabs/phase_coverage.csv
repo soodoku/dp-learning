@@ -1,0 +1,136 @@
+poll_id,pollname,source_dataset,battery_id,phase,n_people,n_attendees,n_nonattendees,n_unknown_attendance,n_missing_phase,n_unknown_presence,n_absent_wave,n_observed_wave,n_scored,n_observed_missing_score,n_known_groups,n_unknown_group
+a1r-climate-2021,America in One Room: Climate,control,a1r-climate-2021:control:knowledge,t0,8814,962,7852,0,0,0,0,8814,8814,0,58,7852
+a1r-climate-2021,America in One Room: Climate,control,a1r-climate-2021:control:knowledge,t1,8814,962,7852,0,8814,8814,0,0,0,0,58,7852
+a1r-climate-2021,America in One Room: Climate,control,a1r-climate-2021:control:knowledge,t2,8814,962,7852,0,0,0,7181,1633,1633,0,58,7852
+america-in-one-room-2019,America in One Room,control,america-in-one-room-2019:control:knowledge,t0,3842,526,3316,0,0,0,0,3842,3842,0,40,3316
+america-in-one-room-2019,America in One Room,control,america-in-one-room-2019:control:knowledge,t1,3842,526,3316,0,3842,3842,0,0,0,0,40,3316
+america-in-one-room-2019,America in One Room,control,america-in-one-room-2019:control:knowledge,t2,3842,526,3316,0,0,0,2475,1367,1367,0,40,3316
+australia-republic-1999,Australia Republic Referendum,cor_sood,australia-republic-1999:cor_sood:knowledge,t0,347,0,0,347,0,0,0,347,347,0,24,0
+australia-republic-1999,Australia Republic Referendum,cor_sood,australia-republic-1999:cor_sood:knowledge,t1,347,0,0,347,347,347,0,0,0,0,24,0
+australia-republic-1999,Australia Republic Referendum,cor_sood,australia-republic-1999:cor_sood:knowledge,t2,347,0,0,347,0,0,0,347,347,0,24,0
+australia-republic-1999,Australia Republic Referendum,historical,australia-republic-1999:historical:knowledge,t0,4659,347,0,4312,0,3439,0,1220,1220,0,24,4312
+australia-republic-1999,Australia Republic Referendum,historical,australia-republic-1999:historical:knowledge,t1,4659,347,0,4312,4659,4659,0,0,0,0,24,4312
+australia-republic-1999,Australia Republic Referendum,historical,australia-republic-1999:historical:knowledge,t2,4659,347,0,4312,0,3439,0,1220,1220,0,24,4312
+btp-2007,By the People 2007,cor_sood,btp-2007:cor_sood:knowledge,t0,301,0,0,301,0,0,0,301,301,0,20,0
+btp-2007,By the People 2007,cor_sood,btp-2007:cor_sood:knowledge,t1,301,0,0,301,301,301,0,0,0,0,20,0
+btp-2007,By the People 2007,cor_sood,btp-2007:cor_sood:knowledge,t2,301,0,0,301,0,0,0,301,301,0,20,0
+btp-general-election-2004,By the People 2004 US General Election,cor_sood,btp-general-election-2004:cor_sood:knowledge,t0,250,0,0,250,0,0,0,250,250,0,15,0
+btp-general-election-2004,By the People 2004 US General Election,cor_sood,btp-general-election-2004:cor_sood:knowledge,t1,250,0,0,250,250,250,0,0,0,0,15,0
+btp-general-election-2004,By the People 2004 US General Election,cor_sood,btp-general-election-2004:cor_sood:knowledge,t2,250,0,0,250,0,0,0,250,250,0,15,0
+btp-general-election-2004,By the People 2004 US General Election,historical,btp-general-election-2004:historical:knowledge,t0,299,248,0,51,0,0,13,286,286,0,15,51
+btp-general-election-2004,By the People 2004 US General Election,historical,btp-general-election-2004:historical:knowledge,t1,299,248,0,51,299,299,0,0,0,0,15,51
+btp-general-election-2004,By the People 2004 US General Election,historical,btp-general-election-2004:historical:knowledge,t2,299,248,0,51,0,0,33,266,266,0,15,51
+btp-health-education-2005,By the People: Health and Education,cor_sood,btp-health-education-2005:cor_sood:knowledge,t0,454,0,0,454,0,0,0,454,454,0,30,0
+btp-health-education-2005,By the People: Health and Education,cor_sood,btp-health-education-2005:cor_sood:knowledge,t1,454,0,0,454,454,454,0,0,0,0,30,0
+btp-health-education-2005,By the People: Health and Education,cor_sood,btp-health-education-2005:cor_sood:knowledge,t2,454,0,0,454,0,0,0,454,454,0,30,0
+btp-health-education-2005,By the People: Health and Education,historical,btp-health-education-2005:historical:knowledge,t0,454,454,0,0,0,0,0,454,454,0,30,0
+btp-health-education-2005,By the People: Health and Education,historical,btp-health-education-2005:historical:knowledge,t1,454,454,0,0,454,454,0,0,0,0,30,0
+btp-health-education-2005,By the People: Health and Education,historical,btp-health-education-2005:historical:knowledge,t2,454,454,0,0,0,0,0,454,454,0,30,0
+btp-national-2003,By the People: National,historical,btp-national-2003:historical:knowledge,t0,245,245,0,0,0,0,0,245,245,0,15,0
+btp-national-2003,By the People: National,historical,btp-national-2003:historical:knowledge,t1,245,245,0,0,245,245,0,0,0,0,15,0
+btp-national-2003,By the People: National,historical,btp-national-2003:historical:knowledge,t2,245,245,0,0,0,0,0,245,245,0,15,0
+btp-online-primaries-2004,By the People 2004 Online Primaries,cor_sood,btp-online-primaries-2004:cor_sood:knowledge,t0,328,0,0,328,0,0,0,328,328,0,16,13
+btp-online-primaries-2004,By the People 2004 Online Primaries,cor_sood,btp-online-primaries-2004:cor_sood:knowledge,t1,328,0,0,328,328,328,0,0,0,0,16,13
+btp-online-primaries-2004,By the People 2004 Online Primaries,cor_sood,btp-online-primaries-2004:cor_sood:knowledge,t2,328,0,0,328,0,43,0,285,285,0,16,13
+btp-presidential-primaries-2004,By the People 2004 US Presidential Primaries,historical,btp-presidential-primaries-2004:historical:knowledge,t0,1289,217,0,1072,0,69,0,1220,1220,0,16,1072
+btp-presidential-primaries-2004,By the People 2004 US Presidential Primaries,historical,btp-presidential-primaries-2004:historical:knowledge,t1,1289,217,0,1072,1289,1289,0,0,0,0,16,1072
+btp-presidential-primaries-2004,By the People 2004 US Presidential Primaries,historical,btp-presidential-primaries-2004:historical:knowledge,t2,1289,217,0,1072,0,544,0,745,745,0,16,1072
+california-whats-next-2011,California What's Next,cor_sood,california-whats-next-2011:cor_sood:knowledge,t0,396,0,0,396,0,17,0,379,379,0,25,0
+california-whats-next-2011,California What's Next,cor_sood,california-whats-next-2011:cor_sood:knowledge,t1,396,0,0,396,396,396,0,0,0,0,25,0
+california-whats-next-2011,California What's Next,cor_sood,california-whats-next-2011:cor_sood:knowledge,t2,396,0,0,396,0,4,0,392,392,0,25,0
+cpl-1996,Central Power & Light,cor_sood,cpl-1996:cor_sood:knowledge,t0,216,0,0,216,0,0,0,216,216,0,16,0
+cpl-1996,Central Power & Light,cor_sood,cpl-1996:cor_sood:knowledge,t1,216,0,0,216,216,216,0,0,0,0,16,0
+cpl-1996,Central Power & Light,cor_sood,cpl-1996:cor_sood:knowledge,t2,216,0,0,216,0,0,0,216,216,0,16,0
+cpl-1996,Central Power & Light,historical,cpl-1996:historical:knowledge,t0,1246,216,0,1030,0,0,0,1246,1246,0,16,1030
+cpl-1996,Central Power & Light,historical,cpl-1996:historical:knowledge,t1,1246,216,0,1030,1246,1246,0,0,0,0,16,1030
+cpl-1996,Central Power & Light,historical,cpl-1996:historical:knowledge,t2,1246,216,0,1030,0,1030,0,216,216,0,16,1030
+denmark-euro-2000,Denmark: Euro,cor_sood,denmark-euro-2000:cor_sood:knowledge,t0,359,0,0,359,0,0,0,359,359,0,0,359
+denmark-euro-2000,Denmark: Euro,cor_sood,denmark-euro-2000:cor_sood:knowledge,t1,359,0,0,359,359,359,0,0,0,0,0,359
+denmark-euro-2000,Denmark: Euro,cor_sood,denmark-euro-2000:cor_sood:knowledge,t2,359,0,0,359,0,0,0,359,359,0,0,359
+europolis-2009,Europolis,cor_sood,europolis-2009:cor_sood:knowledge,t0,348,0,0,348,0,0,0,348,348,0,25,0
+europolis-2009,Europolis,cor_sood,europolis-2009:cor_sood:knowledge,t1,348,0,0,348,348,348,0,0,0,0,25,0
+europolis-2009,Europolis,cor_sood,europolis-2009:cor_sood:knowledge,t2,348,0,0,348,0,0,0,348,348,0,25,0
+europolis-2009,Europolis,historical,europolis-2009:historical:knowledge,t0,4384,348,0,4036,0,0,0,4384,4384,0,25,4036
+europolis-2009,Europolis,historical,europolis-2009:historical:knowledge,t1,4384,348,0,4036,4384,4384,0,0,0,0,25,4036
+europolis-2009,Europolis,historical,europolis-2009:historical:knowledge,t2,4384,348,0,4036,0,4036,0,348,348,0,25,4036
+marousi-2006,"Marousi, Greece",score_only,marousi-2006:score_only:knowledge,t0,1275,159,0,1116,0,0,0,1275,1275,0,15,1129
+marousi-2006,"Marousi, Greece",score_only,marousi-2006:score_only:knowledge,t1,1275,159,0,1116,0,0,1121,154,154,0,15,1129
+marousi-2006,"Marousi, Greece",score_only,marousi-2006:score_only:knowledge,t2,1275,159,0,1116,0,0,1137,138,138,0,15,1129
+michigan-2009,Michigan,cor_sood,michigan-2009:cor_sood:knowledge,t0,310,0,0,310,0,0,0,310,310,0,16,0
+michigan-2009,Michigan,cor_sood,michigan-2009:cor_sood:knowledge,t1,310,0,0,310,310,310,0,0,0,0,16,0
+michigan-2009,Michigan,cor_sood,michigan-2009:cor_sood:knowledge,t2,310,0,0,310,0,0,0,310,310,0,16,0
+new-haven-2004,"New Haven, CT",historical,new-haven-2004:historical:knowledge,t0,132,132,0,0,0,0,0,132,132,0,16,0
+new-haven-2004,"New Haven, CT",historical,new-haven-2004:historical:knowledge,t1,132,132,0,0,132,132,0,0,0,0,16,0
+new-haven-2004,"New Haven, CT",historical,new-haven-2004:historical:knowledge,t2,132,132,0,0,0,0,0,132,132,0,16,0
+nic-1996,National Issues Convention,cor_sood,nic-1996:cor_sood:knowledge,t0,466,0,0,466,0,6,0,460,460,0,30,0
+nic-1996,National Issues Convention,cor_sood,nic-1996:cor_sood:knowledge,t1,466,0,0,466,466,466,0,0,0,0,30,0
+nic-1996,National Issues Convention,cor_sood,nic-1996:cor_sood:knowledge,t2,466,0,0,466,0,6,0,460,460,0,30,0
+nic-1996,National Issues Convention,historical,nic-1996:historical:knowledge,t0,911,466,0,445,0,6,0,905,905,0,30,445
+nic-1996,National Issues Convention,historical,nic-1996:historical:knowledge,t1,911,466,0,445,911,911,0,0,0,0,30,445
+nic-1996,National Issues Convention,historical,nic-1996:historical:knowledge,t2,911,466,0,445,0,279,0,632,632,0,30,445
+nic2-2003,National Issues Convention 2,historical,nic2-2003:historical:knowledge,t0,1493,340,0,1153,0,612,0,881,881,0,24,1153
+nic2-2003,National Issues Convention 2,historical,nic2-2003:historical:knowledge,t1,1493,340,0,1153,1493,1493,0,0,0,0,24,1153
+nic2-2003,National Issues Convention 2,historical,nic2-2003:historical:knowledge,t2,1493,340,0,1153,0,541,0,952,952,0,24,1153
+northern-ireland-2007,Northern Ireland,cor_sood,northern-ireland-2007:cor_sood:knowledge,t0,124,0,0,124,0,0,0,124,124,0,20,0
+northern-ireland-2007,Northern Ireland,cor_sood,northern-ireland-2007:cor_sood:knowledge,t1,124,0,0,124,124,124,0,0,0,0,20,0
+northern-ireland-2007,Northern Ireland,cor_sood,northern-ireland-2007:cor_sood:knowledge,t2,124,0,0,124,0,0,0,124,124,0,20,0
+san-mateo-2008,"San Mateo, CA",cor_sood,san-mateo-2008:cor_sood:knowledge,t0,239,0,0,239,0,22,0,217,217,0,26,0
+san-mateo-2008,"San Mateo, CA",cor_sood,san-mateo-2008:cor_sood:knowledge,t1,239,0,0,239,239,239,0,0,0,0,26,0
+san-mateo-2008,"San Mateo, CA",cor_sood,san-mateo-2008:cor_sood:knowledge,t2,239,0,0,239,0,5,0,234,234,0,26,0
+san-mateo-2008,"San Mateo, CA",historical,san-mateo-2008:historical:knowledge,t0,1806,239,0,1567,0,0,0,1806,1806,0,26,1567
+san-mateo-2008,"San Mateo, CA",historical,san-mateo-2008:historical:knowledge,t1,1806,239,0,1567,1806,1806,0,0,0,0,26,1567
+san-mateo-2008,"San Mateo, CA",historical,san-mateo-2008:historical:knowledge,t2,1806,239,0,1567,0,1568,0,238,238,0,26,1567
+swepco-1996,Southwestern Electric Power,cor_sood,swepco-1996:cor_sood:knowledge,t0,232,0,0,232,0,4,0,228,228,0,14,0
+swepco-1996,Southwestern Electric Power,cor_sood,swepco-1996:cor_sood:knowledge,t1,232,0,0,232,232,232,0,0,0,0,14,0
+swepco-1996,Southwestern Electric Power,cor_sood,swepco-1996:cor_sood:knowledge,t2,232,0,0,232,0,3,0,229,229,0,14,0
+swepco-1996,Southwestern Electric Power,historical,swepco-1996:historical:knowledge,t0,1478,232,0,1246,0,0,0,1478,1478,0,14,1246
+swepco-1996,Southwestern Electric Power,historical,swepco-1996:historical:knowledge,t1,1478,232,0,1246,1478,1478,0,0,0,0,14,1246
+swepco-1996,Southwestern Electric Power,historical,swepco-1996:historical:knowledge,t2,1478,232,0,1246,0,1246,0,232,232,0,14,1246
+tomorrows-europe-2007,Tomorrow's Europe (EU),cor_sood,tomorrows-europe-2007:cor_sood:knowledge,t0,359,0,0,359,0,0,0,359,359,0,18,0
+tomorrows-europe-2007,Tomorrow's Europe (EU),cor_sood,tomorrows-europe-2007:cor_sood:knowledge,t1,359,0,0,359,359,359,0,0,0,0,18,0
+tomorrows-europe-2007,Tomorrow's Europe (EU),cor_sood,tomorrows-europe-2007:cor_sood:knowledge,t2,359,0,0,359,0,0,0,359,359,0,18,0
+tomorrows-europe-2007,Tomorrow's Europe (EU),historical,tomorrows-europe-2007:historical:knowledge,t0,3550,344,0,3206,0,0,0,3550,3550,0,18,3206
+tomorrows-europe-2007,Tomorrow's Europe (EU),historical,tomorrows-europe-2007:historical:knowledge,t1,3550,344,0,3206,0,3213,0,337,337,0,18,3206
+tomorrows-europe-2007,Tomorrow's Europe (EU),historical,tomorrows-europe-2007:historical:knowledge,t2,3550,344,0,3206,0,3191,0,359,359,0,18,3206
+uk-crime-1994,UK Crime,cor_sood,uk-crime-1994:cor_sood:knowledge,t0,299,0,0,299,0,0,0,299,299,0,20,0
+uk-crime-1994,UK Crime,cor_sood,uk-crime-1994:cor_sood:knowledge,t1,299,0,0,299,299,299,0,0,0,0,20,0
+uk-crime-1994,UK Crime,cor_sood,uk-crime-1994:cor_sood:knowledge,t2,299,0,0,299,0,0,0,299,299,0,20,0
+uk-crime-1994,UK Crime,historical,uk-crime-1994:historical:knowledge,t0,869,299,0,570,0,0,0,869,869,0,20,570
+uk-crime-1994,UK Crime,historical,uk-crime-1994:historical:knowledge,t1,869,299,0,570,869,869,0,0,0,0,20,570
+uk-crime-1994,UK Crime,historical,uk-crime-1994:historical:knowledge,t2,869,299,0,570,0,569,0,300,300,0,20,570
+uk-eu-1995,UK EU,cor_sood,uk-eu-1995:cor_sood:knowledge,t0,224,0,0,224,0,0,0,224,224,0,15,4
+uk-eu-1995,UK EU,cor_sood,uk-eu-1995:cor_sood:knowledge,t1,224,0,0,224,224,224,0,0,0,0,15,4
+uk-eu-1995,UK EU,cor_sood,uk-eu-1995:cor_sood:knowledge,t2,224,0,0,224,0,0,0,224,224,0,15,4
+uk-eu-1995,UK EU,historical,uk-eu-1995:historical:knowledge,t0,900,238,0,662,0,0,0,900,900,0,16,662
+uk-eu-1995,UK EU,historical,uk-eu-1995:historical:knowledge,t1,900,238,0,662,900,900,0,0,0,0,16,662
+uk-eu-1995,UK EU,historical,uk-eu-1995:historical:knowledge,t2,900,238,0,662,0,676,0,224,224,0,16,662
+uk-general-election-1997,UK General Election,cor_sood,uk-general-election-1997:cor_sood:knowledge,t0,275,0,0,275,0,0,0,275,275,0,15,0
+uk-general-election-1997,UK General Election,cor_sood,uk-general-election-1997:cor_sood:knowledge,t1,275,0,0,275,275,275,0,0,0,0,15,0
+uk-general-election-1997,UK General Election,cor_sood,uk-general-election-1997:cor_sood:knowledge,t2,275,0,0,275,0,0,0,275,275,0,15,0
+uk-general-election-1997,UK General Election,historical,uk-general-election-1997:historical:knowledge,t0,1210,275,0,935,0,0,0,1210,1210,0,15,935
+uk-general-election-1997,UK General Election,historical,uk-general-election-1997:historical:knowledge,t1,1210,275,0,935,1210,1210,0,0,0,0,15,935
+uk-general-election-1997,UK General Election,historical,uk-general-election-1997:historical:knowledge,t2,1210,275,0,935,0,935,0,275,275,0,15,935
+uk-health-1998,UK Health,cor_sood,uk-health-1998:cor_sood:knowledge,t0,230,0,0,230,0,0,0,230,230,0,15,0
+uk-health-1998,UK Health,cor_sood,uk-health-1998:cor_sood:knowledge,t1,230,0,0,230,230,230,0,0,0,0,15,0
+uk-health-1998,UK Health,cor_sood,uk-health-1998:cor_sood:knowledge,t2,230,0,0,230,0,2,0,228,228,0,15,0
+uk-health-1998,UK Health,historical,uk-health-1998:historical:knowledge,t0,230,230,0,0,0,0,0,230,230,0,15,0
+uk-health-1998,UK Health,historical,uk-health-1998:historical:knowledge,t1,230,230,0,0,230,230,0,0,0,0,15,0
+uk-health-1998,UK Health,historical,uk-health-1998:historical:knowledge,t2,230,230,0,0,0,2,0,228,228,0,15,0
+uk-monarchy-1996,UK Monarchy,cor_sood,uk-monarchy-1996:cor_sood:knowledge,t0,258,0,0,258,0,0,0,258,258,0,15,0
+uk-monarchy-1996,UK Monarchy,cor_sood,uk-monarchy-1996:cor_sood:knowledge,t1,258,0,0,258,258,258,0,0,0,0,15,0
+uk-monarchy-1996,UK Monarchy,cor_sood,uk-monarchy-1996:cor_sood:knowledge,t2,258,0,0,258,0,0,0,258,258,0,15,0
+uk-monarchy-1996,UK Monarchy,historical,uk-monarchy-1996:historical:knowledge,t0,857,258,0,599,0,0,0,857,857,0,15,599
+uk-monarchy-1996,UK Monarchy,historical,uk-monarchy-1996:historical:knowledge,t1,857,258,0,599,857,857,0,0,0,0,15,599
+uk-monarchy-1996,UK Monarchy,historical,uk-monarchy-1996:historical:knowledge,t2,857,258,0,599,0,0,0,857,857,0,15,599
+vermont-energy-2007,Vermont Energy,cor_sood,vermont-energy-2007:cor_sood:knowledge,t0,146,0,0,146,0,0,0,146,146,0,0,146
+vermont-energy-2007,Vermont Energy,cor_sood,vermont-energy-2007:cor_sood:knowledge,t1,146,0,0,146,146,146,0,0,0,0,0,146
+vermont-energy-2007,Vermont Energy,cor_sood,vermont-energy-2007:cor_sood:knowledge,t2,146,0,0,146,0,0,0,146,146,0,0,146
+wtu-1996,West Texas Utilities,cor_sood,wtu-1996:cor_sood:knowledge,t0,230,0,0,230,0,4,0,226,226,0,14,0
+wtu-1996,West Texas Utilities,cor_sood,wtu-1996:cor_sood:knowledge,t1,230,0,0,230,230,230,0,0,0,0,14,0
+wtu-1996,West Texas Utilities,cor_sood,wtu-1996:cor_sood:knowledge,t2,230,0,0,230,0,1,0,229,229,0,14,0
+wtu-1996,West Texas Utilities,historical,wtu-1996:historical:knowledge,t0,1230,230,0,1000,0,0,0,1230,1230,0,14,1000
+wtu-1996,West Texas Utilities,historical,wtu-1996:historical:knowledge,t1,1230,230,0,1000,1230,1230,0,0,0,0,14,1000
+wtu-1996,West Texas Utilities,historical,wtu-1996:historical:knowledge,t2,1230,230,0,1000,0,1000,0,230,230,0,14,1000
+zeguo-2005,Zeguo Township,historical,zeguo-2005:historical:knowledge,t0,269,233,0,36,0,1,0,268,268,0,16,36
+zeguo-2005,Zeguo Township,historical,zeguo-2005:historical:knowledge,t1,269,233,0,36,269,269,0,0,0,0,16,36
+zeguo-2005,Zeguo Township,historical,zeguo-2005:historical:knowledge,t2,269,233,0,36,0,35,0,234,234,0,16,36

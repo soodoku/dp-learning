@@ -17,6 +17,10 @@ core_frame |>
   ) |>
   write_output("covariate_coverage.csv")
 responses <- read_analysis_responses()
+phases <- phase_contrasts(participants = read_phase_participants())
+write_output(phases$contrasts, "phase_contrasts.csv")
+write_output(phases$coverage, "phase_coverage.csv")
+write_output(phases$selection, "pre_arrival_selection.csv")
 main_learning <- learning_estimates(core_frame, responses)
 polls <- appendix_polls(group_ids = core_ids)
 main_learning$summary |>
@@ -62,6 +66,14 @@ provenance <- list(
   sources = upstream_source_manifest()
 )
 jsonlite::write_json(provenance, "tabs/provenance.json", pretty = TRUE, auto_unbox = TRUE)
+phase_provenance <- list(
+  data_commit = provenance$data_commit,
+  bootstrap_replicates = provenance$bootstrap_replicates,
+  sources = dplyr::filter(
+    provenance$sources, source %in% c("polls", "phase_participants", "phase_scores")
+  )
+)
+jsonlite::write_json(phase_provenance, "tabs/phase_provenance.json", pretty = TRUE, auto_unbox = TRUE)
 
 writeLines(c(
   "@misc{dpdata,", "  author = {Sood, Gaurav},", "  title = {Deliberative Poll Data},",
