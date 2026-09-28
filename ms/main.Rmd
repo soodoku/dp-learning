@@ -40,6 +40,34 @@ peers <- read_out("peer_effects_pooled.csv")
 selected <- read_out("selection.csv")
 assignment <- read_out("assignment_check.csv")
 coverage <- read_out("covariate_coverage.csv")
+phase_changes <- read_out("phase_contrasts.csv")
+phase_coverage <- read_out("phase_coverage.csv")
+phase_selection <- read_out("pre_arrival_selection.csv")
+phase_provenance <- jsonlite::read_json("tabs/phase_provenance.json", simplifyVector = TRUE)
+phase_balanced <- dplyr::filter(phase_changes, sample == "all_three_observed_attendees", n_people > 0)
+phase_pairs <- dplyr::filter(phase_changes, sample == "available_paired_attendees", n_people > 0)
+phase_baseline_exit <- dplyr::filter(phase_pairs, contrast == "post_minus_pre_arrival")
+phase_row <- function(poll, contrast) {
+  row <- dplyr::filter(phase_balanced, poll_id == poll, .data$contrast == .env$contrast)
+  stopifnot(nrow(row) == 1L)
+  row
+}
+phase_selection_row <- function(poll, reference) {
+  row <- dplyr::filter(phase_selection, source_dataset == "control", poll_id == poll,
+                      analysis == "baseline_selection_difference", category == reference)
+  stopifnot(nrow(row) == 1L)
+  row
+}
+marousi_exit <- phase_row("marousi-2006", "post_minus_arrival")
+marousi_before <- phase_row("marousi-2006", "arrival_minus_pre_arrival")
+marousi_total <- phase_row("marousi-2006", "post_minus_pre_arrival")
+europe_exit <- phase_row("tomorrows-europe-2007", "post_minus_arrival")
+europe_before <- phase_row("tomorrows-europe-2007", "arrival_minus_pre_arrival")
+europe_total <- phase_row("tomorrows-europe-2007", "post_minus_pre_arrival")
+a1r_invited <- phase_selection_row("america-in-one-room-2019", "attended_minus_invited_nonattender")
+climate_invited <- phase_selection_row("a1r-climate-2021", "attended_minus_invited_nonattender")
+a1r_baseline_control <- phase_selection_row("america-in-one-room-2019", "attended_minus_control")
+climate_baseline_control <- phase_selection_row("a1r-climate-2021", "attended_minus_control")
 balance_knowledge <- assignment[assignment$covariate == "k1", ]
 polls <- read_out("polls.csv")
 item_catalog <- read_item_catalog() |> dplyr::filter(poll_id %in% gains$poll_id)
@@ -61,7 +89,7 @@ reading <- models[models$model == "briefing" & models$term == "read_briefing", ]
 ```
 
 \begin{abstract}
-We study factual learning among `r count(size("core", "n"))` participants in `r size("core", "groups")` discussion groups across `r size("core", "polls")` Deliberative Polls held between `r min(polls$year)` and `r max(polls$year)`. The polls address elections, energy, health, crime, climate, and other public issues in Europe, Australia, China, and the United States. Averaging equally across polls, knowledge scores increased by `r pp(pooled("raw, pooled")$estimate)` percentage points, and the average increase relative to each poll's initial score was `r pp(pooled("relative, pooled")$estimate)`\%. Adjustment for guessing yields estimated learning of `r pp(pooled("guessing adjusted, pooled")$estimate)` percentage points. In two polls with before-and-after control interviews, attendees' gains exceeded controls' gains by `r pp(control_gain("america-in-one-room-2019", "raw")$estimate)` and `r pp(control_gain("a1r-climate-2021", "raw")$estimate)` percentage points; their average difference was `r pp(control_average("raw")$estimate)` percentage points, or `r pp(control_average("adjusted")$estimate)` percentage points after guessing adjustment. We assess uncertainty by resampling polls and their discussion groups.
+We study factual learning among `r count(size("core", "n"))` participants in `r size("core", "groups")` discussion groups across `r size("core", "polls")` Deliberative Polls held between `r min(polls$year)` and `r max(polls$year)`. The polls address elections, energy, health, crime, climate, and other public issues in Europe, Australia, China, and the United States. Across each study's selected initial and later interviews, and averaging equally across polls, knowledge scores increased by `r pp(pooled("raw, pooled")$estimate)` percentage points, and the average increase relative to each poll's initial score was `r pp(pooled("relative, pooled")$estimate)`\%. An item model assuming no forgetting yields estimated learning of `r pp(pooled("guessing adjusted, pooled")$estimate)` percentage points. In two polls with before-and-after control interviews, attendees' gains exceeded controls' gains by `r pp(control_gain("america-in-one-room-2019", "raw")$estimate)` and `r pp(control_gain("a1r-climate-2021", "raw")$estimate)` percentage points; their average difference was `r pp(control_average("raw")$estimate)` percentage points, or `r pp(control_average("adjusted")$estimate)` percentage points after guessing adjustment. In the `r dplyr::n_distinct(phase_balanced$poll_id)` studies with verified pre-arrival, arrival, and exit measurements, substantial gains precede arrival. Attendees also score higher than invited nonattenders before the event in the two control studies. Separating interview timing and attendance shows why the pooled gains cannot all be attributed to event-period deliberation. We assess uncertainty by resampling polls and their discussion groups.
 \end{abstract}
 
 # Introduction
@@ -72,7 +100,7 @@ The expectation of learning follows directly from the nature of "deliberation," 
 
 Or so the theory runs. But how much do participants actually learn, is it the deliberation that teaches them, and who learns the most? We examine learning of relevant facts. This is not the only sort of learning involved, but it is the easiest to measure, and it is both important in itself and positively correlated with the rest.
 
-We compare the knowledge participants bring to deliberation with what they know afterward, using one sample throughout the main analysis. Two of these polls also interviewed people who were not invited, allowing us to compare changes among attendees and controls. Earlier studies document learning in Deliberative Polls and other forums [@luskin2002b; @barabas2004; @sturgis2005; @esterling2011; @theuwis2025]. We report gains in both absolute and relative terms, adjust for guessing, and examine whether participants learn more alongside more knowledgeable groupmates.
+We compare participants' knowledge across each study's retained interviews, using one sample for the main learning estimates and discussion-group models. Those interviews span different parts of the deliberative process. Where verified event timing permits, we separately measure changes before arrival and during the event on a common sample. We also compare pre-arrival knowledge by invitation and attendance to assess selection into the observed participant sample. Two of these polls also interviewed people who were not invited, allowing us to compare changes among attendees and controls. Earlier studies document learning in Deliberative Polls and other forums [@luskin2002b; @barabas2004; @sturgis2005; @esterling2011; @theuwis2025]. We report gains in both absolute and relative terms, adjust for guessing, and examine whether participants learn more alongside more knowledgeable groupmates.
 
 # Deliberative Polling and Learning
 
@@ -106,7 +134,11 @@ Learning requires exposure to information and the ability and motivation to abso
 
 # Data and measures
 
-The main sample comprises `r size("core", "polls")` polls and `r count(size("core", "n"))` attendees with knowledge answers before and after deliberation and recorded discussion-group membership. It supports both the learning estimates and the analysis of discussion groups. We use the versioned Deliberative Poll dataset [@dpdata], selecting one respondent record per poll and averaging item correctness into knowledge scores. Appendix \ref{app:items} gives the questions and scoring rules.
+The main sample comprises `r size("core", "polls")` polls and `r count(size("core", "n"))` attendees with retained knowledge scores at the study's selected initial and later interviews and recorded discussion-group membership. It supports both the learning estimates and the analysis of discussion groups. We use the versioned Deliberative Poll dataset [@dpdata], selecting one respondent record per poll and averaging item correctness into knowledge scores. Appendix \ref{app:items} gives the questions and scoring rules.
+
+The selected interviews do not have a uniform time window. In the main models, $K_1$ and $K_2$ denote the retained initial and later scores, not necessarily arrival and immediate exit. A recruitment telephone interview can precede briefing and preparation; some later interviews are follow-ups. For example, the National Issues Convention's selected later score is from a survey about ten months after its event. Its immediate-exit measurement is retained separately. The broad main-sample estimates therefore summarize changes across study-specific interviews and cannot all be interpreted as learning during the event.
+
+For comparisons with verified timing, $t_0$ denotes pre-arrival, $t_1$ arrival or the start of discussion, $t_2$ immediate exit, and $t_3$ a later follow-up. Missing phases are not renumbered. New Haven's questionnaire after its first deliberative session is an interim measurement, not arrival. The phase analysis requires recorded attendance, positively observed questionnaires, and matching knowledge batteries and denominators. The broader selected-wave benchmarks retain historically zero-filled scores even where the questionnaire's presence is uncertain; their inclusion rules differ from the verified-phase analysis. The phase analysis includes people outside the discussion-group model sample when their attendance and scores are verified. The current exports support paired pre-arrival-to-exit estimates for `r dplyr::n_distinct(phase_baseline_exit$poll_id)` polls and all three comparisons for `r dplyr::n_distinct(phase_balanced$poll_id)`; this describes verified export coverage, not the number of polls that ever collected each questionnaire. Appendix \ref{app:phases} reports the available pairs and their sample sizes.
 
 America in One Room and the climate poll interviewed separate samples who were never invited to deliberate [@fishkin2021]. We compare changes in their scores with changes among attendees in the main sample, using the same questions in both arms. These comparisons may reflect selection into attendance as well as deliberation. Additional control comparisons and follow-ups appear in Appendix \ref{app:controls}.
 
@@ -128,9 +160,9 @@ Here $n_{gj}$ counts group members with an observed response to measure $j$, and
 
 We measure knowledge by closed-ended knowledge questions, mostly multiple choice, in some cases extracted from party or candidate placements, and in a few cases true-false [@luskin1987; @luskin2005; @price1999; @mondak1999; @mondak2001]. Appendix \ref{app:items} lists the items. Correct responses are scored as 1, incorrect responses and "don't knows" as 0 [@luskin2011], and these scores are then averaged across items to give the proportion answered correctly.
 
-Table \ref{tab:models} models the change in proportion correct, $K_2-K_1$, conditional on initial knowledge $K_1$. It compares observed gains among participants with the same measured starting score. Including $K_1$ makes this algebraically equivalent to modeling $K_2$ conditional on $K_1$, as Section \ref{sec:model} shows. An unadjusted change-score model instead constrains the baseline coefficient to zero in the gain equation. These specifications can disagree when groups differ at baseline [@allison1990; @vanbreukelen2006]. Score ceilings, guessing, and measurement error complicate the relationship between observed gains and learning of the underlying facts [@luskin2016]. We therefore treat the T1 coefficient as an association, not an estimate of how prior knowledge causes learning.
+Table \ref{tab:models} models the change in proportion correct, $K_2-K_1$, conditional on initial knowledge $K_1$. It compares observed gains among participants with the same measured starting score. Including $K_1$ makes this algebraically equivalent to modeling $K_2$ conditional on $K_1$, as Section \ref{sec:model} shows. An unadjusted change-score model instead constrains the baseline coefficient to zero in the gain equation. These specifications can disagree when groups differ at baseline [@allison1990; @vanbreukelen2006]. Score ceilings, guessing, and measurement error complicate the relationship between observed gains and learning of the underlying facts [@luskin2016]. We therefore treat the initial-knowledge coefficient as an association, not an estimate of how prior knowledge causes learning.
 
-A correct answer can reflect knowledge or guessing. We apply the item model of @cor2016 separately to each poll's paired answers. Under the assumption that knowledge is not lost between the two interviews, it estimates the share who learned each fact. We average across questions to obtain learning on a 0--1 scale. In each control study, we fit this model separately to attendees and controls and subtract their estimated learning. Both arms use the same items; their guessing probabilities are estimated separately. Table \ref{tab:models} uses observed individual gains, since the item model estimates learning rates rather than an individual latent outcome.
+A correct answer can reflect knowledge or guessing. We apply the item model of @cor2016 separately to each poll's paired answers. Under the assumption that knowledge is not lost between the selected interviews, it estimates the share who learned each fact. This assumption is stronger when the later interview is a delayed follow-up; the adjusted estimates are not uniformly measures of immediate event learning. We average across questions to obtain learning on a 0--1 scale. In each control study, we fit this model separately to attendees and controls and subtract their estimated learning. Both arms use the same items; their guessing probabilities are estimated separately. Table \ref{tab:models} uses observed individual gains, since the item model estimates learning rates rather than an individual latent outcome.
 
 We estimate uncertainty using a hierarchical bootstrap. For estimates across polls, we sample polls with replacement separately within online and in-person modes, retaining their observed counts, and then sample whole discussion groups within each selected poll. For an individual poll, we hold the poll fixed and sample its groups. Independently sampled controls are single-person units, sampled separately from attendees. Each sampled participant retains all items and interviews. We refit the models and recompute denominators in each of `r provenance$bootstrap_replicates` draws, using the 2.5th and 97.5th percentiles for 95\% confidence intervals. Thus the same resampling scheme propagates sampling and guessing-model estimation uncertainty. Stratifying by mode preserves support for the online coefficient in every draw. Inference treats each poll's question battery as fixed.
 
@@ -138,13 +170,52 @@ We estimate uncertainty using a hierarchical bootstrap. For estimates across pol
 
 An absolute gain is the change in the percentage of items answered correctly. A relative gain divides that change by the poll's initial mean score: an increase from 40\% to 50\% correct is 10 percentage points, or 25\% of the initial score. We calculate relative gains from poll means rather than averaging individual ratios, which are undefined for people with zero initial scores. The main pooled estimates give each poll equal weight; the relative result is the average of the poll-specific ratios, not the ratio of two pooled means.
 
-Across the main sample, the average observed gain is `r pp(pooled("raw, pooled")$estimate)` percentage points (95\% interval `r pp(pooled("raw, pooled")$lower)` to `r pp(pooled("raw, pooled")$upper)`). The average relative increase is `r pp(pooled("relative, pooled")$estimate)`\% (95\% interval `r pp(pooled("relative, pooled")$lower)` to `r pp(pooled("relative, pooled")$upper)`\%). Estimated learning after adjustment for guessing averages `r pp(pooled("guessing adjusted, pooled")$estimate)` percentage points (`r pp(pooled("guessing adjusted, pooled")$lower)` to `r pp(pooled("guessing adjusted, pooled")$upper)`). Appendix Table \ref{tab:meta} also reports precision-weighted averages and separate estimates by mode.
+Across the main sample, the average selected-wave gain is `r pp(pooled("raw, pooled")$estimate)` percentage points (95\% interval `r pp(pooled("raw, pooled")$lower)` to `r pp(pooled("raw, pooled")$upper)`). The average relative increase is `r pp(pooled("relative, pooled")$estimate)`\% (95\% interval `r pp(pooled("relative, pooled")$lower)` to `r pp(pooled("relative, pooled")$upper)`\%). Estimated learning after adjustment for guessing averages `r pp(pooled("guessing adjusted, pooled")$estimate)` percentage points (`r pp(pooled("guessing adjusted, pooled")$lower)` to `r pp(pooled("guessing adjusted, pooled")$upper)`). Appendix Table \ref{tab:meta} also reports precision-weighted averages and separate estimates by mode.
 
 A before-and-after gain can include learning from repeated questions or events outside deliberation. Figure \ref{fig:learning} therefore also compares attendees' gains with controls' gains. The observed differences are `r pp(control_gain("america-in-one-room-2019", "raw")$estimate)` percentage points in America in One Room and `r pp(control_gain("a1r-climate-2021", "raw")$estimate)` percentage points in the climate poll. Their equally weighted average is `r pp(control_average("raw")$estimate)` percentage points (95\% interval `r pp(control_average("raw")$lower)` to `r pp(control_average("raw")$upper)`), rising to `r pp(control_average("adjusted")$estimate)` percentage points after guessing adjustment (`r pp(control_average("adjusted")$lower)` to `r pp(control_average("adjusted")$upper)`). Both estimates use the same attendees, controls, and questions. These comparisons do not eliminate selection into attendance.
 
-```{r learning, fig.cap = "Learning in percentage points, with 95\\% hierarchical-bootstrap confidence intervals. A: observed attendee gains in the main-sample polls. B: observed attendee gain minus control gain in the two polls with common baseline and follow-up interviews. Each panel ends with equally weighted observed and guessing-adjusted averages. Whole discussion groups are resampled within polls; independent controls are resampled individually. Pooled intervals resample polls within mode. With one control study per mode, the pooled control interval is conditional on these two studies. Each draw refits the guessing model, treating question batteries as fixed.", fig.pos = "tbp", out.width = "100%"}
+```{r learning, fig.cap = "Knowledge-score changes in percentage points, with 95\\% hierarchical-bootstrap confidence intervals. A: attendee changes across each main-sample poll's selected initial and later interviews. Timing and questionnaire-presence rules vary across these study-specific windows. B: observed attendee gain minus control gain in the two polls with common baseline and follow-up interviews. Each panel ends with equally weighted observed and guessing-adjusted averages. Whole discussion groups are resampled within polls; independent controls are resampled individually. Pooled intervals resample polls within mode. With one control study per mode, the pooled control interval is conditional on these two studies. Each draw refits the guessing model, treating question batteries as fixed.", fig.pos = "tbp", out.width = "100%"}
 figure("learning")
 ```
+
+\FloatBarrier
+
+## Changes before arrival and during the event {#sec:phases}
+
+Both studies with complete three-wave samples show knowledge gains before arrival and additional gains during the event. Among `r marousi_exit$n_people` Marousi attendees with all three observed questionnaires, scores rose by `r pp(marousi_before$estimate)` percentage points from pre-arrival to arrival and `r pp(marousi_exit$estimate)` from arrival to exit, for a total of `r pp(marousi_total$estimate)` points. Among `r europe_exit$n_people` Tomorrow's Europe attendees, the corresponding changes were `r pp(europe_before$estimate)`, `r pp(europe_exit$estimate)`, and `r pp(europe_total$estimate)` points. Table \ref{tab:phase-changes} uses the same respondents for all three changes within each poll, so its total equals the sum of its two component changes before rounding. Pair-specific samples, reported in Appendix \ref{app:phases}, answer a different question when questionnaire availability differs.
+
+```{r phase-changes, results="asis"}
+phase_comparison_table(phase_balanced) |>
+  knitr::kable(
+    format = "latex", booktabs = TRUE, escape = FALSE, position = "H",
+    align = c(">{\\raggedright\\arraybackslash}p{1.65in}", "r", "r", "r", "r"),
+    caption = "Knowledge changes on common three-wave attendee samples. Entries are percentage points; brackets contain 95 percent group-bootstrap intervals where supported."
+  ) |>
+  print()
+```
+
+The phase estimates are unweighted changes in proportion correct, with no guessing adjustment. Tomorrow's Europe intervals resample discussion groups in `r phase_provenance$bootstrap_replicates` draws, retaining each respondent's three scores together. Marousi has `r marousi_exit$n_unknown_group` respondents without verified discussion groups in its complete sample, so we report descriptive estimates without a confidence interval. Its original merge also contains conflicting telephone and exit identifiers; these paired estimates remain conditional on the authored row associations. We preserve that unresolved linkage rather than silently relinking respondents.
+
+Changes before arrival could reflect briefing, preparation, repeated testing, or other events between interviews. Arrival-to-exit changes isolate the event's time window, but do not identify deliberation's causal effect without a credible comparison. Even on a common sample, these estimates describe the attendees with observed questionnaires at all three phases; they do not describe all recruited citizens or all attendees.
+
+## Selection into attendance and exit measurement {#sec:selection}
+
+Attendees enter the event with higher measured knowledge than either invited nonattenders or uninvited controls in both control studies. In America in One Room, the pre-arrival gaps are `r pp(a1r_invited$estimate)` and `r pp(a1r_baseline_control$estimate)` percentage points, respectively. In the climate poll they are `r pp(climate_invited$estimate)` and `r pp(climate_baseline_control$estimate)` points (Table \ref{tab:pre-arrival-selection}). These summaries use everyone with verified attendance status and an observed baseline in each source frame, including attendees without an observed exit. They therefore have different denominators from the paired gain and group-model samples.
+
+```{r pre-arrival-selection, results="asis"}
+phase_selection_table(phase_selection) |>
+  knitr::kable(
+    format = "latex", booktabs = TRUE, position = "H", linesep = "",
+    align = c(">{\\raggedright\\arraybackslash}p{1.65in}",
+              ">{\\raggedright\\arraybackslash}p{1.2in}", "r", "r", "r"),
+    caption = "Pre-arrival knowledge differences: attendees minus each comparison group. N counts observed baseline scores; gaps are percentage points. Descriptive summaries have no estimated sampling intervals."
+  ) |>
+  print()
+```
+
+Invited nonattenders describe selection after invitation; uninvited controls provide a separate untreated comparison. A baseline gap does not by itself establish how much attendance selection biases the gain comparison: the groups can also differ in unmeasured motivation, preparation, and their knowledge trajectories. Conditioning on measured baseline knowledge or subtracting control gains does not eliminate these differences. We therefore report the comparisons as descriptive and do not label them selection-adjusted causal effects.
+
+Questionnaire completion creates an additional selection stage. Appendix Table \ref{tab:phase-attrition} compares baseline knowledge among known attendees with observed, absent, or uncertain exit questionnaires. A blank quiz within an observed questionnaire scores zero; a wholly absent questionnaire remains unmeasured. Records with unknown questionnaire presence do not enter the paired phase estimates. Records with unknown attendance remain in coverage and baseline summaries, rather than being counted as nonattenders. Current Cor-Sood source cohorts have unverified attendance in the canonical export and supply coverage rather than attendee phase estimates; their historical counterparts supply estimates where available. These are limits of the current verified data, not evidence that the original polls lacked attendees or arrival surveys.
 
 # Who Learns?
 
@@ -152,13 +223,13 @@ figure("learning")
 
 Let $G_{igd}=K_{igd2}-K_{igd1}$ denote the change in proportion correct for participant $i$ in discussion group $g$ and poll $d$. We fit a hierarchical linear model [@raudenbush2002]:
 $$G_{igd}=\beta_0+\beta_1K_{igd1}+\mathbf{z}_{igd}'\boldsymbol{\beta}_z+\alpha_{gd}+\gamma_d+\varepsilon_{igd},$$
-where $\mathbf{z}_{igd}$ contains groupmates' mean initial knowledge, group size, and mode. The second specification adds education, age, gender, the proportion of female groupmates, and the education-by-T1 and gender-by-group-composition interactions. The third and fourth specifications separately extend the demographic model: the third adds reported briefing reading, and the fourth adds attitude extremity and group disagreement. The $\beta$ coefficients are fixed regression parameters. For fitting, we assume
+where $\mathbf{z}_{igd}$ contains groupmates' mean initial knowledge, group size, and mode. The second specification adds education, age, gender, the proportion of female groupmates, and the education-by-initial-knowledge and gender-by-group-composition interactions. The third and fourth specifications separately extend the demographic model: the third adds reported briefing reading, and the fourth adds attitude extremity and group disagreement. The $\beta$ coefficients are fixed regression parameters. For fitting, we assume
 $$\alpha_{gd}\sim N(0,\sigma_g^2),\qquad \gamma_d\sim N(0,\sigma_p^2),\qquad \varepsilon_{igd}\sim N(0,\sigma_e^2),$$
 with these components mutually independent conditional on the regressors and independent across distinct groups, polls, and individuals, respectively. The group and poll random intercepts allow outcomes to covary within discussion groups and across groups in the same poll. Their variances, $\sigma_g^2$ and $\sigma_p^2$, measure residual variation at those levels; $\sigma_e^2$ measures individual residual variation. We estimate the coefficients and variance components by maximum likelihood [@bates2015] and obtain confidence intervals from the hierarchical bootstrap.
 
-Adding $K_{igd1}$ to both sides gives the equivalent post-deliberation equation:
+Adding $K_{igd1}$ to both sides gives the equivalent equation for the selected later score:
 $$K_{igd2}=\beta_0+(1+\beta_1)K_{igd1}+\mathbf{z}_{igd}'\boldsymbol{\beta}_z+\alpha_{gd}+\gamma_d+\varepsilon_{igd}.$$
-Thus using gain instead of T2 shifts the coefficient on T1 down by one and leaves the other coefficients and fitted residuals unchanged. We report gain because it directly expresses the change the paper seeks to explain. Conditioning on T1 compares that change among participants with the same measured starting knowledge.
+Thus using gain instead of the later score shifts the coefficient on initial knowledge down by one and leaves the other coefficients and fitted residuals unchanged. We report gain because it directly expresses the change the paper seeks to explain. Conditioning on initial knowledge compares that change among participants with the same measured starting knowledge.
 
 The analysis includes `r count(size("core", "n"))` participants in `r size("core", "groups")` groups and `r size("core", "polls")` polls. The demographic model retains `r count(size("demographic", "n"))` participants and all `r size("demographic", "polls")` polls; `r count(size("core", "n") - size("demographic", "n"))` participants have missing covariates. The reading model includes `r count(size("briefing", "n"))` participants in `r size("briefing", "polls")` polls. The attitude model retains `r count(size("attitudes", "n"))` participants in all `r size("attitudes", "polls")` polls; `r count(size("demographic", "n") - size("attitudes", "n"))` additional participants lack attitude measures.
 
@@ -174,15 +245,15 @@ separators[summary_start:(nrow(table_1) - 1L)] <- "\\addlinespace[0.25em]"
 table_tex <- knitr::kable(
   table_1, format = "latex", booktabs = TRUE, position = "!htb", align = "lrrrr", escape = FALSE,
   linesep = separators,
-  caption = "Change in proportion correct (T2 minus T1), conditional on T1. Coefficients with 95 percent hierarchical-bootstrap confidence intervals below."
+  caption = "Change in proportion correct (later minus initial), conditional on initial knowledge. Coefficients with 95 percent hierarchical-bootstrap confidence intervals below."
 )
 table_tex <- sub("\\centering", "\\centering\\small\\setlength{\\tabcolsep}{3pt}", table_tex, fixed = TRUE)
-cat(sub("\\end{table}", paste0("\\par\\medskip\\noindent{\\footnotesize\\raggedright\\emph{Notes.} Groupmates' mean T1 excludes the respondent herself; both that mean and group size use members with baseline and follow-up answers. All models have poll and small-group random intercepts. Education is coded as below secondary completion, secondary/some college, or degree or higher; the first category is the reference. Marginal $R^2$ covers fixed effects; conditional $R^2$ includes random intercepts. Columns 3 and 4 separately add reading (0--1) and attitudes to column 2. Reading reports are available for fewer polls. Replacing pairwise disagreement with the mean within-group SD gives a dispersion coefficient of ", term("attitude_sd", "attitude_sd"), "; the peer-knowledge coefficient is ", term("attitude_sd", "group_k1"), ".\\par}", "\n\\end{table}"), table_tex, fixed = TRUE))
+cat(sub("\\end{table}", paste0("\\par\\medskip\\noindent{\\footnotesize\\raggedright\\emph{Notes.} Groupmates' mean initial knowledge excludes the respondent herself; both that mean and group size use members with retained initial and later scores. All models have poll and small-group random intercepts. Education is coded as below secondary completion, secondary/some college, or degree or higher; the first category is the reference. Marginal $R^2$ covers fixed effects; conditional $R^2$ includes random intercepts. Columns 3 and 4 separately add reading (0--1) and attitudes to column 2. Reading reports are available for fewer polls. Replacing pairwise disagreement with the mean within-group SD gives a dispersion coefficient of ", term("attitude_sd", "attitude_sd"), "; the peer-knowledge coefficient is ", term("attitude_sd", "group_k1"), ".\\par}", "\n\\end{table}"), table_tex, fixed = TRUE))
 ```
 
-Table \ref{tab:models} compares gains conditional on measured initial knowledge. The T1 coefficient in the baseline model is `r term("core", "k1")`. Because scores have a ceiling and contain measurement error, this should not be read as a causal effect of prior knowledge. The second column brings the education, age, and gender hypotheses into the same set of polls. The third column adds briefing reading, and the fourth adds attitudes. Appendix Table \ref{tab:hetero} examines whether attendee--control differences vary with initial knowledge or education.
+Table \ref{tab:models} compares gains conditional on measured initial knowledge. The initial-knowledge coefficient in the baseline model is `r term("core", "k1")`. Because scores have a ceiling and contain measurement error, this should not be read as a causal effect of prior knowledge. The second column brings the education, age, and gender hypotheses into the same set of polls. The third column adds briefing reading, and the fourth adds attitudes. Appendix Table \ref{tab:hetero} examines whether attendee--control differences vary with initial knowledge or education.
 
-At the reference initial score of zero, both education categories have larger estimated gains than the below-secondary group; the education-by-T1 interactions allow these gaps to vary with starting knowledge. The age estimate is `r term("demographic", "age_decades")` per decade. The intervals for age, gender, and the gender-by-group-composition interaction include zero. The gender coefficient compares women with men when the share of female groupmates is zero; the interaction shows how that difference changes as the share increases. The fourth column adds baseline attitude extremity and policy disagreement. On the same participants, adding these measures changes the peer-knowledge coefficient from `r coef_text(models$estimate[models$model == "demographic_attitude_sample" & models$term == "group_k1"])` to `r coef_text(models$estimate[models$model == "attitudes" & models$term == "group_k1"])`; the intervals for both added attitude measures include zero.
+At the reference initial score of zero, both education categories have larger estimated gains than the below-secondary group; the education-by-initial-knowledge interactions allow these gaps to vary with starting knowledge. The age estimate is `r term("demographic", "age_decades")` per decade. The intervals for age, gender, and the gender-by-group-composition interaction include zero. The gender coefficient compares women with men when the share of female groupmates is zero; the interaction shows how that difference changes as the share increases. The fourth column adds baseline attitude extremity and policy disagreement. On the same participants, adding these measures changes the peer-knowledge coefficient from `r coef_text(models$estimate[models$model == "demographic_attitude_sample" & models$term == "group_k1"])` to `r coef_text(models$estimate[models$model == "attitudes" & models$term == "group_k1"])`; the intervals for both added attitude measures include zero.
 
 Reported reading of the briefing materials is also associated with larger gains. Across `r size("briefing", "polls")` polls, the difference between the lowest and highest reading categories is `r pp(reading$estimate)` percentage points (95\% interval `r pp(reading$lower)` to `r pp(reading$upper)`), conditional on initial knowledge, demographics, group characteristics, and mode, with poll and small-group random intercepts. These reports were collected after deliberation, so the association need not reflect the effect of reading alone.
 
@@ -192,11 +263,11 @@ Table \ref{tab:models} addresses the peer-knowledge hypothesis directly. A ten-p
 
 Appendix Figure \ref{fig:peers} estimates the association separately within each poll. It shows whether the pooled result conceals different patterns across settings. Its average weights those separate slopes equally; Table \ref{tab:models} instead fits a common slope in a hierarchical model. Its contribution is to display variation across polls.
 
-Appendix Table \ref{tab:baseline-composition} examines whether participants with similar baseline characteristics were grouped together. For initial knowledge, the association with groupmates' initial knowledge is `r interval(balance_knowledge$estimate, balance_knowledge$lower, balance_knowledge$upper)`. Its interval includes zero. This diagnostic concerns characteristics measured before discussion; T2 and gain can themselves respond to group composition. A causal interpretation of peer coefficients also requires evidence about the assignment process. Group knowledge after deliberation is difficult to interpret because groupmates share the same experience [@manski1993].
+Appendix Table \ref{tab:baseline-composition} examines whether participants with similar baseline characteristics were grouped together. For initial knowledge, the association with groupmates' initial knowledge is `r interval(balance_knowledge$estimate, balance_knowledge$lower, balance_knowledge$upper)`. Its interval includes zero. This diagnostic concerns characteristics measured before discussion; later knowledge and gain can themselves respond to group composition. A causal interpretation of peer coefficients also requires evidence about the assignment process. Group knowledge after deliberation is difficult to interpret because groupmates share the same experience [@manski1993].
 
 # Conclusion
 
-Participants' factual knowledge increases across the polls we study. Reporting absolute gains in percentage points and increases relative to initial scores makes the magnitude interpretable, while adjustment for guessing addresses one source of measurement error. In the two polls with common before-and-after control interviews, attendees show larger gains than controls. The comparisons remain subject to selection into attendance, and the peer regressions are descriptive. The knowledge questions concern facts selected by organizers, so these estimates describe learning about the topics the events emphasized.
+Participants' factual knowledge increases across the study-specific interview windows we examine. Reporting absolute gains in percentage points and increases relative to initial scores makes the magnitude interpretable, while adjustment for guessing addresses one source of measurement error. In the two polls with common before-and-after control interviews, attendees show larger gains than controls. The comparisons remain subject to selection into attendance, and the peer regressions are descriptive. The three-wave comparisons show that knowledge can increase before arrival as well as during the event. Baseline gaps by attendance and differential questionnaire completion limit what the gains establish about recruited citizens or deliberation's causal effect. The knowledge questions concern facts selected by organizers, so these estimates describe learning about the topics the events emphasized.
 
 \FloatBarrier
 # References {-}
@@ -217,7 +288,7 @@ Participants' factual knowledge increases across the polls we study. Reporting a
 
 # The Deliberative Polls {#app:polls}
 
-These `r nrow(polls)` polls supply the attendee sample throughout the paper. Three also provide control comparisons, including Northern Ireland's T3-only contrast. Tables \ref{tab:polls} and \ref{tab:poll-gains} list polls in the same chronological order.
+These `r nrow(polls)` polls supply the main learning and discussion-group sample. The verified-phase comparisons use their own samples, described in Appendix \ref{app:phases}. Three also provide control comparisons, including Northern Ireland's T3-only contrast. Tables \ref{tab:polls} and \ref{tab:poll-gains} list polls in the same chronological order.
 
 ```{r polls, results = "asis"}
 polls |>
@@ -248,7 +319,7 @@ gains |>
   ) |>
   knitr::kable(format = "latex", booktabs = TRUE, longtable = TRUE,
     linesep = "", align = c(">{\\raggedright\\arraybackslash}p{2.8in}", "r", "r", "r"),
-    caption = "Initial knowledge (percent correct), observed gains, and guessing-adjusted learning (percentage points) across the analyzed polls.")
+    caption = "Selected initial knowledge (percent correct), selected-wave gains, and guessing-adjusted learning (percentage points) in the main sample. Interview windows and questionnaire-presence rules vary by poll.")
 ```
 
 \begin{minipage}{\textwidth}
@@ -271,7 +342,7 @@ meta |>
     position = "H", caption = "Average learning across polls, with hierarchical-bootstrap confidence intervals.")
 ```
 
-Observed gain is T2 minus T1; guessing-adjusted learning estimates the percentage who learned an item, averaged across questions. Equal weighting gives each poll the same weight. Precision weighting uses $w_d=1/\widehat{\mathrm{Var}}(\hat\theta_d)$, with sampling variances estimated by resampling discussion groups within each poll. The weighted average is $\sum_d w_d\hat\theta_d/\sum_d w_d$. These weights are held fixed when resampling polls and groups for its interval. The mode rows split the equal-poll average into in-person and online polls.
+Observed gain is the selected later score minus the selected initial score; guessing-adjusted learning estimates the percentage who learned an item, averaged across questions. Equal weighting gives each poll the same weight. Precision weighting uses $w_d=1/\widehat{\mathrm{Var}}(\hat\theta_d)$, with sampling variances estimated by resampling discussion groups within each poll. The weighted average is $\sum_d w_d\hat\theta_d/\sum_d w_d$. These weights are held fixed when resampling polls and groups for its interval. The mode rows split the equal-poll average into in-person and online polls.
 
 \end{minipage}
 
@@ -295,21 +366,21 @@ Table \ref{tab:hetero} reports changes in the attendee--control difference, not 
 
 ## Groupmates' knowledge of missed questions {#app:item-peers}
 
-The demographic specification can also include groupmates' T1 correctness on the particular questions the participant missed at T1. For each missed question, we calculate the proportion of other group members who answered correctly, then average across those questions. This targeted measure enters alongside groupmates' overall initial knowledge. Respondents who answered every T1 question correctly receive zero on the targeted measure and a separate indicator for having no missed questions.
+The demographic specification can also include groupmates' initial correctness on the particular questions the participant missed at the initial interview. For each missed question, we calculate the proportion of other group members who answered correctly, then average across those questions. This targeted measure enters alongside groupmates' overall initial knowledge. Respondents who answered every initial question correctly receive zero on the targeted measure and a separate indicator for having no missed questions.
 
 The targeted peer coefficient is `r term("items", "group_k1_items")` among `r count(size("items", "n"))` participants in `r size("items", "polls")` polls. The coefficient on overall peer knowledge is `r term("items", "group_k1")`, and the no-missed-questions indicator is `r term("items", "no_missed_items")`. All other regressors, random intercepts, and the bootstrap follow Table \ref{tab:models}.
 
 ## Additional control comparisons {#app:controls}
 
-Regressing T2 scores on attendance and T1 scores answers a different question from comparing gains. The baseline-adjusted attendee--control differences are `r pp(a1r$estimate)` percentage points in America in One Room (`r pp(a1r$lower)` to `r pp(a1r$upper)`), and `r pp(climate$estimate)` in the climate poll (`r pp(climate$lower)` to `r pp(climate$upper)`). These intervals use the same bootstrap as the main comparisons.
+Regressing later scores on attendance and initial scores answers a different question from comparing gains. The baseline-adjusted attendee--control differences are `r pp(a1r$estimate)` percentage points in America in One Room (`r pp(a1r$lower)` to `r pp(a1r$upper)`), and `r pp(climate$estimate)` in the climate poll (`r pp(climate$lower)` to `r pp(climate$upper)`). These intervals use the same bootstrap as the main comparisons.
 
-A year after the climate poll, the baseline-adjusted gap is `r pp(climate_t3$estimate)` percentage points (`r pp(climate_t3$lower)` to `r pp(climate_t3$upper)`). Northern Ireland has only a follow-up control interview: `r ni$n_treated` returning attendees scored `r pp(ni$estimate)` percentage points above `r ni$n_control` controls (`r pp(ni$lower)` to `r pp(ni$upper)`). This is a cross-sectional comparison without a control baseline. We do not apply the immediate-learning model's no-forgetting assumption to these later outcomes.
+A year after the climate poll, the baseline-adjusted gap is `r pp(climate_t3$estimate)` percentage points (`r pp(climate_t3$lower)` to `r pp(climate_t3$upper)`). Northern Ireland has only a follow-up control interview: `r ni$n_treated` returning attendees scored `r pp(ni$estimate)` percentage points above `r ni$n_control` controls (`r pp(ni$lower)` to `r pp(ni$upper)`). This is a cross-sectional comparison without a control baseline. We do not apply the main guessing model's no-forgetting assumption to these later outcomes.
 
 ## Poll-specific peer associations
 
 The following estimates fit a separate slope in each poll, conditional on own initial knowledge. Their equal-poll average is `r interval(peer("k1")$estimate, peer("k1")$lower, peer("k1")$upper)`.
 
-```{r peers, fig.cap = "Association between the other group members' mean T1 knowledge and own knowledge gain, by poll, with 95\\% intervals. Each estimate controls for own T1 knowledge. Intervals use the hierarchical bootstrap. The pooled estimate weights polls equally and resamples polls within mode and then their groups. These are descriptive associations.", fig.pos = "tbp", out.width = "100%"}
+```{r peers, fig.cap = "Association between the other group members' mean initial knowledge and own knowledge gain, by poll, with 95\\% intervals. Each estimate controls for own initial knowledge. Intervals use the hierarchical bootstrap. The pooled estimate weights polls equally and resamples polls within mode and then their groups. These are descriptive associations.", fig.pos = "tbp", out.width = "100%"}
 figure("peer_effects")
 ```
 
@@ -327,9 +398,40 @@ assignment |>
 ```
 
 \clearpage
+# Verified-phase comparisons and sample coverage {#app:phases}
+
+Table \ref{tab:phase-pairs} reports available paired attendees for each verified comparison. These estimates are unweighted changes in proportion correct without guessing adjustment. Each row requires observed questionnaires and the same battery and denominator at both phases; it does not require the third phase or discussion-group membership. Thus the three rows for a poll need not use the same people and need not add up. Table \ref{tab:phase-changes} instead restricts all three changes to the common three-wave sample. Estimates without intervals retain their respondents rather than inventing a clustering unit.
+
+```{r phase-pairs, results="asis"}
+phase_pair_table(phase_pairs) |>
+  knitr::kable(
+    format = "latex", booktabs = TRUE, longtable = TRUE, linesep = "",
+    align = c(">{\\raggedright\\arraybackslash}p{1.95in}",
+              ">{\\raggedright\\arraybackslash}p{1.55in}", "r", "r", "r"),
+    caption = "Verified-phase changes among available paired attendees. Changes and 95 percent group-bootstrap intervals are percentage points. A dash means no supported interval because groups are unknown or too few."
+  ) |>
+  print()
+```
+
+Table \ref{tab:phase-attrition} reports exit-questionnaire availability and baseline knowledge for the two three-wave studies and the two control studies. An absent exit requires evidence of a wholly absent questionnaire; an uncertain exit is not recoded as absent. Baseline means use the scored records counted in the last-but-one column. The groups shown exhaust known attendees in these source frames, including people excluded from paired-change estimates.
+
+```{r phase-attrition, results="asis"}
+phase_attrition_table(phase_selection) |>
+  knitr::kable(
+    format = "latex", booktabs = TRUE, longtable = TRUE, linesep = "",
+    align = c(">{\\raggedright\\arraybackslash}p{2.0in}",
+              ">{\\raggedright\\arraybackslash}p{1.05in}", "r", "r", "r"),
+    caption = "Exit availability among known attendees: sample counts and pre-arrival knowledge (percent correct)."
+  ) |>
+  print()
+```
+
+Marousi's full telephone frame contains `r count(phase_coverage$n_people[phase_coverage$poll_id == "marousi-2006" & phase_coverage$phase == "t0"])` records, of which `r count(phase_coverage$n_unknown_attendance[phase_coverage$poll_id == "marousi-2006" & phase_coverage$phase == "t0"])` have unknown attendance. Their baseline scores are retained in the source export, but absence of an arrival or exit form does not establish that they were invited or that they declined. The `r dplyr::n_distinct(phase_coverage$poll_id[phase_coverage$source_dataset == "cor_sood"])` Cor-Sood cohorts likewise retain unknown attendance. No cross-deposit linkage is inferred from an identical respondent number. Detailed coverage and baseline summaries remain in the replication tables; the phase input revision is \texttt{`r substr(phase_provenance$data_commit, 1, 7)`}, and the main-analysis revision is \texttt{`r substr(provenance$data_commit, 1, 7)`} [@dpdata].
+
+\clearpage
 # Knowledge items {#app:items}
 
-The catalog lists `r nrow(item_catalog)` questions for the same `r nrow(gains)` polls used in the learning analysis throughout the paper [@dpdata]. Wording is paraphrased where only source labels survive; capitalization and unambiguous abbreviations are normalized for readability. Original labels and scoring rules are preserved in the cited dataset. Choices are transcribed where recoverable; truncated or unavailable options are identified. Notes explain open-response coding.
+The catalog lists `r nrow(item_catalog)` questions for the same `r nrow(gains)` polls used in the main learning and group-model analysis [@dpdata]. Wording is paraphrased where only source labels survive; capitalization and unambiguous abbreviations are normalized for readability. Original labels and scoring rules are preserved in the cited dataset. Choices are transcribed where recoverable; truncated or unavailable options are identified. Notes explain open-response coding.
 
 ```{r items, results='asis'}
 cat(item_appendix_markdown(items = item_catalog))

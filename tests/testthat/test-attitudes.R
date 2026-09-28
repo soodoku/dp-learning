@@ -33,6 +33,7 @@ test_that("stacked regression cells retain empty cells", {
   table <- data.frame(label = c("a", "b"), baseline = c("", ".100 [.000, .200]"))
   out <- stack_intervals(table)
   expect_equal(out$baseline[1], "")
-  expect_match(out$baseline[2], "shortstack", fixed = TRUE)
+  expect_match(out$baseline[2], ".100", fixed = TRUE)
+  expect_match(out$baseline[2], "[.000, .200]", fixed = TRUE)
   expect_false(any(grepl("NA", out$baseline, fixed = TRUE)))
 })
