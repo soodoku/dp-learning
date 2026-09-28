@@ -183,9 +183,12 @@ phase_contrasts <- function(
     attendees <- people[people$attended %in% TRUE, ]
     balanced <- Reduce(`&`, lapply(c("t0", "t1", "t2"), function(phase) phase_has_score(attendees, phase))) &
       phase_same_denominator(attendees, c("t0", "t1", "t2"))
-    all_three <- phase_sample_statistics(attendees[balanced, ], specifications, seed + index * 1000L, n_boot) |>
+    all_three <- phase_sample_statistics(
+      attendees[balanced & !is.na(attendees$group), ], specifications, seed + index * 1000L, n_boot
+    ) |>
       dplyr::mutate(
         sample = "all_three_observed_attendees",
+        n_excluded_unknown_group = sum(balanced & is.na(attendees$group)),
         n_incompatible_denominator = sum(
           Reduce(`&`, lapply(c("t0", "t1", "t2"), function(phase) phase_has_score(attendees, phase))) &
             !phase_same_denominator(attendees, c("t0", "t1", "t2"))

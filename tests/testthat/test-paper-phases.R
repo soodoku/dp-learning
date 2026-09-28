@@ -1,14 +1,17 @@
-test_that("phase exhibits keep scores, sample sizes and unsupported intervals", {
+test_that("phase exhibits report estimates and intervals on the same sample", {
   balanced <- read_output("phase_contrasts.csv") |>
     dplyr::filter(sample == "all_three_observed_attendees", n_people > 0L)
   table <- phase_comparison_table(balanced)
   expect_equal(nrow(table), 2L)
   expect_true(all(vapply(table, is.character, logical(1))))
   marousi <- table[grepl("Marousi", table$Poll), ]
-  expect_equal(unname(marousi$N), "133")
-  expect_equal(unname(marousi$`Arrival to exit`), "2.3")
-  expect_equal(unname(marousi$`Pre-arrival to arrival`), "5.0")
-  expect_equal(unname(marousi$`Pre-arrival to exit`), "7.3")
+  expect_equal(unname(marousi$N), "129")
+  expect_match(unname(marousi$`Arrival to exit`), "2.5 ", fixed = TRUE)
+  expect_match(unname(marousi$`Pre-arrival to arrival`), "4.9 ", fixed = TRUE)
+  expect_match(unname(marousi$`Pre-arrival to exit`), "7.4 ", fixed = TRUE)
+  for (column in names(marousi)[-(1:2)]) {
+    expect_match(marousi[[column]], "\\[-?[0-9.]+, -?[0-9.]+\\]")
+  }
   europe <- table[grepl("Europe", table$Poll), ]
   expect_equal(unname(europe$N), "332")
   expect_match(europe$`Arrival to exit`, "7.8", fixed = TRUE)
