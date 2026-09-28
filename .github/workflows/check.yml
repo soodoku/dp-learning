@@ -15,7 +15,7 @@ jobs:
       - uses: actions/checkout@v7.0.1
       - name: Read data revision
         id: data
-        run: echo "revision=$(jq -r .data_commit tabs/provenance.json)" >> "$GITHUB_OUTPUT"
+        run: echo "revision=$(jq -r .data_commit tabs/phase_provenance.json)" >> "$GITHUB_OUTPUT"
       - name: Check out data sources
         uses: actions/checkout@v7.0.1
         with:

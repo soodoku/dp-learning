@@ -14,7 +14,9 @@ upstream_source_ids <- c(
   participants = "analysis_participants_parquet",
   item_responses = "analysis_item_responses_parquet",
   scores = "analysis_scores_parquet",
-  attitudes = "analysis_attitude_responses_parquet"
+  attitudes = "analysis_attitude_responses_parquet",
+  phase_participants = "analysis_phase_participants_parquet",
+  phase_scores = "analysis_phase_scores_parquet"
 )
 
 upstream_source_manifest <- function(root = dp_data_root()) {
@@ -134,4 +136,12 @@ read_polardata <- function(path = source_path("distortions_responses")) {
 
 read_analysis_attitudes <- function(root = dp_data_root()) {
   arrow::read_parquet(source_path("attitudes", root = root))
+}
+
+read_phase_participants <- function(root = dp_data_root()) {
+  arrow::read_parquet(source_path("phase_participants", root = root))
+}
+
+read_analysis_phase_scores <- function(root = dp_data_root()) {
+  arrow::read_parquet(source_path("phase_scores", root = root))
 }

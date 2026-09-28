@@ -1,0 +1,21 @@
+{
+  "data_commit": "1495dc5b8c29a2a63d68177420c50b260887f29c",
+  "bootstrap_replicates": 999,
+  "sources": [
+    {
+      "source": "polls",
+      "path": "output/analysis/analysis_polls.parquet",
+      "sha256": "e378b69887098ee33bae2187a235d4913db17961def58f5da2d632884ff1e477"
+    },
+    {
+      "source": "phase_participants",
+      "path": "output/analysis/analysis_phase_participants.parquet",
+      "sha256": "3f99ce971b4449036e91ac2175af9a78e280d58f64f03bfd821789a9f7fe231b"
+    },
+    {
+      "source": "phase_scores",
+      "path": "output/analysis/analysis_phase_scores.parquet",
+      "sha256": "c12993b861d67759229a45bd1dd0e505ddf0be4e54c7f19e08f3ea2ff3297784"
+    }
+  ]
+}
