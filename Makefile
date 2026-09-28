@@ -1,13 +1,16 @@
 DP_DATA_ROOT ?= $(abspath ../dp-data)
 export DP_DATA_ROOT
 
-.PHONY: restore analysis figures paper manuscript format lint test check ci-docker clean
+.PHONY: restore analysis attrition figures paper manuscript format lint test check ci-docker clean
 
 restore:
 	Rscript -e 'renv::restore(prompt = FALSE)'
 
 analysis:
 	Rscript scripts/run_all.R
+
+attrition:
+	Rscript -e 'purrr::walk(list.files("R", full.names = TRUE), source); purrr::iwalk(attrition_analysis(), function(table, name) readr::write_csv(table, paste0("tabs/attrition_", name, ".csv"), na = ""))'
 
 figures: analysis
 	Rscript scripts/figures.R

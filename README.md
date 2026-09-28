@@ -92,3 +92,16 @@ and does not impose the guessing model's no-forgetting assumption. NIC's main
 analysis uses its documented exit interviews; the ten-month follow-up is retained
 only for this separate comparison. All source items and interview timing remain
 in dp-data.
+
+The focused attrition comparison (`make attrition`) uses upstream typed phase and
+participant tables for Marousi, NIC and the climate poll. `tabs/attrition_flow.csv`
+and `tabs/attrition_patterns.csv` record observation counts and intermittent
+missingness; `tabs/attrition_recruitment.csv` retains distinct attendance and
+assignment categories. `tabs/attrition_means.csv` records model predictors,
+response probabilities, weight diagnostics and baseline differences.
+`tabs/attrition_contrasts.csv` compares complete-case, normalized IPW and augmented
+IPW point estimates. Marousi targets baseline-observed attendees; follow-up
+comparisons target baseline-and-exit-observed attendees. These adjustments assume
+response is independent of missing knowledge conditional on recorded predictors.
+They do not estimate sampling intervals, nonresponse sensitivity bounds or
+invitation effects. The manuscript reports the estimates and their assumptions.

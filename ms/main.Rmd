@@ -44,6 +44,9 @@ peers <- read_out("peer_effects_pooled.csv")
 selected <- read_out("selection.csv")
 assignment <- read_out("assignment_check.csv")
 coverage <- read_out("covariate_coverage.csv")
+attrition_changes <- read_out("attrition_contrasts.csv")
+attrition_flow <- read_out("attrition_flow.csv")
+attrition_means <- read_out("attrition_means.csv")
 phase_changes <- read_out("phase_contrasts.csv")
 phase_coverage <- read_out("phase_coverage.csv")
 phase_selection <- read_out("pre_arrival_selection.csv")
@@ -307,7 +310,7 @@ retention |>
   print()
 ```
 
-Knowledge remains above baseline at follow-up in both studies. Climate participants lose some of their initial gain after exit, whereas the National Issues Convention shows no clear decline. These comparisons describe returning attendees. Using the same people at each interview keeps changes in sample composition from being mistaken for changes in knowledge, but does not establish that those lost to follow-up had the same experience. Changes after exit can reflect forgetting, further learning, or both. We therefore use observed scores without the guessing model's no-forgetting assumption. The climate poll also permits a comparison with controls at the later interview (Appendix \ref{app:controls}).
+Knowledge remains above baseline at follow-up in both studies. Climate participants lose some of their initial gain after exit, whereas the National Issues Convention shows no clear decline. These comparisons describe returning attendees. Using the same people at each interview keeps changes in sample composition from being mistaken for changes in knowledge, but does not establish that those lost to follow-up had the same experience. Adjusting for observed predictors of follow-up response yields similar point estimates (Appendix \ref{app:attrition-adjustment}). Changes after exit can reflect forgetting, further learning, or both. We therefore use observed scores without the guessing model's no-forgetting assumption. The climate poll also permits a comparison with controls at the later interview (Appendix \ref{app:controls}).
 
 # Who Learns?
 
@@ -514,6 +517,58 @@ phase_attrition_table(phase_selection) |>
 ```
 
 Marousi's full telephone frame contains `r count(phase_coverage$n_people[phase_coverage$poll_id == "marousi-2006" & phase_coverage$phase == "t0"])` records, of which `r count(phase_coverage$n_unknown_attendance[phase_coverage$poll_id == "marousi-2006" & phase_coverage$phase == "t0"])` have unknown attendance. Their baseline scores are available, but absence of an arrival or exit form does not establish that they were invited or that they declined. Some Cor-Sood cohorts likewise retain unresolved attendance; their status is recorded separately from questionnaire presence. Matching respondent numbers in separate datasets are not sufficient to establish that records describe the same person.
+
+## Adjusting for missing interviews {#app:attrition-adjustment}
+
+The comparisons above describe attendees who answered the relevant questionnaires. If returning respondents learned more or less than other attendees, their gains need not describe the larger attendee cohort. We examine this possibility in Marousi, the National Issues Convention, and the climate poll. In Marousi, the target is every documented attendee with a pre-arrival score. For the two follow-up studies, the target is attendees with both pre-arrival and exit scores, including those missing at follow-up. These latter comparisons address retention among attendees whose initial gain is observed; they do not adjust for missing baseline or exit interviews.
+
+```{r attrition-cohorts, results="asis"}
+attrition_flow |>
+  dplyr::select(pollname, phase, n_target, n_target_observed) |>
+  tidyr::pivot_wider(names_from = phase, values_from = n_target_observed) |>
+  dplyr::transmute(Poll = pollname, `Target N` = n_target,
+                   `Pre-arrival` = t0, Arrival = t1, Exit = t2, `Follow-up` = t3) |>
+  dplyr::mutate(dplyr::across(-Poll, ~ifelse(is.na(.x), "--", as.character(.x)))) |>
+  knitr::kable(format = "latex", booktabs = TRUE, position = "H", linesep = "",
+               align = c(">{\\raggedright\\arraybackslash}p{1.7in}", rep("r", 5)),
+               caption = "Observed knowledge scores within each target cohort. A dash denotes a phase outside that comparison.") |>
+  print()
+```
+
+Missing interviews are treated separately at each stage. A missed arrival interview does not imply that the exit interview is missing. People with unknown attendance are not classified as nonattenders, and an absent questionnaire is not assigned a knowledge score of zero.
+
+Within each poll, we estimate the probability of observing a score using logistic regression and its conditional mean using fractional logistic regression. We combine the two predictions in an augmented inverse-probability-weighted estimate [@seaman2018]. Let $R_{it}$ indicate an observed score at stage $t$, $\hat p_t(X_i)$ its estimated response probability, and $\hat m_t(X_i)$ its predicted value. The estimated mean for the target cohort is
+
+$$
+\widehat{\mu}_t = \frac{1}{N}\sum_{i=1}^{N}\left[\hat m_t(X_i) +
+\frac{R_{it}}{\hat p_t(X_i)}\{K_{it}-\hat m_t(X_i)\}\right],
+$$
+
+where the residual term is zero when the score is unobserved. We calculate changes by subtracting stage means for the same target cohort, so the component changes sum to the total. Table \ref{tab:attrition-adjusted} compares these estimates with complete-case changes and normalized inverse-probability-weighted changes.
+
+The Marousi models use pre-arrival knowledge. The National Issues Convention models use pre-arrival and exit knowledge. The climate models also include age, a bachelor's-degree indicator, and gender. We use demographics only where they are recorded for the entire target cohort, avoiding further exclusions or demographic imputation. All models are fitted separately by poll, with the same predictors in the response and outcome models.
+
+```{r attrition-adjusted, results="asis"}
+attrition_changes |>
+  dplyr::mutate(Comparison = dplyr::case_when(
+    from == "t0" & to == "t1" ~ "Pre-arrival to arrival",
+    from == "t1" & to == "t2" ~ "Arrival to exit",
+    from == "t0" & to == "t2" ~ "Pre-arrival to exit",
+    from == "t2" & to == "t3" ~ "Exit to follow-up",
+    TRUE ~ "Pre-arrival to follow-up"
+  )) |>
+  dplyr::transmute(Poll = pollname, Comparison,
+                   `Complete cases` = pp(complete_case), Weighted = pp(ipw), Augmented = pp(aipw)) |>
+  knitr::kable(format = "latex", booktabs = TRUE, position = "H", linesep = "",
+               align = c(">{\\raggedright\\arraybackslash}p{1.6in}",
+                         ">{\\raggedright\\arraybackslash}p{1.35in}", "r", "r", "r"),
+               caption = "Knowledge changes before and after adjustment for interview nonresponse, in percentage points. Entries are point estimates; this comparison does not estimate sampling intervals.") |>
+  print()
+```
+
+The Marousi complete-case column includes `r attrition_changes$n_complete[attrition_changes$poll_id == "marousi-2006"][1]` attendees, including the `r prose_count(marousi_exit$n_excluded_unknown_group)` with unknown groups excluded from Table \ref{tab:phase-changes}. The adjusted estimates target all `r attrition_changes$n_target[attrition_changes$poll_id == "marousi-2006"][1]` baseline-observed attendees. In the follow-up studies, the complete-case samples match Table \ref{tab:retention}, while adjustment targets the larger cohorts in Table \ref{tab:attrition-cohorts}.
+
+The fitted response probabilities are no lower than `r pp(min(attrition_means$min_probability))`\%, and no respondent receives an inverse-probability weight above `r num(max(attrition_means$max_weight), 2)`. We do not trim weights. Adjustment changes these point estimates by at most `r pp(max(abs(attrition_changes$aipw - attrition_changes$complete_case)))` percentage points. This similarity concerns selection on the measured predictors. Identification still requires that, conditional on those predictors, respondents and nonrespondents have the same expected knowledge and a positive chance of response. Under that assumption, the augmented estimator is consistent if either the response model or the outcome model is correctly specified. It does not remove selection on unmeasured knowledge, establish a causal effect of attendance, or estimate what nonattenders would have learned.
 
 \clearpage
 # Knowledge items {#app:items}

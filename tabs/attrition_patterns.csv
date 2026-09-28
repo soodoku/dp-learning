@@ -1,0 +1,8 @@
+poll_id,pollname,source_dataset,battery_id,pattern,n_people
+a1r-climate-2021,America in One Room: Climate,control,a1r-climate-2021:control:knowledge,t0:observed; t2:observed; t3:observed,845
+a1r-climate-2021,America in One Room: Climate,control,a1r-climate-2021:control:knowledge,t0:observed; t2:observed; t3:unmeasured,117
+marousi-2006,"Marousi, Greece",score_only,marousi-2006:score_only:knowledge,t0:observed; t1:observed; t2:observed,133
+marousi-2006,"Marousi, Greece",score_only,marousi-2006:score_only:knowledge,t0:observed; t1:observed; t2:unmeasured,21
+marousi-2006,"Marousi, Greece",score_only,marousi-2006:score_only:knowledge,t0:observed; t1:unmeasured; t2:observed,5
+nic-1996,National Issues Convention,historical,nic-1996:historical:knowledge,t0:observed; t2:observed; t3:observed,383
+nic-1996,National Issues Convention,historical,nic-1996:historical:knowledge,t0:observed; t2:observed; t3:unmeasured,73
