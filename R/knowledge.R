@@ -56,7 +56,8 @@ leave_one_out <- function(x, by) {
 assignment_check <- function(frame, covariates = c("k1", "female", "age", "education_ba")) {
   if ("education" %in% names(frame)) {
     frame <- dplyr::mutate(
-      frame, education_ba = as.numeric(education == "BA or more")
+      frame,
+      education_ba = as.numeric(education == "BA or more")
     )
   }
   purrr::map(covariates, \(covariate) {
@@ -68,14 +69,16 @@ assignment_check <- function(frame, covariates = c("k1", "female", "age", "educa
         poll_others = leave_one_out(own, pollid)
       ) |>
       dplyr::filter(is.finite(peer), is.finite(poll_others))
-    fit <- stats::lm(own ~ peer + poll_others + factor(pollid), data = polls)
-    vc <- sandwich::vcovCL(fit, cluster = ~group)
+    statistic <- function(x) {
+      x$peer <- leave_one_out(x$own, x$group)
+      x$poll_others <- leave_one_out(x$own, x$pollid)
+      c(peer = stats::coef(stats::lm(own ~ peer + poll_others + factor(pollid), data = x))[["peer"]])
+    }
+    result <- bootstrap_stat(polls, statistic)
     tibble::tibble(
-      covariate = covariate,
-      estimate = stats::coef(fit)[["peer"]],
-      std_error = sqrt(vc["peer", "peer"]),
-      n = stats::nobs(fit),
-      groups = dplyr::n_distinct(polls$group)
+      covariate = covariate, estimate = result$estimate[[1]], std_error = result$se[[1]],
+      lower = result$lower[[1]], upper = result$upper[[1]],
+      n = nrow(polls), groups = dplyr::n_distinct(polls$group)
     )
   }) |>
     purrr::list_rbind()

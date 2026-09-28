@@ -13,7 +13,8 @@ attendee_panel <- function(
     dplyr::filter(!is.na(t1), !is.na(t2))
   available <- participants |>
     dplyr::inner_join(
-      paired, by = c("poll_id", "source_dataset", "respondent_id"),
+      paired,
+      by = c("poll_id", "source_dataset", "respondent_id"),
       relationship = "one-to-one"
     )
   historical_ids <- unique(available$poll_id[
@@ -52,22 +53,4 @@ attendee_panel <- function(
     all(out$k2 >= 0 & out$k2 <= 1)
   )
   out
-}
-
-poll_gains <- function(panel) {
-  se <- \(x) stats::sd(x) / sqrt(length(x))
-  panel |>
-    dplyr::mutate(raw_gain = k2 - k1) |>
-    dplyr::summarise(
-      respondents = dplyr::n(),
-      online = dplyr::first(online),
-      k1_mean = mean(k1), k2_mean = mean(k2),
-      raw = mean(raw_gain), raw_se = se(raw_gain),
-      k1_sd = stats::sd(k1),
-      .by = c(poll_id, pollname)
-    ) |>
-    dplyr::mutate(
-      raw_sd = raw / k1_sd, raw_sd_se = raw_se / k1_sd
-    ) |>
-    dplyr::arrange(dplyr::desc(raw))
 }

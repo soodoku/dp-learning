@@ -6,13 +6,11 @@ How much do participants in Deliberative Polls learn, does participation cause l
 
 [Manuscript](ms/main.pdf) · [Manuscript source](ms/main.Rmd) · [Results](tabs/) · [Figures](figs/)
 
-The analysis includes 31 polls with respondent-level knowledge-item answers before and after deliberation. The main attendee analysis uses 28 polls with verified small-group identifiers: 8,800 participants in 592 groups. The appendix reports observed and guessing-adjusted gains across all 31. Four polls have attendee-control comparisons. Three have common T1/T2 interviews; Northern Ireland has a T3-only control comparison. The control comparisons can reflect selection into attendance. Baseline knowledge is not fully balanced across the expanded set of small groups, so groupmate coefficients are descriptive.
+The main analysis follows 8,800 participants in 592 discussion groups across 28 polls. It reports absolute gains, gains relative to initial knowledge, and estimates adjusted for guessing using the item model in [guess](https://github.com/soodoku/guess). Figure 1 also compares attendee and control gains in the two main-sample polls with both interviews in both arms. The appendix covers later control interviews and models with additional covariates.
 
-The [dp-data repository](https://github.com/soodoku/dp-data) holds the data and their provenance, poll metadata, group identifiers, source checksums, and generated-file manifests. This repository joins its typed Parquet poll, item, participant, item-response, and score tables into one attendee panel. The [poll appendix data](tabs/polls.csv) gives each included poll one row. The item appendix is generated from the [canonical knowledge-item catalog](https://github.com/soodoku/dp-data/blob/main/metadata/items.csv). Supplementary historical-poll models examine briefing reading and groupmates' T1 answers to the questions each respondent got wrong at T1. The latent learning estimates use the source-survey batteries rebuilt in dp-data; [its comparison audit](https://github.com/soodoku/dp-data/blob/main/audit/knowledge_parity.csv) records differences from the Cor–Sood deposit.
+All confidence intervals use a hierarchical bootstrap: resample polls within mode, then discussion groups, keeping each participant's item responses and interview waves together. Within-poll comparisons hold the poll fixed and resample separately by study arm; independent controls are individual sampling units. Pooled learning estimates weight polls equally. Control comparisons can reflect selection into attendance, and groupmate coefficients are descriptive.
 
-The America in One Room, climate, antimicrobial-resistance, and Northern Ireland studies provide respondent item answers for both attendees and controls.
-
-The upstream respondent export recovers briefing-material reading reports for nine polls. Their model appears in the appendix.
+The [dp-data repository](https://github.com/soodoku/dp-data) supplies typed Parquet tables of polls, items, participants, responses, and scores. This repository joins and filters those tables; the poll and item appendices are generated from them. [Build provenance](tabs/provenance.json) records the data revision, input manifests, model package version, and bootstrap replicate count. Self-reported briefing reading is available for nine polls and enters an appendix model.
 
 ## Reproduce
 
@@ -24,7 +22,7 @@ make restore
 make check
 ```
 
-`DP_DATA_ROOT` can point to another checkout. `make check` rebuilds the tables, figures, and PDF, then runs linting and numerical tests. The build checks inputs against the manifests in `dp-data`; it does not download data or keep a second source inventory here. `make ci-docker` runs the same checks in a standard R image.
+`DP_DATA_ROOT` can point to another checkout. `make check` rebuilds the tables, figures, and PDF, then runs linting and numerical tests. The build checks inputs against the manifests in `dp-data`; it does not download data or keep a second source inventory here. `make ci-docker` runs the same checks in a standard R image. The analysis uses 999 bootstrap replicates; `DP_BOOT_WORKERS` controls the number of parallel workers (default: 2).
 
 ## Repository layout
 

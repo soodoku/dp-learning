@@ -463,27 +463,6 @@
       "Maintainer": "Hadley Wickham <hadley@posit.co>",
       "Repository": "CRAN"
     },
-    "abind": {
-      "Package": "abind",
-      "Version": "1.4-8",
-      "Source": "Repository",
-      "Date": "2024-09-08",
-      "Title": "Combine Multidimensional Arrays",
-      "Authors@R": "c(person(\"Tony\", \"Plate\", email = \"tplate@acm.org\", role = c(\"aut\", \"cre\")), person(\"Richard\", \"Heiberger\", role = c(\"aut\")))",
-      "Maintainer": "Tony Plate <tplate@acm.org>",
-      "Description": "Combine multidimensional arrays into a single array. This is a generalization of 'cbind' and 'rbind'.  Works with vectors, matrices, and higher-dimensional arrays (aka tensors). Also provides functions 'adrop', 'asub', and 'afill' for manipulating, extracting and replacing data in arrays.",
-      "Depends": [
-        "R (>= 1.5.0)"
-      ],
-      "Imports": [
-        "methods",
-        "utils"
-      ],
-      "License": "MIT + file LICENSE",
-      "NeedsCompilation": "no",
-      "Author": "Tony Plate [aut, cre], Richard Heiberger [aut]",
-      "Repository": "CRAN"
-    },
     "arrow": {
       "Package": "arrow",
       "Version": "25.0.1",
@@ -656,35 +635,6 @@
       "URL": "https://www.rforge.net/base64enc",
       "BugReports": "https://github.com/s-u/base64enc/issues",
       "NeedsCompilation": "yes",
-      "Repository": "CRAN"
-    },
-    "bayesmeta": {
-      "Package": "bayesmeta",
-      "Version": "3.5",
-      "Source": "Repository",
-      "Type": "Package",
-      "Title": "Bayesian Random-Effects Meta-Analysis and Meta-Regression",
-      "Date": "2025-08-29",
-      "Authors@R": "c(person(given=\"Christian\", family=\"Roever\", role=c(\"aut\",\"cre\"),  email=\"christian.roever@med.uni-goettingen.de\", comment=c(ORCID=\"0000-0002-6911-698X\")), person(given=\"Tim\", family=\"Friede\", role=\"ctb\", email=\"tim.friede@med.uni-goettingen.de\", comment=c(ORCID=\"0000-0001-5347-7441\")))",
-      "Maintainer": "Christian Roever <christian.roever@med.uni-goettingen.de>",
-      "Depends": [
-        "forestplot (>= 2.0.0)",
-        "metafor (>= 2.0-0)",
-        "mvtnorm (>= 1.1-1)",
-        "numDeriv (>= 2016.8-1.1)"
-      ],
-      "Suggests": [
-        "compute.es",
-        "knitr",
-        "rmarkdown",
-        "R.rsp"
-      ],
-      "Description": "A collection of functions allowing to derive the posterior distribution of the model parameters in random-effects meta-analysis or meta-regression, and providing functionality to evaluate joint and marginal posterior probability distributions, predictive distributions, shrinkage effects, posterior predictive p-values, etc.; For more details, see also Roever C (2020) <doi:10.18637/jss.v093.i06>, or Roever C and Friede T (2022) <doi:10.1016/j.cmpb.2022.107303>.",
-      "License": "GPL (>= 2)",
-      "URL": "https://gitlab.gwdg.de/croever/bayesmeta",
-      "VignetteBuilder": "knitr, R.rsp",
-      "NeedsCompilation": "no",
-      "Author": "Christian Roever [aut, cre] (ORCID: <https://orcid.org/0000-0002-6911-698X>), Tim Friede [ctb] (ORCID: <https://orcid.org/0000-0001-5347-7441>)",
       "Repository": "CRAN"
     },
     "bit": {
@@ -1467,48 +1417,6 @@
       "NeedsCompilation": "no",
       "Author": "Hadley Wickham [aut, cre], Posit Software, PBC [cph, fnd] (ROR: <https://ror.org/03wc8by49>)",
       "Maintainer": "Hadley Wickham <hadley@posit.co>",
-      "Repository": "CRAN"
-    },
-    "forestplot": {
-      "Package": "forestplot",
-      "Version": "3.2.0",
-      "Source": "Repository",
-      "Title": "Advanced Forest Plot Using 'grid' Graphics",
-      "Authors@R": "c(person(given = \"Max\", family = \"Gordon\", role = c(\"aut\", \"cre\"), email = \"max@gforge.se\"), person(given = \"Thomas\", family = \"Lumley\", role = c(\"aut\", \"ctb\")))",
-      "Description": "Allows the creation of forest plots with advanced features, such as multiple confidence intervals per row, customizable fonts for individual text elements, and flexible confidence interval drawing. It also supports mixing text with mathematical expressions. The package extends the application of forest plots beyond traditional meta-analyses, offering a more general version of the original 'rmeta' package’s forestplot() function. It relies heavily on the 'grid' package for rendering the plots.",
-      "License": "GPL-2",
-      "URL": "https://gforge.se/packages/",
-      "BugReports": "https://github.com/gforge/forestplot/issues",
-      "Biarch": "yes",
-      "Depends": [
-        "R (>= 4.1.0)",
-        "grid",
-        "checkmate",
-        "abind"
-      ],
-      "Suggests": [
-        "dplyr",
-        "Gmisc",
-        "Greg",
-        "knitr",
-        "purrr",
-        "rlang",
-        "rmarkdown",
-        "rmeta",
-        "rms",
-        "testthat",
-        "tibble",
-        "tidyr",
-        "tidyselect",
-        "tidyverse"
-      ],
-      "Encoding": "UTF-8",
-      "NeedsCompilation": "no",
-      "VignetteBuilder": "knitr",
-      "RoxygenNote": "7.3.3",
-      "LazyData": "true",
-      "Author": "Max Gordon [aut, cre], Thomas Lumley [aut, ctb]",
-      "Maintainer": "Max Gordon <max@gforge.se>",
       "Repository": "CRAN"
     },
     "fs": {
@@ -2480,24 +2388,6 @@
       "Maintainer": "Lionel Henry <lionel@posit.co>",
       "Repository": "CRAN"
     },
-    "mathjaxr": {
-      "Package": "mathjaxr",
-      "Version": "2.0-0",
-      "Source": "Repository",
-      "Date": "2025-12-01",
-      "Title": "Using 'Mathjax' in Rd Files",
-      "Authors@R": "person(given = \"Wolfgang\", family = \"Viechtbauer\", role = c(\"aut\",\"cre\"), email = \"wvb@wvbauer.com\", comment = c(ORCID = \"0000-0003-3463-4063\"))",
-      "Description": "Provides 'MathJax' and macros to enable its use within Rd files for rendering equations in the HTML help files.",
-      "License": "GPL-3",
-      "Encoding": "UTF-8",
-      "BuildManual": "TRUE",
-      "URL": "https://github.com/wviechtb/mathjaxr",
-      "BugReports": "https://github.com/wviechtb/mathjaxr/issues",
-      "NeedsCompilation": "no",
-      "Author": "Wolfgang Viechtbauer [aut, cre] (ORCID: <https://orcid.org/0000-0003-3463-4063>)",
-      "Maintainer": "Wolfgang Viechtbauer <wvb@wvbauer.com>",
-      "Repository": "CRAN"
-    },
     "memoise": {
       "Package": "memoise",
       "Version": "2.0.1",
@@ -2526,137 +2416,6 @@
       "NeedsCompilation": "no",
       "Author": "Hadley Wickham [aut], Jim Hester [aut], Winston Chang [aut, cre], Kirill Müller [aut], Daniel Cook [aut], Mark Edmondson [ctb]",
       "Maintainer": "Winston Chang <winston@rstudio.com>",
-      "Repository": "CRAN"
-    },
-    "metadat": {
-      "Package": "metadat",
-      "Version": "1.6-0",
-      "Source": "Repository",
-      "Date": "2026-04-29",
-      "Title": "Meta-Analysis Datasets",
-      "Authors@R": "c( person(given = \"Wolfgang\", family = \"Viechtbauer\", role = c(\"aut\",\"cre\"), email = \"wvb@metafor-project.org\", comment = c(ORCID = \"0000-0003-3463-4063\")), person(given = \"Thomas\", family=\"White\", role=\"aut\", email = \"thomas.white@sydney.edu.au\", comment = c(ORCID = \"0000-0002-3976-1734\")), person(given = \"Daniel\", family=\"Noble\", role=\"aut\", email = \"daniel.noble@anu.edu.au\", comment = c(ORCID = \"0000-0001-9460-8743\")), person(given = \"Alistair\", family=\"Senior\", role=\"aut\", email = \"alistair.senior@sydney.edu.au\", comment = c(ORCID = \"0000-0001-9805-7280\")), person(given = \"W. Kyle\", family=\"Hamilton\", role=\"aut\", email = \"whamilton@ucmerced.edu\", comment = c(ORCID = \"0000-0002-8642-7990\")), person(given = \"Guido\", family = \"Schwarzer\", role = \"dtc\", email = \"guido.schwarzer@uniklinik-freiburg.de\", comment = c(ORCID = \"0000-0001-6214-9087\")), person(given = \"Christian\", family = \"Röver\", role = \"dtc\", email = \"christian.roever@med.uni-goettingen.de\", comment = c(ORCID = \"0000-0002-6911-698X\")))",
-      "Depends": [
-        "R (>= 4.0.0)"
-      ],
-      "Imports": [
-        "utils",
-        "tools",
-        "mathjaxr"
-      ],
-      "Suggests": [
-        "metafor",
-        "numDeriv",
-        "BiasedUrn",
-        "dfoptim",
-        "igraph",
-        "ape",
-        "testthat",
-        "digest",
-        "lme4",
-        "clubSandwich",
-        "meta",
-        "netmeta",
-        "mvtnorm",
-        "gridExtra",
-        "rms",
-        "bayesmeta",
-        "ellipse",
-        "metasens",
-        "mada"
-      ],
-      "Description": "A collection of meta-analysis datasets for teaching purposes, illustrating/testing meta-analytic methods, and validating published analyses.",
-      "License": "GPL (>= 2)",
-      "ByteCompile": "TRUE",
-      "LazyData": "TRUE",
-      "Encoding": "UTF-8",
-      "RdMacros": "mathjaxr",
-      "BuildManual": "TRUE",
-      "URL": "https://github.com/wviechtb/metadat, https://wviechtb.github.io/metadat/",
-      "BugReports": "https://github.com/wviechtb/metadat/issues",
-      "NeedsCompilation": "no",
-      "Author": "Wolfgang Viechtbauer [aut, cre] (ORCID: <https://orcid.org/0000-0003-3463-4063>), Thomas White [aut] (ORCID: <https://orcid.org/0000-0002-3976-1734>), Daniel Noble [aut] (ORCID: <https://orcid.org/0000-0001-9460-8743>), Alistair Senior [aut] (ORCID: <https://orcid.org/0000-0001-9805-7280>), W. Kyle Hamilton [aut] (ORCID: <https://orcid.org/0000-0002-8642-7990>), Guido Schwarzer [dtc] (ORCID: <https://orcid.org/0000-0001-6214-9087>), Christian Röver [dtc] (ORCID: <https://orcid.org/0000-0002-6911-698X>)",
-      "Maintainer": "Wolfgang Viechtbauer <wvb@metafor-project.org>",
-      "Repository": "CRAN"
-    },
-    "metafor": {
-      "Package": "metafor",
-      "Version": "5.2-1",
-      "Source": "Repository",
-      "Date": "2026-09-15",
-      "Title": "Meta-Analysis Package for R",
-      "Authors@R": "person(given = \"Wolfgang\", family = \"Viechtbauer\", role = c(\"aut\",\"cre\"), email = \"wvb@metafor-project.org\", comment = c(ORCID = \"0000-0003-3463-4063\"))",
-      "Depends": [
-        "R (>= 4.0.0)",
-        "methods",
-        "Matrix",
-        "metadat",
-        "numDeriv"
-      ],
-      "Imports": [
-        "stats",
-        "utils",
-        "graphics",
-        "grDevices",
-        "nlme",
-        "mathjaxr",
-        "pbapply",
-        "digest"
-      ],
-      "Suggests": [
-        "lme4",
-        "pracma",
-        "minqa",
-        "nloptr",
-        "dfoptim",
-        "ucminf",
-        "lbfgsb3c",
-        "subplex",
-        "BB",
-        "Rsolnp",
-        "alabama",
-        "optimParallel",
-        "optimx",
-        "CompQuadForm",
-        "mvtnorm",
-        "BiasedUrn",
-        "Epi",
-        "survival",
-        "GLMMadaptive",
-        "glmmTMB",
-        "car",
-        "multcomp",
-        "gsl",
-        "sp",
-        "ape",
-        "boot",
-        "clubSandwich",
-        "crayon",
-        "R.rsp",
-        "testthat",
-        "rmarkdown",
-        "wildmeta",
-        "emmeans",
-        "estmeansd",
-        "metaBLUE",
-        "rstudioapi",
-        "glmulti",
-        "MuMIn",
-        "mice",
-        "Amelia",
-        "calculus"
-      ],
-      "Description": "A comprehensive collection of functions for conducting meta-analyses in R. The package includes functions to calculate various effect sizes or outcome measures, fit equal-, fixed-, random-, and mixed-effects models to such data, carry out moderator and meta-regression analyses, and create various types of meta-analytical plots (e.g., forest, funnel, radial, L'Abbe, Baujat, bubble, and GOSH plots). For meta-analyses of binomial and person-time data, the package also provides functions that implement specialized methods, including the Mantel-Haenszel method, Peto's method, and a variety of suitable generalized linear (mixed-effects) models (i.e., mixed-effects logistic and Poisson regression models). Finally, the package provides functionality for fitting meta-analytic multivariate/multilevel models that account for non-independent sampling errors and/or true effects (e.g., due to the inclusion of multiple treatment studies, multiple endpoints, or other forms of clustering). Network meta-analyses and meta-analyses accounting for known correlation structures (e.g., due to phylogenetic relatedness) can also be conducted. An introduction to the package can be found in Viechtbauer (2010) <doi:10.18637/jss.v036.i03>.",
-      "License": "GPL (>= 2)",
-      "ByteCompile": "TRUE",
-      "Encoding": "UTF-8",
-      "RdMacros": "mathjaxr",
-      "VignetteBuilder": "R.rsp",
-      "BuildManual": "TRUE",
-      "URL": "https://www.metafor-project.org https://github.com/wviechtb/metafor https://wviechtb.github.io/metafor/ https://www.wvbauer.com",
-      "BugReports": "https://github.com/wviechtb/metafor/issues",
-      "NeedsCompilation": "no",
-      "Author": "Wolfgang Viechtbauer [aut, cre] (ORCID: <https://orcid.org/0000-0003-3463-4063>)",
-      "Maintainer": "Wolfgang Viechtbauer <wvb@metafor-project.org>",
       "Repository": "CRAN"
     },
     "mime": {
@@ -2701,32 +2460,6 @@
       "NeedsCompilation": "yes",
       "Repository": "CRAN",
       "Author": "Douglas Bates [aut], Katharine M. Mullen [aut, cre], John C. Nash [aut], Ravi Varadhan [aut]"
-    },
-    "mvtnorm": {
-      "Package": "mvtnorm",
-      "Version": "1.4-2",
-      "Source": "Repository",
-      "Title": "Multivariate Normal and t Distributions",
-      "Authors@R": "c(person(\"Alan\", \"Genz\", role = \"aut\"), person(\"Frank\", \"Bretz\", role = \"aut\"), person(\"Tetsuhisa\", \"Miwa\", role = \"aut\"), person(\"Xuefei\", \"Mi\", role = \"aut\"), person(\"Friedrich\", \"Leisch\", role = \"ctb\"), person(\"Fabian\", \"Scheipl\", role = \"ctb\"), person(\"Bjoern\", \"Bornkamp\", role = \"ctb\", comment = c(ORCID = \"0000-0002-6294-8185\")), person(\"Martin\", \"Maechler\", role = \"ctb\", comment = c(ORCID = \"0000-0002-8685-9910\")), person(\"Torsten\", \"Hothorn\", role = c(\"aut\", \"cre\"), email = \"Torsten.Hothorn@R-project.org\", comment = c(ORCID = \"0000-0001-8301-0471\")))",
-      "Description": "Computes multivariate normal and t probabilities, quantiles, random deviates,  and densities. Log-likelihoods for multivariate Gaussian models and Gaussian copulae  parameterised by Cholesky factors of covariance or precision matrices are implemented  for interval-censored and exact data, or a mix thereof. Score functions for these  log-likelihoods are available. A class representing multiple lower triangular matrices  and corresponding methods are part of this package.",
-      "Imports": [
-        "stats",
-        "utils"
-      ],
-      "Depends": [
-        "R(>= 3.5.0)"
-      ],
-      "Suggests": [
-        "qrng",
-        "numDeriv",
-        "bibtex"
-      ],
-      "License": "GPL-2",
-      "URL": "https://codeberg.org/thothorn/mvtnorm",
-      "NeedsCompilation": "yes",
-      "Author": "Alan Genz [aut], Frank Bretz [aut], Tetsuhisa Miwa [aut], Xuefei Mi [aut], Friedrich Leisch [ctb], Fabian Scheipl [ctb], Bjoern Bornkamp [ctb] (ORCID: <https://orcid.org/0000-0002-6294-8185>), Martin Maechler [ctb] (ORCID: <https://orcid.org/0000-0002-8685-9910>), Torsten Hothorn [aut, cre] (ORCID: <https://orcid.org/0000-0001-8301-0471>)",
-      "Maintainer": "Torsten Hothorn <Torsten.Hothorn@R-project.org>",
-      "Repository": "CRAN"
     },
     "nlme": {
       "Package": "nlme",
@@ -2873,34 +2606,6 @@
       "NeedsCompilation": "yes",
       "Author": "Henrik Bengtsson [aut, cre, cph] (ORCID: <https://orcid.org/0000-0002-7579-5165>), Mike Cheng [ctb]",
       "Maintainer": "Henrik Bengtsson <henrikb@braju.com>",
-      "Repository": "CRAN"
-    },
-    "pbapply": {
-      "Package": "pbapply",
-      "Version": "1.7-5",
-      "Source": "Repository",
-      "Type": "Package",
-      "Title": "Adding Progress Bar to '*apply' Functions",
-      "Date": "2026-08-31",
-      "Authors@R": "c(person(given = \"Peter\", family = \"Solymos\", comment = c(ORCID = \"0000-0001-7337-1740\"), role = c(\"aut\", \"cre\"), email = \"psolymos@gmail.com\"), person(given = \"Zygmunt\", family = \"Zawadzki\", role = \"aut\", email = \"zygmunt@zstat.pl\"), person(given = \"Henrik\",  family = \"Bengtsson\",  role = \"ctb\", email = \"henrikb@braju.com\"), person(\"R Core Team\", role = c(\"cph\", \"ctb\")))",
-      "Maintainer": "Peter Solymos <psolymos@gmail.com>",
-      "Description": "A lightweight package that adds progress bar to vectorized R functions ('*apply'). The implementation can easily be added to functions where showing the progress is useful (e.g. bootstrap). The type and style of the progress bar (with percentages or remaining time) can be set through options. Supports several parallel processing backends including mirai and future.",
-      "Depends": [
-        "R (>= 3.2.0)"
-      ],
-      "Imports": [
-        "parallel"
-      ],
-      "Suggests": [
-        "shiny",
-        "future",
-        "future.apply"
-      ],
-      "License": "GPL (>= 2)",
-      "URL": "https://github.com/psolymos/pbapply, https://peter.solymos.org/pbapply/",
-      "BugReports": "https://github.com/psolymos/pbapply/issues",
-      "NeedsCompilation": "no",
-      "Author": "Peter Solymos [aut, cre] (ORCID: <https://orcid.org/0000-0001-7337-1740>), Zygmunt Zawadzki [aut], Henrik Bengtsson [ctb], R Core Team [cph, ctb]",
       "Repository": "CRAN"
     },
     "pillar": {
@@ -3657,48 +3362,6 @@
       "NeedsCompilation": "no",
       "Author": "Kirill Müller [aut, cre] (ORCID: <https://orcid.org/0000-0002-1416-3412>)",
       "Maintainer": "Kirill Müller <kirill@cynkra.com>",
-      "Repository": "CRAN"
-    },
-    "sandwich": {
-      "Package": "sandwich",
-      "Version": "3.1-3",
-      "Source": "Repository",
-      "Date": "2026-08-02",
-      "Title": "Robust Covariance Matrix Estimators",
-      "Authors@R": "c(person(given = \"Achim\", family = \"Zeileis\", role = c(\"aut\", \"cre\"), email = \"Achim.Zeileis@R-project.org\", comment = c(ORCID = \"0000-0003-0918-3766\")), person(given = \"Thomas\", family = \"Lumley\", role = \"aut\", email = \"t.lumley@auckland.ac.nz\", comment = c(ORCID = \"0000-0003-4255-5437\")), person(given = \"Nathaniel\", family = \"Graham\", role = \"ctb\", email = \"npgraham1@gmail.com\", comment = c(ORCID = \"0009-0002-1215-5256\")), person(given = \"Susanne\", family = \"Koell\", role = \"ctb\"))",
-      "Description": "Object-oriented software for model-robust covariance matrix estimators. Starting out from the basic  robust Eicker-Huber-White sandwich covariance methods include: heteroscedasticity-consistent (HC) covariances for cross-section data; heteroscedasticity- and autocorrelation-consistent (HAC) covariances for time series data (such as Andrews' kernel HAC, Newey-West, and WEAVE estimators); clustered covariances (one-way and multi-way); panel and panel-corrected covariances; outer-product-of-gradients covariances; and (clustered) bootstrap covariances. All methods are applicable to (generalized) linear model objects fitted by lm() and glm() but can also be adapted to other classes through S3 methods. Details can be found in Zeileis et al. (2020) <doi:10.18637/jss.v095.i01>, Zeileis (2004) <doi:10.18637/jss.v011.i10> and Zeileis (2006) <doi:10.18637/jss.v016.i09>.",
-      "Depends": [
-        "R (>= 3.0.0)"
-      ],
-      "Imports": [
-        "stats",
-        "utils",
-        "zoo"
-      ],
-      "Suggests": [
-        "AER",
-        "car",
-        "geepack",
-        "lattice",
-        "lme4",
-        "lmtest",
-        "MASS",
-        "multiwayvcov",
-        "parallel",
-        "pcse",
-        "plm",
-        "pscl",
-        "scatterplot3d",
-        "stats4",
-        "strucchange",
-        "survival"
-      ],
-      "License": "GPL-2 | GPL-3",
-      "URL": "https://zeileis.codeberg.page/sandwich/",
-      "BugReports": "https://codeberg.org/zeileis/sandwich/issues",
-      "NeedsCompilation": "no",
-      "Author": "Achim Zeileis [aut, cre] (ORCID: <https://orcid.org/0000-0003-0918-3766>), Thomas Lumley [aut] (ORCID: <https://orcid.org/0000-0003-4255-5437>), Nathaniel Graham [ctb] (ORCID: <https://orcid.org/0009-0002-1215-5256>), Susanne Koell [ctb]",
-      "Maintainer": "Achim Zeileis <Achim.Zeileis@R-project.org>",
       "Repository": "CRAN"
     },
     "sass": {
@@ -4596,50 +4259,6 @@
       "NeedsCompilation": "yes",
       "Author": "Hadley Wickham [cre] (ORCID: <https://orcid.org/0000-0003-4757-117X>), Shawn Garbett [ctb] (ORCID: <https://orcid.org/0000-0003-4079-5621>), Jeremy Stephens [aut, ctb], Kirill Simonov [aut], Yihui Xie [ctb] (ORCID: <https://orcid.org/0000-0003-0645-5666>), Zhuoer Dong [ctb], Jeffrey Horner [ctb], reikoch [ctb], Will Beasley [ctb] (ORCID: <https://orcid.org/0000-0002-5613-5006>), Brendan O'Connor [ctb], Michael Quinn [ctb], Charlie Gao [ctb], Gregory R. Warnes [ctb], Zhian N. Kamvar [ctb]",
       "Maintainer": "Hadley Wickham <hadley@posit.co>",
-      "Repository": "CRAN"
-    },
-    "zoo": {
-      "Package": "zoo",
-      "Version": "1.9-0",
-      "Source": "Repository",
-      "Date": "2026-07-30",
-      "Title": "S3 Infrastructure for Regular and Irregular Time Series (Z's Ordered Observations)",
-      "Authors@R": "c(person(given = \"Achim\", family = \"Zeileis\", role = c(\"aut\", \"cre\"), email = \"Achim.Zeileis@R-project.org\", comment = c(ORCID = \"0000-0003-0918-3766\")), person(given = \"Gabor\", family = \"Grothendieck\", role = \"aut\", email = \"ggrothendieck@gmail.com\"), person(given = c(\"Jeffrey\", \"A.\"), family = \"Ryan\", role = \"aut\", email = \"jeff.a.ryan@gmail.com\"), person(given = c(\"Joshua\", \"M.\"), family = \"Ulrich\", role = \"ctb\", email = \"josh.m.ulrich@gmail.com\"), person(given = \"Felix\", family = \"Andrews\", role = \"ctb\", email = \"felix@nfrac.org\"))",
-      "Description": "An S3 class with methods for working with regular and irregular time series. The class stores data as numeric vectors/matrices (or factors) along with a time index of arbitrary class (including numeric, Date, POSIXct, chron, yearmon, yearqtr, etc.). Functions and methods are consistent with the ts class and base R and also extend standard generics. Tools include: Data import/export, coercion, visualization (with base R, 'ggplot2', 'lattice', 'tinyplot'), alignment and merging, aggregation, lags and subsets, rolling analytics, and time-based interpolation/filling. The design is introduced in Zeileis and Grothendieck (2005) <doi:10.18637/jss.v014.i06>.",
-      "Depends": [
-        "R (>= 3.1.0)",
-        "stats"
-      ],
-      "Suggests": [
-        "AER",
-        "coda",
-        "chron",
-        "ggplot2 (>= 3.5.0)",
-        "knitr",
-        "mondate",
-        "scales",
-        "stinepack",
-        "strucchange",
-        "timeDate",
-        "timeSeries (>= 4021.104)",
-        "tinyplot",
-        "tis",
-        "tseries",
-        "xts"
-      ],
-      "Imports": [
-        "utils",
-        "graphics",
-        "grDevices",
-        "lattice (>= 0.20-27)"
-      ],
-      "License": "GPL-2 | GPL-3",
-      "VignetteBuilder": "knitr",
-      "URL": "https://zeileis.codeberg.page/zoo/",
-      "BugReports": "https://codeberg.org/zeileis/zoo/issues",
-      "NeedsCompilation": "yes",
-      "Author": "Achim Zeileis [aut, cre] (ORCID: <https://orcid.org/0000-0003-0918-3766>), Gabor Grothendieck [aut], Jeffrey A. Ryan [aut], Joshua M. Ulrich [ctb], Felix Andrews [ctb]",
-      "Maintainer": "Achim Zeileis <Achim.Zeileis@R-project.org>",
       "Repository": "CRAN"
     }
   }

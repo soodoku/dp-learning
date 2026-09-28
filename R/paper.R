@@ -4,8 +4,8 @@ read_item_catalog <- function(root = Sys.getenv("DP_DATA_ROOT", unset = "../dp-d
   arrow::read_parquet(file.path(root, "output", "analysis", "analysis_items.parquet"))
 }
 
-item_appendix_markdown <- function(root = Sys.getenv("DP_DATA_ROOT", unset = "../dp-data")) {
-  items <- read_item_catalog(root)
+item_appendix_markdown <- function(root = Sys.getenv("DP_DATA_ROOT", unset = "../dp-data"),
+                                   items = read_item_catalog(root)) {
   polls <- arrow::read_parquet(file.path(root, "output", "analysis", "analysis_polls.parquet"))
   items <- dplyr::left_join(
     items, dplyr::select(polls, "poll_id", "title", "year"),
@@ -20,20 +20,26 @@ item_appendix_markdown <- function(root = Sys.getenv("DP_DATA_ROOT", unset = "..
     lines <- c(lines, sprintf("## %s (%s)\n", group$title[1], group$year[1]))
     for (i in seq_len(nrow(group))) {
       item <- group[i, ]
-      question <- item$question
+      question <- item$question_display
       type <- item$response_type
-      source <- item$source_column_t1
-      detail <- sprintf("**%s** (%s; source `%s`).", question, type, source)
-      if (!is.na(item$answer_choices)) {
-        detail <- c(detail, paste0("Choices: ", item$answer_choices, "."))
+      detail <- sprintf("**%s** (%s).", question, type)
+      if (!is.na(item$answer_choices_display)) {
+        detail <- c(detail, paste0("Choices: ", item$answer_choices_display, "."))
       }
-      key <- if (item$correct_answer == "Answer text not recovered") {
+      key <- if (item$correct_answer_display == "Answer text not recovered") {
         paste0("Code ", item$correct_codes, " (answer text not recovered).")
       } else {
-        paste0(item$correct_answer, " [", item$correct_codes, "].")
+        paste0(item$correct_answer_display, " [", item$correct_codes, "].")
       }
       detail <- c(detail, paste("Scored correct:", key))
-      if (!is.na(item$coding_note)) detail <- c(detail, item$coding_note)
+      if (!is.na(item$coding_note)) {
+        note <- gsub(" See R/[^[:space:]]+\\.", "", item$coding_note)
+        note <- gsub("correct_codes", "the answer key", note, fixed = TRUE)
+        note <- gsub("explicit party spellings in metadata/knowledge_items.csv",
+          "party-name variants listed in the cited dataset", note, fixed = TRUE
+        )
+        detail <- c(detail, note)
+      }
       lines <- c(lines, paste0("- ", paste(detail, collapse = " "), "\n"))
     }
   }
@@ -48,20 +54,13 @@ coef_text <- function(x, digits = 3) {
   sub("^-(\\.0+)$", "\\1", out)
 }
 
-est_se <- \(estimate, se, digits = 3) paste0(coef_text(estimate, digits), " (", coef_text(se, digits), ")")
-
-interval <- \(median, lower, upper, digits = 3) {
-  paste0(coef_text(median, digits), " [", coef_text(lower, digits), ", ", coef_text(upper, digits), "]")
+interval <- \(estimate, lower, upper, digits = 3) {
+  paste0(coef_text(estimate, digits), " [", coef_text(lower, digits), ", ", coef_text(upper, digits), "]")
 }
 
 model_term <- function(models, model, term) {
   row <- models[models$model == model & models$term == term, ]
-  est_se(row$estimate, row$std_error)
-}
-
-meta_row <- function(meta, model, parameter, digits = 3) {
-  row <- meta[meta$model == model & meta$parameter == parameter, ]
-  interval(row$median, row$lower, row$upper, digits)
+  interval(row$estimate, row$lower, row$upper)
 }
 
 control_row <- \(effects, study, comparison) effects[effects$study == study & effects$comparison == comparison, ]
@@ -75,7 +74,7 @@ term_labels <- c(
   "k1:educationBA or more" = "T1 x BA or more",
   age_decades = "Age (decades)",
   extremity = "Attitude extremity",
-  group_size = "Paired respondents in group",
+  group_size = "Group size",
   group_k1 = "Groupmates' mean T1",
   group_k1_items = "Groupmates' T1 on missed questions",
   heterogeneity = "Opinion heterogeneity",
@@ -97,7 +96,7 @@ model_table <- function(models, keep, headers) {
     dplyr::filter(model %in% keep, !grepl("pollid", term)) |>
     dplyr::mutate(
       label = factor(unname(row_labels[term]), levels = unique(unname(row_labels))),
-      cell = est_se(estimate, std_error)
+      cell = interval(estimate, lower, upper)
     ) |>
     dplyr::select(label, model, cell) |>
     tidyr::pivot_wider(names_from = model, values_from = cell, values_fill = "") |>

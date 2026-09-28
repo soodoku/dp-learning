@@ -5,7 +5,8 @@ read_historical_items <- function(path = source_path("item_responses")) {
   arrow::read_parquet(path) |>
     dplyr::filter(source_dataset == "historical") |>
     dplyr::left_join(
-      bridge, by = c("poll_id", "respondent_id"),
+      bridge,
+      by = c("poll_id", "respondent_id"),
       relationship = "many-to-one"
     )
 }
@@ -17,7 +18,8 @@ item_scores_for_respondents <- function(items, polardata, root = dp_data_root())
   scores <- items |>
     dplyr::inner_join(poll_ids, by = "poll_id", relationship = "many-to-one") |>
     dplyr::transmute(
-      dpnum, caseid = as.numeric(historical_respondent_id),
+      dpnum,
+      caseid = as.numeric(historical_respondent_id),
       wave = as.integer(sub("^t", "", wave)), correct
     ) |>
     dplyr::inner_join(
