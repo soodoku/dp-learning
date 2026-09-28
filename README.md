@@ -105,3 +105,13 @@ comparisons target baseline-and-exit-observed attendees. These adjustments assum
 response is independent of missing knowledge conditional on recorded predictors.
 They do not estimate sampling intervals, nonresponse sensitivity bounds or
 invitation effects. The manuscript reports the estimates and their assumptions.
+
+`tabs/knowledge_gaps.csv` compares pre-arrival and exit gender and education gaps
+on the demographic-model sample. Each comparison weights eligible polls equally;
+`tabs/knowledge_gaps_by_poll.csv` preserves its poll-specific means and counts.
+Intervals resample whole polls within mode and preserve both interviews. These
+are descriptive changes in gaps, distinct from baseline-adjusted gain coefficients.
+The relative-education comparison reuses upstream poll-specific higher/lower
+cutoffs in the 20 historical polls with that definition; fixed qualification
+comparisons retain their separately reported coverage. The regression education
+categories are unchanged.

@@ -32,6 +32,7 @@ prose_count <- \(n) if (n %in% 0:9) {
   c("zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine")[n + 1L]
 } else count(n)
 gains <- read_out("poll_gains.csv")
+gaps <- read_out("knowledge_gaps.csv")
 retention <- read_out("retention.csv")
 meta <- read_out("meta.csv")
 controlled_learning <- read_out("control_learning.csv")
@@ -95,6 +96,11 @@ peer <- \(p) peers[peers$peer == p, ]
 term <- \(model, t) model_term(models, model, t)
 size <- \(model, what) models[[what]][models$model == model][1]
 reading <- models[models$model == "briefing" & models$term == "read_briefing", ]
+gap <- function(comparison, term) {
+  row <- dplyr::filter(gaps, .data$comparison == .env$comparison, .data$term == .env$term)
+  stopifnot(nrow(row) == 1L)
+  row
+}
 initial_correct <- mean(gains$k1_mean)
 later_correct <- mean(gains$k2_mean)
 initial_headroom <- 1 - initial_correct
@@ -244,13 +250,13 @@ Here $n_{gj}$ counts group members with an observed response to measure $j$, and
 
 A correct answer can reflect knowledge or guessing. We apply the item model of @cor2016 separately to each poll's paired answers. Under the assumption that knowledge is not lost between interviews, it estimates the share who learned each fact. We use this adjustment only for the pre-arrival-to-exit comparisons, not for the later follow-ups. We average across questions to obtain learning on a 0--1 scale. In each control study, we fit this model separately to attendees and controls and subtract their estimated learning. Both arms use the same items; their guessing probabilities are estimated separately. Table \ref{tab:models} uses observed individual gains, since the item model estimates learning rates rather than an individual latent outcome.
 
-We estimate uncertainty using a hierarchical bootstrap. For estimates across polls, we sample polls with replacement separately within online and in-person modes, retaining their observed counts, and then sample whole discussion groups within each selected poll. For an individual poll, we hold the poll fixed and sample its groups. Independently sampled controls are single-person units, sampled separately from attendees. Each sampled participant retains all items and interviews. We refit the models and recompute denominators in each of `r provenance$bootstrap_replicates` draws, using the 2.5th and 97.5th percentiles for 95\% confidence intervals. Thus the same resampling scheme propagates sampling and guessing-model estimation uncertainty. Stratifying by mode preserves support for the online coefficient in every draw. Inference treats each poll's question battery as fixed.
+We estimate uncertainty using a hierarchical bootstrap. For estimates across polls, we sample polls with replacement separately within online and in-person modes, retaining their observed counts, and then sample whole discussion groups within each selected poll. For an individual poll, we hold the poll fixed and sample its groups. Independently sampled controls are single-person units, sampled separately from attendees. Each sampled participant retains all items and interviews. We refit the models and recompute denominators in each of `r provenance$bootstrap_replicates` draws, using the 2.5th and 97.5th percentiles for 95\% confidence intervals. Thus the same resampling scheme propagates sampling and guessing-model estimation uncertainty. Stratifying by mode preserves support for the online coefficient in every draw. Inference treats each poll's question battery as fixed. The demographic gap comparisons use whole-poll resampling, described with Appendix Table \ref{tab:knowledge-gaps}.
 
 # How Much Do Participants Learn?
 
 An absolute gain is the change in the percentage of items answered correctly. A relative gain divides that change by the poll's initial mean score: an increase from 40\% to 50\% correct is 10 percentage points, or 25\% of the initial score. We calculate relative gains from poll means rather than averaging individual ratios, which are undefined for people with zero initial scores. The main pooled estimates give each poll equal weight; the relative result is the average of the poll-specific ratios, not the ratio of two pooled means.
 
-Across the main sample, the average absolute gain is `r pp(pooled("raw, pooled")$estimate)` percentage points (95\% interval `r pp(pooled("raw, pooled")$lower)` to `r pp(pooled("raw, pooled")$upper)`). The average relative gain is `r pp(pooled("relative, pooled")$estimate)`\% (95\% interval `r pp(pooled("relative, pooled")$lower)` to `r pp(pooled("relative, pooled")$upper)`\%). Estimated learning after adjustment for guessing averages `r pp(pooled("guessing adjusted, pooled")$estimate)` percentage points (`r pp(pooled("guessing adjusted, pooled")$lower)` to `r pp(pooled("guessing adjusted, pooled")$upper)`). Appendix Table \ref{tab:meta} also reports precision-weighted averages and separate estimates by mode.
+Across the main sample, the average absolute gain is `r pp(pooled("raw, pooled")$estimate)` percentage points (95\% interval `r pp(pooled("raw, pooled")$lower)` to `r pp(pooled("raw, pooled")$upper)`). The average relative gain is `r pp(pooled("relative, pooled")$estimate)`\% (95\% interval `r pp(pooled("relative, pooled")$lower)` to `r pp(pooled("relative, pooled")$upper)`\%). Estimated learning after adjustment for guessing averages `r pp(pooled("guessing adjusted, pooled")$estimate)` percentage points (`r pp(pooled("guessing adjusted, pooled")$lower)` to `r pp(pooled("guessing adjusted, pooled")$upper)`). Precision weighting lowers the observed average to `r pp(pooled("raw, precision weighted")$estimate)` points. Gains are larger in person than online, averaging `r pp(meta$estimate[meta$model == "raw, by mode" & meta$parameter == "face_to_face"])` and `r pp(meta$estimate[meta$model == "raw, by mode" & meta$parameter == "online"])` points, respectively (Appendix Table \ref{tab:meta}). These mode differences may also reflect differences in participants, topics, and timing; they do not identify an effect of meeting in person.
 
 A before-and-after gain can include learning from repeated questions or events outside deliberation. Figure \ref{fig:learning} therefore also compares attendees' gains with controls' gains. The observed differences are `r pp(control_gain("america-in-one-room-2019", "raw")$estimate)` percentage points in America in One Room and `r pp(control_gain("a1r-climate-2021", "raw")$estimate)` percentage points in the climate poll. Their equally weighted average is `r pp(control_average("raw")$estimate)` percentage points (95\% interval `r pp(control_average("raw")$lower)` to `r pp(control_average("raw")$upper)`), rising to `r pp(control_average("adjusted")$estimate)` percentage points after guessing adjustment (`r pp(control_average("adjusted")$lower)` to `r pp(control_average("adjusted")$upper)`). Both estimates use the same attendees, controls, and questions. These comparisons do not eliminate selection into attendance.
 
@@ -310,7 +316,7 @@ retention |>
   print()
 ```
 
-Knowledge remains above baseline at follow-up in both studies. Climate participants lose some of their initial gain after exit, whereas the National Issues Convention shows no clear decline. These comparisons describe returning attendees. Using the same people at each interview keeps changes in sample composition from being mistaken for changes in knowledge, but does not establish that those lost to follow-up had the same experience. Adjusting for observed predictors of follow-up response yields similar point estimates (Appendix \ref{app:attrition-adjustment}). Changes after exit can reflect forgetting, further learning, or both. We therefore use observed scores without the guessing model's no-forgetting assumption. The climate poll also permits a comparison with controls at the later interview (Appendix \ref{app:controls}).
+Knowledge remains above baseline at follow-up in both studies. Climate participants lose some of their initial gain after exit, whereas the National Issues Convention shows no clear decline. These comparisons describe returning attendees. Using the same people at each interview keeps changes in sample composition from being mistaken for changes in knowledge, but does not establish that those lost to follow-up had the same experience. Adjusting for observed predictors of follow-up response yields similar point estimates (Appendix \ref{app:attrition-adjustment}). Changes after exit can reflect forgetting, further learning, or both. We therefore use observed scores without the guessing model's no-forgetting assumption. In the climate poll, the baseline-adjusted attendee--control gap also remains positive a year later (Appendix \ref{app:controls}).
 
 # Who Learns?
 
@@ -332,23 +338,33 @@ table_tex <- sub("\\centering", "\\centering\\small\\setlength{\\tabcolsep}{3pt}
 cat(sub("\\end{table}", paste0("\\par\\medskip\\noindent{\\footnotesize\\raggedright\\emph{Notes.} Groupmates' mean initial knowledge excludes the respondent herself; both that mean and group size use members with initial and later scores. All models have poll and small-group random intercepts. Education is coded as below secondary completion, secondary/some college, or degree or higher; the first category is the reference. Marginal $R^2$ covers fixed effects; conditional $R^2$ includes random intercepts. Columns 3 and 4 separately add attitudes and reading (0--1) to column 2. Reading reports are available for fewer polls. Replacing pairwise disagreement with the mean within-group SD gives a dispersion coefficient of ", term("attitude_sd", "attitude_sd"), "; the peer-knowledge coefficient is ", term("attitude_sd", "group_k1"), ".\\par}", "\n\\end{table}"), table_tex, fixed = TRUE))
 ```
 
-Table \ref{tab:models} compares gains conditional on measured initial knowledge. The initial-knowledge coefficient in the baseline model is `r term("core", "k1")`. Because scores have a ceiling and contain measurement error, this should not be read as a causal effect of prior knowledge. The second column brings the education, age, and gender hypotheses into the same set of polls. The third column adds attitudes, and the fourth adds briefing reading. Appendix Table \ref{tab:hetero} examines whether attendee--control differences vary with initial knowledge or education.
+Table \ref{tab:models} compares gains conditional on measured initial knowledge. The initial-knowledge coefficient in the baseline model is `r term("core", "k1")`. Because scores have a ceiling and contain measurement error, this should not be read as a causal effect of prior knowledge. The second column brings the education, age, and gender hypotheses into the same set of polls. The third column adds attitudes, and the fourth adds briefing reading. In both control studies, the attendee--control difference is larger among respondents who start with less knowledge. The climate poll also shows a larger difference among respondents without a bachelor's degree, while the corresponding education estimate in the 2019 poll is imprecise (Appendix Table \ref{tab:hetero}).
 
 At the reference initial score of zero, both education categories have larger estimated gains than the below-secondary group; the education-by-initial-knowledge interactions allow these gaps to vary with starting knowledge. The age estimate is `r term("demographic", "age_decades")` per decade. The intervals for age, gender, and the gender-by-group-composition interaction include zero. The gender coefficient compares women with men when the share of female groupmates is zero; the interaction shows how that difference changes as the share increases. The third column adds baseline attitude extremity and policy disagreement. On the same participants, adding these measures changes the peer-knowledge coefficient from `r coef_text(models$estimate[models$model == "demographic_attitude_sample" & models$term == "group_k1"])` to `r coef_text(models$estimate[models$model == "attitudes" & models$term == "group_k1"])`; the intervals for both added attitude measures include zero.
 
 Reported reading of the briefing materials is also associated with larger gains. Across `r size("briefing", "polls")` polls, the difference between the lowest and highest reading categories is `r pp(reading$estimate)` percentage points (95\% interval `r pp(reading$lower)` to `r pp(reading$upper)`), conditional on initial knowledge, demographics, group characteristics, and mode, with poll and small-group random intercepts. These reports were collected after deliberation, so the association need not reflect the effect of reading alone.
 
+## Do knowledge gaps narrow?
+
+The gender gap narrows, but the educational gap does not show comparable convergence. On the same respondents before and after, the average difference between men and women declines from `r pp(gap("gender", "pre")$estimate)` to `r pp(gap("gender", "post")$estimate)` percentage points. The reduction is `r pp(-gap("gender", "change")$estimate)` points (95\% interval `r pp(-gap("gender", "change")$upper)` to `r pp(-gap("gender", "change")$lower)`). Women gain more on average, although a gap remains at exit.
+
+For education, relative standing within a poll is also relevant: the same qualification can occupy different positions across countries and cohorts. We therefore use the poll-specific higher/lower education cutoffs underlying @luskin2022 in the `r gap("relative_education", "change")$polls` polls with that definition. The gap increases from `r pp(gap("relative_education", "pre")$estimate)` to `r pp(gap("relative_education", "post")$estimate)` points, widening by `r pp(gap("relative_education", "change")$estimate)` points (95\% interval `r pp(gap("relative_education", "change")$lower)` to `r pp(gap("relative_education", "change")$upper)`). Using fixed qualifications, the gap between degree holders and attendees below secondary completion also widens. The gap between degree holders and attendees with secondary education or some college changes little (Appendix Table \ref{tab:knowledge-gaps}). Each comparison gives eligible polls equal weight.
+
+These are changes in observed gaps, not differences conditional on equal starting knowledge. Women begin with lower scores, so their larger average gain can coexist with the imprecise conditional gender association in Table \ref{tab:models}. The comparisons span pre-arrival to exit and include preparation as well as the event; they do not establish that deliberation caused the gaps to narrow or widen.
+
 ## Group composition and learning
 
 Table \ref{tab:models} addresses the peer-knowledge hypothesis directly. A ten-percentage-point difference in groupmates' mean initial knowledge is associated with `r num(10 * models$estimate[models$model == "core" & models$term == "group_k1"], 2)` percentage points of additional gain in the baseline model and `r num(10 * models$estimate[models$model == "demographic" & models$term == "group_k1"], 2)` after demographic adjustment. The intervals in the table quantify uncertainty about these pooled associations.
 
-Appendix Figure \ref{fig:peers} estimates the association separately within each poll. It shows whether the pooled result conceals different patterns across settings. Its average weights those separate slopes equally; Table \ref{tab:models} instead fits a common slope in a hierarchical model. Its contribution is to display variation across polls.
+The average of the separate within-poll peer-knowledge associations is also positive but imprecise: a ten-percentage-point difference in groupmates' initial knowledge is associated with `r num(10 * peer("k1")$estimate, 1)` points of additional gain (95\% interval `r num(10 * peer("k1")$lower, 1)` to `r num(10 * peer("k1")$upper, 1)`). Appendix Figure \ref{fig:peers} displays the estimates across polls. Its average gives each poll equal weight; Table \ref{tab:models} instead fits a common slope in a hierarchical model.
 
 Appendix Table \ref{tab:baseline-composition} examines whether participants with similar baseline characteristics were grouped together. For initial knowledge, the association with groupmates' initial knowledge is `r interval(balance_knowledge$estimate, balance_knowledge$lower, balance_knowledge$upper)`. Its interval includes zero. This diagnostic concerns characteristics measured before discussion; later knowledge and gain can themselves respond to group composition. A causal interpretation of peer coefficients also requires evidence about the assignment process. Group knowledge after deliberation is difficult to interpret because groupmates share the same experience [@manski1993].
 
 # Conclusion
 
 Participants' factual knowledge increases between recruitment and the end of deliberation. Reporting absolute and relative gains makes the magnitude interpretable, while adjustment for guessing addresses one source of measurement error. In the two polls with common before-and-after control interviews, attendees show larger gains than controls. Interpreting the gain differences causally requires attendees and controls to have comparable changes without participation; the peer regressions are descriptive. The three-wave comparisons show that knowledge can increase before arrival as well as during the event. Generalizing beyond attendees requires assumptions about those who did not attend or complete later questionnaires. The knowledge questions concern facts selected by organizers, so these estimates describe learning about the topics the events emphasized.
+
+Higher average knowledge does not imply that knowledge becomes more equally distributed. On average, the gender gap narrows without disappearing, while the gap between respondents classified as more and less educated within their poll widens. Deliberation and its surrounding preparation can therefore accompany both broader learning and persistent or increasing educational differences in knowledge.
 
 The gains also need to be considered against how much room there was to learn. Giving each poll equal weight, participants answered `r pp(initial_correct)`\% of questions correctly at the initial interview and `r pp(later_correct)`\% at the later interview. The gain of `r pp(later_correct - initial_correct)` percentage points closed `r pp(headroom_closed)`\% of the initial `r pp(initial_headroom)`-point gap to a perfect score. At the later interview, `r pp(1 - later_correct)`\% of answers were still incorrect or blank. This is a comparison of average scores, not a count of previously unknown facts learned: correct answers can reflect guessing, and net gains can conceal both learning and forgetting.
 
@@ -433,6 +449,30 @@ meta |>
 Observed gain is the exit score minus the pre-arrival score; guessing-adjusted learning estimates the percentage who learned an item, averaged across questions. Equal weighting gives each poll the same weight. Precision weighting uses $w_d=1/\widehat{\mathrm{Var}}(\hat\theta_d)$, with sampling variances estimated by resampling discussion groups within each poll. The weighted average is $\sum_d w_d\hat\theta_d/\sum_d w_d$. These weights are held fixed when resampling polls and groups for its interval. The mode rows split the equal-poll average into in-person and online polls.
 
 \end{minipage}
+
+```{r knowledge-gaps, results="asis"}
+gaps |>
+  dplyr::mutate(value = ifelse(term == "change",
+                              paste0(pp(estimate), " [", pp(lower), ", ", pp(upper), "]"), pp(estimate))) |>
+  dplyr::select(comparison, polls, term, value) |>
+  tidyr::pivot_wider(names_from = term, values_from = value) |>
+  dplyr::transmute(
+    Comparison = dplyr::recode(comparison,
+      gender = "Men minus women",
+      relative_education = "Poll-specific higher minus lower education",
+      degree_vs_below_secondary = "Degree minus below secondary",
+      degree_vs_secondary = "Degree minus secondary/some college"),
+    Polls = polls, `Pre-arrival` = pre, Exit = post, `Change [95% interval]` = change
+  ) |>
+  knitr::kable(format = "latex", booktabs = TRUE, position = "H", linesep = "",
+               align = c(">{\\raggedright\\arraybackslash}p{2.1in}", "r", "r", "r", "r"),
+               caption = "Knowledge gaps before and after, in percentage points. Negative changes indicate narrowing. Intervals resample whole polls within mode, preserving paired interviews.") |>
+  print()
+```
+
+These comparisons use the demographic-model sample and calculate each gap within a poll before averaging equally across polls. A poll enters a comparison only if both categories are observed. The relative-education comparison uses the poll-specific cutoffs in the `r gap("relative_education", "change")$polls` historical polls with that definition [@luskin2022], allowing the threshold for higher education to vary across settings. Tied categories remain together, so the two groups need not be equally large. Table \ref{tab:models} uses three education categories. Europolis has no respondents below secondary completion in this sample, so the degree-versus-below-secondary comparison covers `r gap("degree_vs_below_secondary", "change")$polls` polls; the gender and degree-versus-secondary comparisons cover `r gap("gender", "change")$polls`. Some education categories contain few respondents within individual polls. For these gap comparisons, we resample whole polls within mode in `r gap("gender", "change")$bootstrap_replicates` draws, retaining all respondents and both interviews together. The interval for the change is calculated from paired changes in each draw, not by subtracting the endpoints of separate intervals. These comparisons use the same scoring and questionnaire-completion rules as the main analysis.
+
+\clearpage
 
 ```{r hetero}
 hetero |>
