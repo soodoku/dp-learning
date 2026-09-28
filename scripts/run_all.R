@@ -1,50 +1,21 @@
 purrr::walk(list.files("R", full.names = TRUE), source)
 
 verify_sources()
-polardata <- read_polardata()
-historical_items <- read_historical_items()
-frame <- analysis_frame(
-  polardata, item_scores_for_respondents(historical_items, polardata)
-)
-frame <- dplyr::left_join(
-  frame, read_briefing_scores(),
-  by = c("dpnum", "caseid"), relationship = "one-to-one"
-)
-stopifnot(dplyr::n_distinct(frame$dpnum[!is.na(frame$read_briefing)]) == 9L)
-
 dir.create("tabs", showWarnings = FALSE)
 write_output <- \(x, name) readr::write_csv(x, file.path("tabs", name), na = "")
-
-historical_polls <- read_respondent_sources() |>
-  dplyr::select(poll_id, dpnum) |>
-  dplyr::filter(dpnum %in% polardata$dpnum)
-stopifnot(nrow(historical_polls) == 21L)
-group_items <- purrr::map2(
-  historical_polls$poll_id, historical_polls$dpnum, t1_items_for_poll,
-  polardata = polardata, knowledge = historical_items
-) |>
-  purrr::list_rbind() |>
-  item_group_knowledge()
-frame <- dplyr::left_join(
-  frame,
-  dplyr::select(
-    group_items, pollid, caseid,
-    group_k1_items = item_group_k1,
-    no_missed_items
-  ),
-  by = c("pollid", "caseid"),
-  relationship = "one-to-one"
-)
 
 control_data <- control_panel()
 attendees <- attendee_panel()
 core_frame <- core_group_frame(attendees)
 core_ids <- unique(core_frame$poll_id)
-dplyr::bind_rows(
-  assignment_check(core_frame, c("k1", "female")),
-  assignment_check(frame, c("age", "education_ba"))
-) |>
-  write_output("assignment_check.csv")
+assignment_check(core_frame) |> write_output("assignment_check.csv")
+core_frame |>
+  dplyr::summarise(
+    participants = dplyr::n(), age = sum(!is.na(age)),
+    education = sum(!is.na(education)), female = sum(!is.na(female)),
+    reading = sum(!is.na(read_briefing)), .by = c(poll_id, pollname)
+  ) |>
+  write_output("covariate_coverage.csv")
 responses <- read_analysis_responses()
 main_learning <- learning_estimates(core_frame, responses)
 polls <- appendix_polls(group_ids = core_ids)
@@ -57,18 +28,21 @@ write_output(controlled_learning$summary, "control_learning.csv")
 write_output(controlled_learning$pooled, "control_learning_pooled.csv")
 write_output(polls, "polls.csv")
 
-models <- list(
-  historical = main_formula,
-  minority = minority_formula,
-  items = items_formula,
-  briefing = briefing_formula
-)
+reading_frame <- dplyr::filter(core_frame, any(!is.na(read_briefing)), .by = poll_id)
+attitude_frame <- add_attitude_measures(core_frame)
 dplyr::bind_rows(
   bootstrap_model(core_frame, core_formula, "core"),
-  purrr::imap(models, \(formula, name) {
-    bootstrap_model(frame, formula, name)
-  }) |>
-    purrr::list_rbind()
+  bootstrap_model(core_frame, demographic_formula, "demographic"),
+  bootstrap_model(core_frame, core_formula, "core_demographic_sample",
+    included = model_complete_cases(core_frame, demographic_formula)
+  ),
+  bootstrap_model(reading_frame, expanded_briefing_formula, "briefing"),
+  bootstrap_model(attitude_frame, attitude_formula, "attitudes"),
+  bootstrap_model(attitude_frame, attitude_sd_formula, "attitude_sd"),
+  bootstrap_model(attitude_frame, demographic_formula, "demographic_attitude_sample",
+    included = model_complete_cases(attitude_frame, attitude_formula)
+  ),
+  bootstrap_model(add_item_peer_measure(core_frame, responses), items_formula, "items")
 ) |>
   write_output("models.csv")
 

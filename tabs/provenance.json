@@ -1,12 +1,12 @@
 {
-  "data_commit": "a8a3cf407077d14d68ad66551d5e2efa23a09b5b",
+  "data_commit": "36f11f26a879b0352ba1c502d4eae79636299933",
   "guess_version": "0.8.0",
   "bootstrap_replicates": 999,
   "sources": [
     {
       "source": "distortions_responses",
       "path": "output/polardata/polardata.parquet",
-      "sha256": "0dd64c2dc61de6473fb97ef204c80bf9640f2ccf6a0af9c70e19152c0696121d"
+      "sha256": "1093dd8f30a2fb7e6428bebbae704d15d63440a9b4e27af541f45a5a53db63d3"
     },
     {
       "source": "briefing_reading",
@@ -21,22 +21,27 @@
     {
       "source": "items",
       "path": "output/analysis/analysis_items.parquet",
-      "sha256": "651951c2998fd6af148301cc6f441705755a738f02bbe0c96de1eb6f25b6f51a"
+      "sha256": "0f73ba022215f79780162db8fea1e247bb67f88ea88308d3a7482bce0c316f37"
     },
     {
       "source": "participants",
       "path": "output/analysis/analysis_participants.parquet",
-      "sha256": "7bec87dbf116ea501b4b442d02cc789edeab7ba841c047004c79f8b0919c36fc"
+      "sha256": "e6d6bddbd3b29a59c18ca228031448880a1a02bb9b06ba6ae4f0ea320b5e1ea8"
     },
     {
       "source": "item_responses",
       "path": "output/analysis/analysis_item_responses.parquet",
-      "sha256": "e321b1a6a149c15bf73ecc6b0aa6f414d0d1e8bfdbcd7130353e045656b51c2f"
+      "sha256": "1b314e8564897c39539cfbc8913ecb56b164101646801a4de1bcfe58b5c1e484"
     },
     {
       "source": "scores",
       "path": "output/analysis/analysis_scores.parquet",
-      "sha256": "a6ec560b5d605074ffe31f7429b387a3d46f6901841882004f925aded9055fcf"
+      "sha256": "223ce4e829af0b6c31a9754c5e8643743e9569d7d19847745a1ec9cad23a0578"
+    },
+    {
+      "source": "attitudes",
+      "path": "output/analysis/analysis_attitude_responses.parquet",
+      "sha256": "37532b103e99d7d3b314b565ade516178c3fe59ac571339f6e09693faf01655e"
     }
   ]
 }

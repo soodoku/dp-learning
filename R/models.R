@@ -1,8 +1,7 @@
 # Observed knowledge gain conditional on baseline knowledge and covariates,
-# with random intercepts for small group and poll. Every regressor is measured
-# before deliberation. Minority status is missing for whole polls (EU, China,
-# Greece), so it enters only in a robustness model.
-core_formula <- I(k2 - k1) ~ k1 + group_k1 + group_size + online + poll_k1 +
+# with random intercepts for small group and poll. Core regressors refer to
+# baseline; briefing reading is recalled afterward.
+core_formula <- I(k2 - k1) ~ k1 + group_k1 + group_size + online +
   (1 | group) + (1 | pollid)
 
 core_group_frame <- function(attendees) {
@@ -11,31 +10,24 @@ core_group_frame <- function(attendees) {
     dplyr::mutate(
       group_size = dplyr::n(),
       group_k1 = (sum(k1) - k1) / (group_size - 1),
+      p_female = leave_one_out(female, group),
       .by = group
     ) |>
     dplyr::filter(group_size > 1L) |>
     dplyr::mutate(poll_k1 = mean(k1), .by = poll_id) |>
-    dplyr::mutate(pollid = poll_id)
+    dplyr::mutate(
+      pollid = poll_id,
+      education = factor(education_labels[as.character(education)], levels = education_labels)
+    )
 }
 
-main_formula <- I(k2 - k1) ~ k1 * education + age_decades + extremity + group_size + group_k1 +
-  heterogeneity + female * p_female + online + poll_k1 + (1 | group) + (1 | pollid)
+demographic_formula <- I(k2 - k1) ~ k1 * education + age_decades +
+  female * p_female + group_size + group_k1 + online +
+  (1 | group) + (1 | pollid)
 
-minority_formula <- stats::update(main_formula, . ~ . + minority * p_minority)
+items_formula <- stats::update(demographic_formula, . ~ . + group_k1_items + no_missed_items)
 
-# Other members' T1 knowledge of items the participant missed at T1, added
-# alongside their overall T1 knowledge. A separate indicator marks respondents
-# with no missed T1 items, whose targeted opportunity score is zero.
-items_formula <- stats::update(main_formula, . ~ . + group_k1_items + no_missed_items)
-
-# Source-linked respondent reports of briefing-material reading are available.
-# Poll-level terms are replaced by poll intercepts.
-briefing_formula <- stats::update(
-  main_formula,
-  . ~ . - online - poll_k1 - (1 | pollid) + factor(pollid) + read_briefing
-)
-
-fit_knowledge <- function(frame, formula = main_formula, check = TRUE) {
+fit_knowledge <- function(frame, formula = core_formula, check = TRUE) {
   if ("age" %in% names(frame)) {
     frame <- dplyr::mutate(frame, age_decades = age / 10)
   }
@@ -80,16 +72,32 @@ tidy_fit <- function(fit, model) {
 }
 
 
-bootstrap_model <- function(frame, formula, model) {
+bootstrap_model <- function(frame, formula, model, included = rep(TRUE, nrow(frame))) {
   if ("age" %in% names(frame)) frame$age_decades <- frame$age / 10
-  fit <- fit_knowledge(frame, formula, check = FALSE)
+  stopifnot(length(included) == nrow(frame), !anyNA(included))
+  frame$.model_included <- included
+  fit <- fit_knowledge(frame[frame$.model_included, ], formula, check = FALSE)
   terms <- names(lme4::fixef(fit))
   terms <- terms[!grepl("factor\\(pollid\\)", terms)]
   statistic <- function(x) {
-    suppressMessages(lme4::fixef(fit_knowledge(x, formula, check = FALSE)))[terms]
+    suppressMessages(lme4::fixef(fit_knowledge(x[x$.model_included, ], formula, check = FALSE)))[terms]
   }
   message("Regression bootstrap: ", model)
   result <- bootstrap_stat(frame, statistic)
   tidy_fit(fit, model) |>
     dplyr::inner_join(dplyr::select(bootstrap_rows(result), -estimate), by = "term")
 }
+
+
+model_complete_cases <- function(frame, formula) {
+  frame$age_decades <- frame$age / 10
+  stats::complete.cases(frame[all.vars(formula)])
+}
+
+expanded_briefing_formula <- stats::update(
+  demographic_formula,
+  . ~ . + read_briefing
+)
+
+attitude_formula <- stats::update(demographic_formula, . ~ . + extremity + disagreement)
+attitude_sd_formula <- stats::update(attitude_formula, . ~ . - disagreement + attitude_sd)

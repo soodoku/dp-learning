@@ -68,9 +68,9 @@ control_row <- \(effects, study, comparison) effects[effects$study == study & ef
 term_labels <- c(
   "(Intercept)" = "Intercept",
   k1 = "T1 knowledge",
-  "educationHigh school" = "High school",
+  "educationHigh school" = "Secondary/some college",
   "educationBA or more" = "BA or more",
-  "k1:educationHigh school" = "T1 x high school",
+  "k1:educationHigh school" = "T1 x secondary/some college",
   "k1:educationBA or more" = "T1 x BA or more",
   age_decades = "Age (decades)",
   extremity = "Attitude extremity",
@@ -78,6 +78,8 @@ term_labels <- c(
   group_k1 = "Groupmates' mean T1",
   group_k1_items = "Groupmates' T1 on missed questions",
   heterogeneity = "Opinion heterogeneity",
+  disagreement = "Policy disagreement",
+  attitude_sd = "Policy dispersion (SD)",
   female = "Female",
   p_female = "Group share women",
   "female:p_female" = "Female x group share women",
@@ -85,7 +87,6 @@ term_labels <- c(
   p_minority = "Group share minority",
   "minority:p_minority" = "Minority x group share minority",
   online = "Online",
-  poll_k1 = "Poll mean T1",
   read_briefing = "Briefing reading"
 )
 
@@ -115,4 +116,16 @@ model_table <- function(models, keep, headers) {
   dplyr::bind_rows(dplyr::mutate(est, label = as.character(label)), sizes) |>
     dplyr::select(label, dplyr::all_of(keep)) |>
     purrr::set_names(c("", headers))
+}
+
+stack_intervals <- function(table) {
+  table[-1] <- lapply(table[-1], function(column) {
+    vapply(column, function(cell) {
+      if (!nzchar(cell)) return("")
+      parts <- strsplit(cell, " [", fixed = TRUE)[[1]]
+      if (length(parts) == 1L) return(cell)
+      paste0("\\shortstack[r]{", parts[1], " \\\\ {[", parts[2], "}}")
+    }, character(1))
+  })
+  table
 }

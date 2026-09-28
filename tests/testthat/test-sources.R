@@ -1,13 +1,13 @@
 test_that("upstream manifests identify available and unchanged files", {
   manifest <- upstream_source_manifest()
-  expect_equal(nrow(manifest), 7L)
+  expect_equal(nrow(manifest), 8L)
   expect_false(anyDuplicated(manifest$source) > 0L)
   expect_true(verify_sources())
   expect_setequal(
     manifest$source,
     c(
       "distortions_responses", "briefing_reading", "polls", "items",
-      "participants", "item_responses", "scores"
+      "participants", "item_responses", "scores", "attitudes"
     )
   )
 })
@@ -160,4 +160,28 @@ test_that("participant ages come from upstream without reader recoding", {
 
   source$ppage[source$dpnum == 9 & source$caseid == 52125] <- 15
   expect_error(analysis_frame(source, scores))
+})
+
+test_that("matched models use identical common regressors", {
+  source <- read_polardata()
+  historical <- analysis_frame(
+    source, item_scores_for_respondents(read_historical_items(), source)
+  ) |>
+    dplyr::mutate(historical_respondent_id = as.character(caseid)) |>
+    dplyr::left_join(
+      dplyr::select(read_respondent_sources(), poll_id, dpnum),
+      by = "dpnum", relationship = "many-to-one"
+    )
+  joined <- dplyr::inner_join(
+    core_group_frame(attendee_panel()), historical,
+    by = c("poll_id", "historical_respondent_id"),
+    relationship = "one-to-one", suffix = c(".core", ".historical")
+  )
+  expect_equal(nrow(joined), nrow(historical))
+  for (variable in c("k1", "k2", "group_size", "group_k1", "poll_k1", "p_female")) {
+    expect_equal(
+      joined[[paste0(variable, ".core")]],
+      joined[[paste0(variable, ".historical")]], tolerance = 1e-10
+    )
+  }
 })

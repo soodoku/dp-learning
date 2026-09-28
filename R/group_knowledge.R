@@ -93,3 +93,22 @@ item_group_knowledge <- function(items) {
       .by = c(pollid, caseid, group)
     )
 }
+
+add_item_peer_measure <- function(frame, responses = read_analysis_responses()) {
+  keys <- c("poll_id", "source_dataset", "respondent_id")
+  measures <- responses |>
+    dplyr::filter(wave == "t1") |>
+    dplyr::inner_join(dplyr::select(frame, dplyr::all_of(keys), group),
+      by = keys, relationship = "many-to-one"
+    ) |>
+    dplyr::transmute(pollid = poll_id, caseid = respondent_id,
+      group, item = item_id, correct = dplyr::coalesce(correct, 0L)
+    ) |>
+    item_group_knowledge() |>
+    dplyr::rename(poll_id = pollid, respondent_id = caseid,
+      group_k1_items = item_group_k1
+    )
+  dplyr::left_join(frame, dplyr::select(measures, -group),
+    by = c("poll_id", "respondent_id"), relationship = "one-to-one"
+  )
+}

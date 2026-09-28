@@ -77,13 +77,13 @@ test_that("guessing-adjusted pooling uses the same poll samples", {
                      meta$parameter == "mu"), 1L)
 })
 
-test_that("missed-item peer model uses the historical item sample", {
+test_that("missed-item peer model uses the main item sample", {
   items <- read_output("models.csv") |> dplyr::filter(model == "items")
-  main <- read_output("models.csv") |> dplyr::filter(model == "historical")
+  main <- read_output("models.csv") |> dplyr::filter(model == "demographic")
   core <- read_output("models.csv") |> dplyr::filter(model == "core")
   expect_equal(unique(core$polls), 28L)
   expect_equal(unique(core$n), 8800L)
-  expect_equal(unique(items$polls), 21L)
+  expect_equal(unique(items$polls), 28L)
   expect_equal(unique(main$n) - unique(items$n), 0L)
   expect_true(all(c(
     "group_k1", "group_k1_items", "no_missed_items"
@@ -93,7 +93,7 @@ test_that("missed-item peer model uses the historical item sample", {
 
 test_that("briefing model uses all source-linked reading reports", {
   briefing <- read_output("models.csv") |> dplyr::filter(model == "briefing")
-  expect_equal(unique(briefing$polls), 9L)
+  expect_equal(unique(briefing$polls), 12L)
   expect_gt(unique(briefing$n), 0L)
 })
 
@@ -108,4 +108,19 @@ test_that("conditional gain and posttest models are equivalent", {
   expect_equal(coefficients, lme4::fixef(posttest), tolerance = 1e-4)
   expect_equal(stats::fitted(gain) + frame$k1, stats::fitted(posttest), tolerance = 1e-4)
   expect_equal(stats::residuals(gain), stats::residuals(posttest), tolerance = 1e-4)
+})
+
+
+test_that("expanded models retain all polls and comparisons hold cases fixed", {
+  models <- read_output("models.csv")
+  samples <- dplyr::distinct(models, model, n, polls, groups)
+  row <- function(name) samples[samples$model == name, ]
+  expect_equal(row("demographic")$polls, 28L)
+  expect_equal(row("demographic")$groups, 592L)
+  expect_equal(row("demographic")$n, 8668L)
+  expect_equal(row("core_demographic_sample")$n, row("demographic")$n)
+  expect_equal(row("attitudes")$polls, 28L)
+  expect_equal(row("attitude_sd")$n, row("attitudes")$n)
+  expect_equal(row("demographic_attitude_sample")$n, row("attitudes")$n)
+  expect_equal(row("demographic_attitude_sample")$polls, row("attitudes")$polls)
 })
