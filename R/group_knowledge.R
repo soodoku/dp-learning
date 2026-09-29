@@ -26,7 +26,7 @@ item_scores_for_respondents <- function(items, polardata, root = dp_data_root())
       dplyr::distinct(polardata, dpnum, caseid),
       by = c("dpnum", "caseid"), relationship = "many-to-one"
     ) |>
-    dplyr::summarise(score = mean(correct, na.rm = TRUE), .by = c(dpnum, caseid, wave)) |>
+    dplyr::summarise(score = sum(correct, na.rm = TRUE) / dplyr::n(), .by = c(dpnum, caseid, wave)) |>
     tidyr::pivot_wider(names_from = wave, values_from = score, names_prefix = "k")
   stopifnot(
     nrow(scores) == nrow(polardata),
@@ -52,7 +52,7 @@ t1_items_for_poll <- function(poll_id, dpnum, polardata, knowledge) {
     all(items$correct[!is.na(items$correct)] %in% 0:1)
   )
   scores <- items |>
-    dplyr::summarise(score = mean(correct, na.rm = TRUE), n_items = dplyr::n(), .by = caseid)
+    dplyr::summarise(score = sum(correct, na.rm = TRUE) / dplyr::n(), n_items = dplyr::n(), .by = caseid)
   stopifnot(
     dplyr::n_distinct(scores$n_items) == 1L,
     all(
@@ -102,7 +102,7 @@ add_item_peer_measure <- function(frame, responses = read_analysis_responses()) 
       by = keys, relationship = "many-to-one"
     ) |>
     dplyr::transmute(pollid = poll_id, caseid = respondent_id,
-      group, item = item_id, correct = dplyr::coalesce(correct, 0L)
+      group, item = item_id, correct
     ) |>
     item_group_knowledge() |>
     dplyr::rename(poll_id = pollid, respondent_id = caseid,

@@ -1,6 +1,5 @@
 paired_item_answers <- function(responses, poll_id) {
-  data <- dplyr::filter(responses, .data$poll_id == .env$poll_id) |>
-    dplyr::mutate(correct = dplyr::coalesce(correct, 0L))
+  data <- dplyr::filter(responses, .data$poll_id == .env$poll_id)
   wide <- function(wave_name) {
     data |>
       dplyr::filter(wave == wave_name) |>
