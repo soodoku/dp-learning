@@ -30,7 +30,9 @@ lint:
 test:
 	Rscript -e 'testthat::test_dir("tests/testthat", stop_on_failure = TRUE)'
 
-check: paper lint test
+check:
+	$(MAKE) lint test manuscript
+	$(MAKE) paper
 
 ci-docker:
 	docker run --rm -e DP_DATA_ROOT=/dp-data -v "$(DP_DATA_ROOT):/dp-data:ro" \
