@@ -45,10 +45,19 @@ test_that("appendix poll coverage comes from upstream data", {
 
 test_that("one canonical attendee panel supplies gains and group models", {
   panel <- attendee_panel()
-  expect_equal(nrow(panel), 10282L)
+  expect_equal(nrow(panel), 10272L)
   expect_equal(dplyr::n_distinct(panel$poll_id), 30L)
   expect_equal(dplyr::n_distinct(panel$poll_id[!is.na(panel$group)]), 27L)
-  expect_equal(nrow(core_group_frame(panel)), 8496L)
+  expect_equal(nrow(core_group_frame(panel)), 8486L)
+  nic <- dplyr::filter(panel, poll_id == "nic-1996")
+  expect_equal(nrow(nic), 456L)
+  historical_nic <- read_analysis_participants() |>
+    dplyr::filter(poll_id == "nic-1996", source_dataset == "historical", panel)
+  expect_equal(nrow(historical_nic), 466L)
+  expect_setequal(setdiff(historical_nic$respondent_id, nic$respondent_id), c(
+    "cdd-nic-1996-survey:source-row-1", "10000400", "10000460", "10004670",
+    "10007580", "10007590", "10011680", "10012790", "10014282", "10014650"
+  ))
   primaries <- dplyr::filter(panel, study_id == "btp-primaries-2004")
   expect_identical(unique(primaries$poll_id), "btp-online-primaries-2004")
   expect_equal(nrow(primaries), 239L)
@@ -194,4 +203,30 @@ test_that("matched models use identical common regressors", {
       joined[[paste0(variable, ".historical")]], tolerance = 1e-10
     )
   }
+})
+
+
+test_that("California's absent telephone forms do not become zero baselines", {
+  ids <- as.character(c(599, 647, 711, 722, 724, 729, 872, 882, 887, 888))
+  people <- read_analysis_participants() |>
+    dplyr::filter(poll_id == "california-whats-next-2011", source_dataset == "cor_sood")
+  expect_equal(nrow(people), 396L)
+  expect_setequal(people$respondent_id[!people$panel], ids)
+  scores <- read_analysis_phase_scores() |>
+    dplyr::filter(
+      poll_id == "california-whats-next-2011", source_dataset == "cor_sood",
+      respondent_id %in% ids
+    )
+  baseline <- dplyr::filter(scores, wave == "t0")
+  expect_equal(nrow(baseline), 10L)
+  expect_true(all(!baseline$wave_observed))
+  expect_true(all(is.na(baseline$score)))
+  later <- dplyr::filter(scores, wave %in% c("t1", "t2"), n_items == 5L)
+  expect_equal(nrow(later), 20L)
+  expect_true(all(later$wave_observed))
+  expect_true(all(is.finite(later$score)))
+  panel <- attendee_panel() |>
+    dplyr::filter(poll_id == "california-whats-next-2011")
+  expect_equal(nrow(panel), 386L)
+  expect_false(any(panel$respondent_id %in% ids))
 })

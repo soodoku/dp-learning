@@ -26,14 +26,14 @@ control_panel <- function(
     ) |>
     dplyr::transmute(
       study = unname(labels[poll_id]), poll_id, id = respondent_id,
-      source_dataset, respondent_id, arm, treated = as.numeric(arm == "attended"), panel,
+      source_dataset, respondent_id, arm, treated = as.numeric(arm %in% c("attended", "completed")), panel,
       k1 = kt1, k2 = kt2, k3 = kt3,
       weight, ba, female, group = small_group_id,
       cluster = cluster_id, country
     )
   stopifnot(!anyNA(out$study), !anyDuplicated(out[c("poll_id", "id")]))
-  eligible <- unique(people$poll_id[people$arm == "attended" & !is.na(people$small_group_id)])
-  out <- dplyr::filter(out, poll_id %in% eligible, arm != "attended" | !is.na(group))
+  eligible <- unique(people$poll_id[people$arm %in% c("attended", "completed") & !is.na(people$small_group_id)])
+  out <- dplyr::filter(out, poll_id %in% eligible, !arm %in% c("attended", "completed") | !is.na(group))
   out$pollid <- out$poll_id
   out$group <- ifelse(!is.na(out$group), paste0("discussion_", out$group),
     paste0(out$arm, "_", out$cluster)
@@ -108,9 +108,9 @@ control_effects <- function(data) {
   adjusted <- list(
     list(a1r, "treated", 1, 0, NULL, "Attended vs uninvited control", "percent"),
     list(a1r, "treated", 1, 0, "weight", "Attended vs uninvited control, weighted", "percent"),
-    list(climate, "treated", 1, 0, NULL, "Attended vs uninvited control", "percent"),
-    list(climate, "treated", 1, 0, "weight", "Attended vs uninvited control, weighted", "percent"),
-    list(climate_t3, "treated", 1, 0, NULL, "Attended vs control, one year later", "percent")
+    list(climate, "treated", 1, 0, NULL, "Completed vs uninvited control", "percent"),
+    list(climate, "treated", 1, 0, "weight", "Completed vs uninvited control, weighted", "percent"),
+    list(climate_t3, "treated", 1, 0, NULL, "Completed vs control, one year later", "percent")
   ) |>
     purrr::map(\(x) {
       effect(x[[1]], x[[2]], x[[3]], x[[4]], x[[5]]) |>
@@ -121,12 +121,12 @@ control_effects <- function(data) {
   dplyr::bind_rows(adjusted, ni_t3_effect(data))
 }
 
-# Initial knowledge of attendees and nonattenders in each recruitment frame.
+# Initial knowledge by observed participation or completion in each recruitment frame.
 selection <- function(data) {
   data |>
     dplyr::filter(
       poll_id %in% c("america-in-one-room-2019", "a1r-climate-2021"),
-      arm %in% c("attended", "invited_nonattender", "recruitment_nonattender")
+      arm %in% c("attended", "completed", "invited_nonattender", "invited_noncompleter", "recruitment_nonattender")
     ) |>
     dplyr::summarise(
       k1 = mean(k1), n = dplyr::n(),
@@ -135,10 +135,14 @@ selection <- function(data) {
     dplyr::mutate(group = dplyr::recode(
       arm,
       attended = "attended",
+      completed = "completed",
+      invited_noncompleter = "other invitees",
       invited_nonattender = "invited, did not attend",
       recruitment_nonattender = "recruitment sample, did not attend"
     )) |>
-    dplyr::mutate(arm = factor(arm, levels = c("attended", "invited_nonattender", "recruitment_nonattender"))) |>
+    dplyr::mutate(arm = factor(arm, levels = c(
+      "attended", "completed", "invited_nonattender", "invited_noncompleter", "recruitment_nonattender"
+    ))) |>
     dplyr::arrange(study, arm) |>
     dplyr::select(study, group, k1, n)
 }
@@ -188,7 +192,7 @@ control_learning <- function(data, core, responses) {
   results <- lapply(seq_along(ids), function(i) {
     id <- ids[i]
     people <- dplyr::filter(
-      data, poll_id == .env$id, arm %in% c("attended", "control"),
+      data, poll_id == .env$id, arm %in% c("attended", "completed", "control"),
       !is.na(k1), !is.na(k2)
     )
     people <- dplyr::filter(
@@ -204,13 +208,13 @@ control_learning <- function(data, core, responses) {
     people <- people[match(answers$ids, people$respondent_id), ]
     people$.boot_row <- seq_len(nrow(people))
     statistic <- function(x) {
-      learning <- vapply(c("attended", "control"), function(arm) {
-        rows <- x$.boot_row[x$arm == arm]
+      learning <- vapply(c(1, 0), function(treated) {
+        rows <- x$.boot_row[x$treated == treated]
         fit_learning(answers$pre[rows, , drop = FALSE], answers$post[rows, , drop = FALSE])
       }, numeric(1))
       gain <- x$k2 - x$k1
       c(
-        raw = mean(gain[x$arm == "attended"]) - mean(gain[x$arm == "control"]),
+        raw = mean(gain[x$treated == 1]) - mean(gain[x$treated == 0]),
         adjusted = unname(learning[1] - learning[2])
       )
     }
@@ -219,7 +223,7 @@ control_learning <- function(data, core, responses) {
     summary <- bootstrap_rows(fit) |>
       dplyr::mutate(
         poll_id = id, study = people$study[1],
-        n_treated = sum(people$arm == "attended"),
+        n_treated = sum(people$treated == 1),
         n_control = sum(people$arm == "control"), .before = 1
       )
     list(summary = summary, fit = fit)

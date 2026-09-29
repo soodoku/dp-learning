@@ -65,7 +65,7 @@ attendee_panel <- function(
     dplyr::filter(
       (source_dataset == "historical" & panel) |
         (source_dataset == "cor_sood" & poll_id %in% cor_ids) |
-        (source_dataset == "control" & arm == "attended" &
+        (source_dataset == "control" & arm %in% c("attended", "completed") &
            !poll_id %in% c(historical_ids, cor_ids))
     ) |>
     dplyr::left_join(

@@ -65,10 +65,10 @@ Seven Cor-Sood cohorts now have source-verified attendance in the phase
 participant export. Other cohorts retain unresolved attendance and contribute
 coverage; historical counterparts supply comparisons where available.
 A hardcoded participant arm or an online post survey alone is insufficient
-evidence of attendance. The current score exports support all three comparisons for Marousi and
-Tomorrow's Europe. The upstream wave catalog separately identifies retained
-arrival sources for California, Europolis, Denmark, Vermont and a partial
-Michigan battery; those measurements have not yet entered these comparisons.
+evidence of attendance. Comparable three-wave scores now support California,
+Europolis, Marousi, Michigan and Tomorrow's Europe. Michigan uses its common
+partial battery. The upstream wave catalog also records arrival materials for
+Denmark and Vermont; those polls do not enter the three-wave decomposition.
 Counts refer to underlying studies, so the two Primaries catalog IDs do not
 count twice.
 
@@ -106,12 +106,21 @@ response is independent of missing knowledge conditional on recorded predictors.
 They do not estimate sampling intervals, nonresponse sensitivity bounds or
 invitation effects. The manuscript reports the estimates and their assumptions.
 
+The climate poll retains its published cohort of 962 people who completed the
+sessions and post-survey, labeled `completed` upstream. The other 7,018 invitees
+are `invited_noncompleter`; their attendance is unknown in the analytical view.
+Baseline comparisons therefore describe completers versus other invitees.
+Neither this labeling nor the nullable attendance flag changes paired knowledge
+scores, the 962-person treatment cohort, or the 671-person post-survey control
+cohort. America in One Room 2019 retains its separate attendance definition.
+
 `tabs/knowledge_gaps.csv` compares pre-arrival and exit gender and education gaps
 on the demographic-model sample. Each comparison weights eligible polls equally;
 `tabs/knowledge_gaps_by_poll.csv` preserves its poll-specific means and counts.
 Intervals resample whole polls within mode and preserve both interviews. These
 are descriptive changes in gaps, distinct from baseline-adjusted gain coefficients.
-The relative-education comparison reuses upstream poll-specific higher/lower
-cutoffs in the 20 historical polls with that definition; fixed qualification
-comparisons retain their separately reported coverage. The regression education
+The relative-education comparison uses the upstream within-poll median split
+in the 20 historical polls with that definition. Medians use each poll's reviewed
+ordered education measure among unique historical participants; tied categories
+remain together. Fixed qualification comparisons retain their separate coverage. The regression education
 categories are unchanged.

@@ -151,7 +151,14 @@ phase_interval_text <- function(estimate, lower, upper) {
   out
 }
 
-phase_comparison_table <- function(data) {
+phase_battery_sizes <- function(root = Sys.getenv("DP_DATA_ROOT", unset = "../dp-data")) {
+  scores <- arrow::read_parquet(file.path(root, "output", "analysis", "analysis_phase_scores.parquet"))
+  sizes <- dplyr::distinct(scores, battery_id, n_items)
+  stopifnot(!anyDuplicated(sizes$battery_id))
+  sizes
+}
+
+phase_comparison_table <- function(data, batteries = phase_battery_sizes()) {
   data <- dplyr::filter(data, sample == "all_three_observed_attendees", n_people > 0)
   sizes <- data |>
     dplyr::summarise(
@@ -164,8 +171,10 @@ phase_comparison_table <- function(data) {
     dplyr::select(pollname, source_dataset, battery_id, n_people, contrast, cell) |>
     tidyr::pivot_wider(names_from = contrast, values_from = cell) |>
     dplyr::arrange(pollname) |>
+    dplyr::left_join(batteries, by = "battery_id", relationship = "many-to-one") |>
     dplyr::transmute(
-      Poll = pollname, N = prettyNum(n_people, big.mark = ","),
+      Poll = pollname, Items = dplyr::if_else(is.na(n_items), "--", as.character(n_items)),
+      N = prettyNum(n_people, big.mark = ","),
       `Pre-arrival to arrival` = arrival_minus_pre_arrival,
       `Arrival to exit` = post_minus_arrival,
       `Pre-arrival to exit` = post_minus_pre_arrival
@@ -184,21 +193,25 @@ phase_selection_table <- function(data) {
       Poll = pollname,
       Comparator = dplyr::recode(category,
         attended_minus_control = "Uninvited controls",
+        completed_minus_control = "Uninvited controls",
+        completed_minus_invited_noncompleter = "Other invitees",
         attended_minus_invited_nonattender = "Invited nonattenders",
         attended_minus_recruitment_nonattender = "Recruitment nonattenders"
       ),
-      `Attendee N` = prettyNum(n_scored, big.mark = ","),
+      `Participant N` = prettyNum(n_scored, big.mark = ","),
       `Comparator N` = prettyNum(n_reference_scored, big.mark = ","),
       `Gap (pp)` = num(100 * estimate, 1)
     )
 }
 
-phase_pair_table <- function(data) {
+phase_pair_table <- function(data, batteries = phase_battery_sizes()) {
   data |>
     dplyr::filter(sample == "available_paired_attendees", n_people > 0L) |>
-    dplyr::arrange(pollname, match(contrast, names(phase_labels))) |>
+    dplyr::arrange(pollname, match(contrast, names(phase_labels)), battery_id) |>
+    dplyr::left_join(batteries, by = "battery_id", relationship = "many-to-one") |>
     dplyr::transmute(
       Poll = pollname, Comparison = unname(phase_labels[contrast]),
+      Items = dplyr::if_else(is.na(n_items), "--", as.character(n_items)),
       N = prettyNum(n_people, big.mark = ","), `Change (pp)` = num(100 * estimate, 1),
       `95% interval` = dplyr::if_else(is.finite(lower) & is.finite(upper),
         paste(num(100 * lower, 1), num(100 * upper, 1), sep = " to "), "--"
