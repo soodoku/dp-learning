@@ -153,11 +153,17 @@ phase_selection <- function(data) {
   attrition <- dplyr::bind_rows(lapply(unique(exit_status), function(category) {
     phase_selection_summary(attendees[exit_status == category, ], "attendee_exit_attrition", category)
   }))
-  selected <- data[data$attended %in% TRUE, ]
-  reference_arms <- intersect(c("invited_nonattender", "recruitment_nonattender", "control"), data$arm)
+  completion_cohort <- any(data$arm %in% "completed")
+  selected <- if (completion_cohort) data[data$arm %in% "completed", ] else attendees
+  reference_arms <- intersect(
+    c("invited_nonattender", "invited_noncompleter", "recruitment_nonattender", "control"), data$arm
+  )
   comparisons <- dplyr::bind_rows(lapply(reference_arms, function(arm) {
-    reference <- data[data$attended %in% FALSE & data$arm %in% arm, ]
-    first <- phase_selection_summary(selected, "baseline_selection_difference", paste0("attended_minus_", arm))
+    reference_rows <- data$arm %in% arm &
+      (data$attended %in% FALSE | (completion_cohort & arm == "invited_noncompleter"))
+    reference <- data[reference_rows, ]
+    category <- paste0(if (completion_cohort) "completed_minus_" else "attended_minus_", arm)
+    first <- phase_selection_summary(selected, "baseline_selection_difference", category)
     second <- phase_selection_summary(reference, "baseline_selection_difference", arm)
     first$n_reference <- second$n_people
     first$n_reference_scored <- second$n_scored

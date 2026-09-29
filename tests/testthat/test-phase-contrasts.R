@@ -175,7 +175,7 @@ test_that("published phase changes preserve a common three-wave sample", {
   wide <- balanced |>
     dplyr::select(poll_id, source_dataset, battery_id, contrast, estimate, n_people) |>
     tidyr::pivot_wider(names_from = contrast, values_from = c(estimate, n_people))
-  expect_equal(nrow(wide), 2L)
+  expect_equal(nrow(wide), 5L)
   expect_equal(
     wide$estimate_post_minus_pre_arrival,
     wide$estimate_post_minus_arrival + wide$estimate_arrival_minus_pre_arrival
@@ -214,4 +214,24 @@ test_that("main interview labels follow stages, not input score numbers", {
   timing <- main_interview_timing(panel, scores)
   expect_equal(timing$phase_t1, c("t0", "t0"))
   expect_equal(timing$phase_t2, c("t2", "t2"))
+})
+
+
+test_that("completion comparisons retain invitees with unknown attendance", {
+  fixture <- phase_fixture()
+  fixture$participants$arm[fixture$participants$attended %in% TRUE] <- "completed"
+  other <- fixture$participants$respondent_id == "e"
+  fixture$participants$arm[other] <- "invited_noncompleter"
+  fixture$participants$attended[other] <- NA
+  output <- do.call(phase_contrasts, c(fixture, list(n_boot = 19L)))
+  selected <- dplyr::filter(output$selection, analysis == "baseline_selection_difference")
+  expect_setequal(selected$category, c("completed_minus_invited_noncompleter", "completed_minus_control"))
+  other <- dplyr::filter(selected, category == "completed_minus_invited_noncompleter")
+  expect_equal(other$n_reference, 1L)
+  expect_true(is.finite(other$estimate))
+  selected$source_dataset <- "control"
+  expect_true("Other invitees" %in% phase_selection_table(selected)$Comparator)
+  coverage <- output$coverage
+  expect_true(all(coverage$n_unknown_attendance == 2L))
+  expect_true(all(coverage$n_nonattendees == 1L))
 })
