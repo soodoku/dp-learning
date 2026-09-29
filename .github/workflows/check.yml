@@ -35,3 +35,13 @@ jobs:
         with:
           name: manuscript
           path: ms/main.pdf
+      - name: Preserve manuscript diagnostics on failure
+        if: failure()
+        uses: actions/upload-artifact@v7.0.1
+        with:
+          name: manuscript-diagnostics
+          path: |
+            ms/main.tex
+            ms/main.log
+            ms/main.knit.md
+          if-no-files-found: ignore

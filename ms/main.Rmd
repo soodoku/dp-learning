@@ -271,6 +271,7 @@ figure("learning")
 Marousi and Tomorrow's Europe show knowledge gains before arrival and additional gains during the event. Among `r marousi_exit$n_people` Marousi attendees with all three observed questionnaires and recorded discussion groups, scores rose by `r pp(marousi_before$estimate)` percentage points from pre-arrival to arrival and `r pp(marousi_exit$estimate)` from arrival to exit, for a total of `r pp(marousi_total$estimate)` points. Among `r europe_exit$n_people` Tomorrow's Europe attendees, the corresponding changes were `r pp(europe_before$estimate)`, `r pp(europe_exit$estimate)`, and `r pp(europe_total$estimate)` points. Table \ref{tab:phase-changes} uses the same respondents for all three changes within each poll, so its total equals the sum of its two component changes before rounding. Pair-specific samples, reported in Appendix \ref{app:phases}, answer a different question when questionnaire availability differs.
 
 ```{r phase-changes, results="asis"}
+cat("\n```{=latex}\n")
 phase_comparison_table(phase_balanced) |>
   knitr::kable(
     format = "latex", booktabs = TRUE, escape = FALSE, position = "H",
@@ -280,6 +281,7 @@ phase_comparison_table(phase_balanced) |>
     caption = "Knowledge changes among attendees with all three questionnaires and recorded discussion groups. Entries are percentage points; brackets contain 95 percent group-bootstrap intervals."
   ) |>
   print()
+cat("\n```\n")
 ```
 
 These estimates are unweighted changes in proportion correct, without adjustment for guessing. Intervals resample discussion groups in `r phase_provenance$bootstrap_replicates` draws, retaining each respondent's three scores together. The Marousi comparisons exclude `r prose_count(marousi_exit$n_excluded_unknown_group)` otherwise eligible respondents whose discussion groups are unknown. Its original merge also contains conflicting telephone and exit identifiers; these estimates therefore depend on the original matching of respondents across interviews, which remains unresolved.
@@ -323,6 +325,7 @@ Knowledge remains above baseline at follow-up in both studies. Climate participa
 ## Who gains more?
 
 ```{r models, results="asis"}
+cat("\n```{=latex}\n")
 table_1 <- model_table(models, c("core", "demographic", "attitudes", "briefing"), c("Baseline", "Demographics", "+ Attitudes", "+ Reading"))
 table_1 <- stack_intervals(table_1)
 separators <- rep("\\addlinespace[0.15em]", nrow(table_1))
@@ -336,6 +339,7 @@ table_tex <- knitr::kable(
 )
 table_tex <- sub("\\centering", "\\centering\\small\\setlength{\\tabcolsep}{3pt}", table_tex, fixed = TRUE)
 cat(sub("\\end{table}", paste0("\\par\\medskip\\noindent{\\footnotesize\\raggedright\\emph{Notes.} Groupmates' mean initial knowledge excludes the respondent herself; both that mean and group size use members with initial and later scores. All models have poll and small-group random intercepts. Education is coded as below secondary completion, secondary/some college, or degree or higher; the first category is the reference. Marginal $R^2$ covers fixed effects; conditional $R^2$ includes random intercepts. Columns 3 and 4 separately add attitudes and reading (0--1) to column 2. Reading reports are available for fewer polls. Replacing pairwise disagreement with the mean within-group SD gives a dispersion coefficient of ", term("attitude_sd", "attitude_sd"), "; the peer-knowledge coefficient is ", term("attitude_sd", "group_k1"), ".\\par}", "\n\\end{table}"), table_tex, fixed = TRUE))
+cat("\n```\n")
 ```
 
 Table \ref{tab:models} compares gains conditional on measured initial knowledge. The initial-knowledge coefficient in the baseline model is `r term("core", "k1")`. Because scores have a ceiling and contain measurement error, this should not be read as a causal effect of prior knowledge. The second column brings the education, age, and gender hypotheses into the same set of polls. The third column adds attitudes, and the fourth adds briefing reading. In both control studies, the attendee--control difference is larger among respondents who start with less knowledge. The climate poll also shows a larger difference among respondents without a bachelor's degree, while the corresponding education estimate in the 2019 poll is imprecise (Appendix Table \ref{tab:hetero}).

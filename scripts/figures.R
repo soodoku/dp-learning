@@ -39,9 +39,7 @@ controlled_panel <- "B. Attendee gain minus\ncontrol gain"
 prepost <- read_output("poll_gains.csv") |>
   dplyr::transmute(
     panel = prepost_panel,
-    label = dplyr::case_when(
-      TRUE ~ pollname
-    ),
+    label = pollname,
     estimate = 100 * raw, lower = 100 * raw_lower,
     upper = 100 * raw_upper, pooled = FALSE
   )
