@@ -34,7 +34,7 @@ forest <- function(data, x_label) {
 }
 
 # One scale and one hierarchical-bootstrap interval throughout Figure 1.
-prepost_panel <- "A. Before event to exit\n(exceptions marked)"
+prepost_panel <- "A. Pre-arrival to exit"
 controlled_panel <- "B. Attendee gain minus\ncontrol gain"
 prepost <- read_output("poll_gains.csv") |>
   dplyr::transmute(

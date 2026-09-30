@@ -73,3 +73,26 @@ test_that("phase exhibits distinguish question batteries within the same poll", 
   michigan <- pairs[pairs$Poll == "Michigan" & pairs$Comparison == "Arrival to exit", ]
   expect_setequal(michigan$Items, c("4", "6", "9"))
 })
+
+
+test_that("Tomorrow's Europe source versions remain identifiable without changing estimates", {
+  source <- read_output("phase_contrasts.csv") |>
+    dplyr::filter(poll_id == "tomorrows-europe-2007", sample == "available_paired_attendees", n_people > 0L)
+  actual <- phase_pair_table(source)
+  expect_equal(nrow(actual), nrow(source))
+  expect_equal(sum(grepl(": Archive$", actual$Poll)), 3L)
+  expect_equal(sum(grepl(": Cor–Sood replication$", actual$Poll)), 1L)
+  expected <- dplyr::arrange(source, pollname, match(contrast, names(phase_labels)), battery_id)
+  expect_identical(actual$`Change (pp)`, num(100 * expected$estimate, 1))
+  expect_identical(actual$N, prettyNum(expected$n_people, big.mark = ","))
+})
+
+
+test_that("exit-availability exhibits distinguish overlapping source versions", {
+  actual <- phase_attrition_table(read_output("pre_arrival_selection.csv"))
+  europe <- actual[grepl("Tomorrow", actual$Poll), ]
+  expect_equal(nrow(europe), 2L)
+  expect_true(any(grepl(": Archive$", europe$Poll)))
+  expect_true(any(grepl(": Cor–Sood replication$", europe$Poll)))
+  expect_equal(as.integer(europe$`Attendee N`), c(335L, 335L))
+})

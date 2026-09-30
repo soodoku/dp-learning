@@ -175,7 +175,11 @@ test_that("published phase changes preserve a common three-wave sample", {
   wide <- balanced |>
     dplyr::select(poll_id, source_dataset, battery_id, contrast, estimate, n_people) |>
     tidyr::pivot_wider(names_from = contrast, values_from = c(estimate, n_people))
-  expect_equal(nrow(wide), 5L)
+  expect_equal(nrow(wide), 6L)
+  michigan <- dplyr::filter(wide, poll_id == "michigan-2009")
+  expect_setequal(michigan$battery_id, c(
+    "michigan-2009:cor_sood:knowledge", "michigan-2009:cor_sood:knowledge_placements_four"
+  ))
   expect_equal(
     wide$estimate_post_minus_pre_arrival,
     wide$estimate_post_minus_arrival + wide$estimate_arrival_minus_pre_arrival

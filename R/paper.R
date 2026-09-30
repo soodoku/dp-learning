@@ -71,7 +71,7 @@ term_labels <- c(
   "educationMiddle education" = "Middle education",
   "educationHigher education" = "Higher education",
   "k1:educationMiddle education" = "Initial x middle education",
-  "k1:educationHigher education" = "Initial x Higher education",
+  "k1:educationHigher education" = "Initial x higher education",
   age_decades = "Age (decades)",
   extremity = "Attitude extremity",
   group_size = "Group size",
@@ -204,13 +204,22 @@ phase_selection_table <- function(data) {
     )
 }
 
+phase_poll_label <- function(poll_id, source_dataset, pollname) {
+  dplyr::case_when(
+    poll_id == "tomorrows-europe-2007" & source_dataset == "historical" ~ paste0(pollname, ": Archive"),
+    poll_id == "tomorrows-europe-2007" & source_dataset == "cor_sood" ~ paste0(pollname, ": Cor–Sood replication"),
+    TRUE ~ pollname
+  )
+}
+
 phase_pair_table <- function(data, batteries = phase_battery_sizes()) {
   data |>
     dplyr::filter(sample == "available_paired_attendees", n_people > 0L) |>
     dplyr::arrange(pollname, match(contrast, names(phase_labels)), battery_id) |>
     dplyr::left_join(batteries, by = "battery_id", relationship = "many-to-one") |>
     dplyr::transmute(
-      Poll = pollname, Comparison = unname(phase_labels[contrast]),
+      Poll = phase_poll_label(poll_id, source_dataset, pollname),
+      Comparison = unname(phase_labels[contrast]),
       Items = dplyr::if_else(is.na(n_items), "--", as.character(n_items)),
       N = prettyNum(n_people, big.mark = ","), `Change (pp)` = num(100 * estimate, 1),
       `95% interval` = dplyr::if_else(is.finite(lower) & is.finite(upper),
@@ -227,7 +236,7 @@ phase_attrition_table <- function(data) {
     dplyr::filter(analysis == "attendee_exit_attrition", poll_id %in% studies) |>
     dplyr::arrange(pollname, category) |>
     dplyr::transmute(
-      Poll = pollname,
+      Poll = phase_poll_label(poll_id, source_dataset, pollname),
       Exit = dplyr::recode(category,
         exit_observed = "Observed", exit_absent = "Absent", exit_unknown = "Uncertain"
       ),
