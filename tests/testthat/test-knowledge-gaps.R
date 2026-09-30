@@ -35,7 +35,7 @@ test_that("published knowledge gaps reproduce and measure paired change", {
       rows$estimate[rows$term == "post"] - rows$estimate[rows$term == "pre"], tolerance = 1e-12
     )
   }
-  expect_equal(unique(output$summary$n_people[output$summary$comparison == "gender"]), 8369L)
+  expect_equal(unique(output$summary$n_people[output$summary$comparison == "gender"]), 8364L)
   expect_equal(nrow(output$by_poll), 100L)
 })
 

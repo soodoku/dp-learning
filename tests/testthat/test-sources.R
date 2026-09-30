@@ -19,15 +19,32 @@ test_that("briefing reports link nine upstream polls to historical participants"
   expect_false(anyDuplicated(reading[c("dpnum", "caseid")]) > 0L)
 })
 
-test_that("both score waves are rebuilt from respondent item answers", {
-  source <- dplyr::filter(read_polardata(), pollname != "National Issues Convention")
-  scores <- item_scores_for_respondents(read_historical_items(), source)
-  expect_equal(nrow(scores), nrow(source))
-  frame <- analysis_frame(source, scores)
-  expect_equal(nrow(frame), nrow(source))
-  changed <- scores
-  changed$k2[1] <- changed$k2[1] + 0.1
-  expect_error(analysis_frame(source, changed))
+test_that("historical canonical scores agree with polardata including absent waves", {
+  people <- read_analysis_participants() |>
+    dplyr::filter(source_dataset == "historical") |>
+    dplyr::select(poll_id, source_dataset, respondent_id, historical_respondent_id)
+  scores <- read_analysis_scores() |>
+    dplyr::filter(source_dataset == "historical", wave %in% c("t1", "t2")) |>
+    dplyr::inner_join(people,
+      by = c("poll_id", "source_dataset", "respondent_id"), relationship = "many-to-one"
+    ) |>
+    dplyr::filter(!is.na(historical_respondent_id)) |>
+    dplyr::select(poll_id, historical_respondent_id, wave, score) |>
+    tidyr::pivot_wider(names_from = wave, values_from = score)
+  legacy <- read_polardata() |>
+    dplyr::filter(pollname != "National Issues Convention") |>
+    dplyr::mutate(historical_respondent_id = as.character(caseid)) |>
+    dplyr::left_join(dplyr::select(read_respondent_sources(), poll_id, dpnum),
+      by = "dpnum", relationship = "many-to-one"
+    )
+  joined <- dplyr::left_join(legacy, scores,
+    by = c("poll_id", "historical_respondent_id"), relationship = "one-to-one"
+  )
+  expect_equal(nrow(joined), nrow(legacy))
+  expect_equal(is.na(joined$t1), is.na(joined$t1know))
+  expect_equal(is.na(joined$t2), is.na(joined$t2know))
+  expect_equal(joined$t1, joined$t1know, tolerance = 1e-6)
+  expect_equal(joined$t2, joined$t2know, tolerance = 1e-6)
 })
 
 test_that("appendix poll coverage comes from upstream data", {
@@ -45,10 +62,10 @@ test_that("appendix poll coverage comes from upstream data", {
 
 test_that("one canonical attendee panel supplies gains and group models", {
   panel <- attendee_panel()
-  expect_equal(nrow(panel), 10272L)
+  expect_equal(nrow(panel), 10270L)
   expect_equal(dplyr::n_distinct(panel$poll_id), 30L)
   expect_equal(dplyr::n_distinct(panel$poll_id[!is.na(panel$group)]), 27L)
-  expect_equal(nrow(core_group_frame(panel)), 8486L)
+  expect_equal(nrow(core_group_frame(panel)), 8480L)
   nic <- dplyr::filter(panel, poll_id == "nic-1996")
   expect_equal(nrow(nic), 456L)
   historical_nic <- read_analysis_participants() |>
@@ -165,43 +182,46 @@ test_that("NIC age and mode are consumed from corrected upstream values", {
 })
 
 test_that("participant ages come from upstream without reader recoding", {
-  source <- dplyr::filter(read_polardata(), pollname != "National Issues Convention")
-  scores <- item_scores_for_respondents(read_historical_items(), source)
-  frame <- analysis_frame(source, scores)
-  zeguo <- frame[frame$dpnum == 9 & frame$caseid == 52125, ]
-  europolis <- frame[frame$dpnum == 11 & frame$caseid == 71300005619, ]
+  panel <- attendee_panel()
+  upstream <- dplyr::select(read_analysis_participants(), poll_id, source_dataset, respondent_id, age)
+  joined <- dplyr::left_join(panel, upstream,
+    by = c("poll_id", "source_dataset", "respondent_id"),
+    relationship = "one-to-one", suffix = c(".reader", ".upstream")
+  )
+  expect_equal(nrow(joined), nrow(panel))
+  expect_equal(joined$age.reader, joined$age.upstream)
+  zeguo <- dplyr::filter(panel, poll_id == "zeguo-2005", historical_respondent_id == "52125")
+  europolis <- dplyr::filter(panel, poll_id == "europolis-2009", historical_respondent_id == "71300005619")
+  expect_equal(nrow(zeguo), 1L)
   expect_equal(zeguo$age, 33)
+  expect_equal(nrow(europolis), 1L)
   expect_true(is.na(europolis$age))
-  expect_equal(frame$age[match(
-    paste(source$dpnum, source$caseid), paste(frame$dpnum, frame$caseid)
-  )], source$ppage)
-
-  source$ppage[source$dpnum == 9 & source$caseid == 52125] <- 15
-  expect_error(analysis_frame(source, scores))
 })
 
-test_that("matched models use identical common regressors", {
-  source <- dplyr::filter(read_polardata(), pollname != "National Issues Convention")
-  historical <- analysis_frame(
-    source, item_scores_for_respondents(read_historical_items(), source)
-  ) |>
-    dplyr::mutate(historical_respondent_id = as.character(caseid)) |>
-    dplyr::left_join(
-      dplyr::select(read_respondent_sources(), poll_id, dpnum),
-      by = "dpnum", relationship = "many-to-one"
-    ) |>
-    dplyr::filter(!poll_id %in% c("btp-presidential-primaries-2004", "nic-1996"))
-  joined <- dplyr::inner_join(
-    core_group_frame(attendee_panel()), historical,
-    by = c("poll_id", "historical_respondent_id"),
-    relationship = "one-to-one", suffix = c(".core", ".historical")
-  )
-  expect_equal(nrow(joined), nrow(historical))
-  for (variable in c("k1", "k2", "group_size", "group_k1", "poll_k1", "p_female")) {
-    expect_equal(
-      joined[[paste0(variable, ".core")]],
-      joined[[paste0(variable, ".historical")]], tolerance = 1e-10
+test_that("group regressors use exactly the corrected eligible attendees", {
+  panel <- attendee_panel()
+  actual <- core_group_frame(panel)
+  eligible <- panel[!is.na(panel$group), ]
+  sizes <- table(eligible$group)
+  eligible <- eligible[eligible$group %in% names(sizes)[sizes > 1L], ]
+  key <- function(data) paste(data$poll_id, data$respondent_id, sep = ":")
+  expect_setequal(key(actual), key(eligible))
+  eligible <- eligible[match(key(actual), key(eligible)), ]
+  expect_equal(actual$k1, eligible$k1)
+  expect_equal(actual$k2, eligible$k2)
+  expected <- vapply(seq_len(nrow(eligible)), function(index) {
+    peers <- eligible$group == eligible$group[index]
+    peers[index] <- FALSE
+    women <- eligible$female[peers]
+    c(
+      group_size = sum(peers) + 1L,
+      group_k1 = mean(eligible$k1[peers]),
+      poll_k1 = mean(eligible$k1[eligible$poll_id == eligible$poll_id[index]]),
+      p_female = if (all(is.na(women))) NA_real_ else mean(women, na.rm = TRUE)
     )
+  }, numeric(4))
+  for (variable in rownames(expected)) {
+    expect_equal(actual[[variable]], unname(expected[variable, ]), tolerance = 1e-10)
   }
 })
 
@@ -229,4 +249,44 @@ test_that("California's absent telephone forms do not become zero baselines", {
     dplyr::filter(poll_id == "california-whats-next-2011")
   expect_equal(nrow(panel), 386L)
   expect_false(any(panel$respondent_id %in% ids))
+})
+
+
+test_that("approved attendance, exit absence and unknown groups define model eligibility", {
+  people <- read_phase_participants()
+  selected <- attendee_panel()
+  grouped <- core_group_frame(selected)
+  new_haven <- dplyr::filter(people,
+    poll_id == "new-haven-2004", source_dataset == "historical", respondent_id == "3124"
+  )
+  expect_equal(nrow(new_haven), 1L)
+  expect_true(new_haven$attended)
+  expect_false(new_haven$panel)
+  departure <- read_analysis_phase_scores() |>
+    dplyr::filter(
+      poll_id == "new-haven-2004", source_dataset == "historical",
+      respondent_id == "3124", wave == "t2"
+    )
+  expect_equal(nrow(departure), 1L)
+  expect_false(departure$wave_observed)
+  expect_true(is.na(departure$score))
+  expect_false(any(selected$poll_id == "new-haven-2004" & selected$respondent_id == "3124"))
+
+  national <- dplyr::filter(people,
+    poll_id == "btp-national-2003", source_dataset == "historical", respondent_id == "134"
+  )
+  expect_equal(nrow(national), 1L)
+  expect_false(national$attended)
+  expect_true(national$panel)
+  expect_false(any(selected$poll_id == "btp-national-2003" & selected$respondent_id == "134"))
+
+  unknown_ids <- c("1008", "3132", "4316", "5022")
+  unknown_groups <- dplyr::filter(selected, poll_id == "uk-eu-1995", respondent_id %in% unknown_ids)
+  expect_setequal(unknown_groups$respondent_id, unknown_ids)
+  expect_true(all(is.na(unknown_groups$group)))
+  expect_true(all(is.finite(unknown_groups$k1) & is.finite(unknown_groups$k2)))
+  expect_false(any(grouped$poll_id == "uk-eu-1995" & grouped$respondent_id %in% unknown_ids))
+  demographic <- grouped[model_complete_cases(grouped, demographic_formula), ]
+  expect_equal(nrow(demographic), 8364L)
+  expect_equal(dplyr::n_distinct(demographic$group), 622L)
 })

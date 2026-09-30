@@ -11,31 +11,6 @@ read_historical_items <- function(path = source_path("item_responses")) {
     )
 }
 
-item_scores_for_respondents <- function(items, polardata, root = dp_data_root()) {
-  poll_ids <- read_respondent_sources(root) |>
-    dplyr::select(poll_id, dpnum) |>
-    dplyr::filter(dpnum %in% polardata$dpnum)
-  scores <- items |>
-    dplyr::inner_join(poll_ids, by = "poll_id", relationship = "many-to-one") |>
-    dplyr::transmute(
-      dpnum,
-      caseid = as.numeric(historical_respondent_id),
-      wave = as.integer(sub("^t", "", wave)), correct
-    ) |>
-    dplyr::inner_join(
-      dplyr::distinct(polardata, dpnum, caseid),
-      by = c("dpnum", "caseid"), relationship = "many-to-one"
-    ) |>
-    dplyr::summarise(score = mean(correct, na.rm = TRUE), .by = c(dpnum, caseid, wave)) |>
-    tidyr::pivot_wider(names_from = wave, values_from = score, names_prefix = "k")
-  stopifnot(
-    nrow(scores) == nrow(polardata),
-    !anyDuplicated(scores[c("dpnum", "caseid")]),
-    all(is.finite(scores$k1)), all(is.finite(scores$k2))
-  )
-  scores
-}
-
 t1_items_for_poll <- function(poll_id, dpnum, polardata, knowledge) {
   poll <- dplyr::filter(polardata, .data$dpnum == .env$dpnum)
   items <- knowledge |>
@@ -52,7 +27,7 @@ t1_items_for_poll <- function(poll_id, dpnum, polardata, knowledge) {
     all(items$correct[!is.na(items$correct)] %in% 0:1)
   )
   scores <- items |>
-    dplyr::summarise(score = mean(correct, na.rm = TRUE), n_items = dplyr::n(), .by = caseid)
+    dplyr::summarise(score = sum(correct, na.rm = TRUE) / dplyr::n(), n_items = dplyr::n(), .by = caseid)
   stopifnot(
     dplyr::n_distinct(scores$n_items) == 1L,
     all(
@@ -102,7 +77,7 @@ add_item_peer_measure <- function(frame, responses = read_analysis_responses()) 
       by = keys, relationship = "many-to-one"
     ) |>
     dplyr::transmute(pollid = poll_id, caseid = respondent_id,
-      group, item = item_id, correct = dplyr::coalesce(correct, 0L)
+      group, item = item_id, correct
     ) |>
     item_group_knowledge() |>
     dplyr::rename(poll_id = pollid, respondent_id = caseid,

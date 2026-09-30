@@ -1,12 +1,12 @@
 {
-  "data_commit": "f22f17fff46acb1f7e7a549d4f2e0533d1479619",
+  "data_commit": "371e06520f0f3993f0a09474bb27941030dffade",
   "guess_version": "0.8.0",
   "bootstrap_replicates": 999,
   "sources": [
     {
       "source": "distortions_responses",
       "path": "output/polardata/polardata.parquet",
-      "sha256": "85408d0ccb281fa9d485d430ccc48dc1db8fe126ec6e90b4c5115dc6c4eb4d3b"
+      "sha256": "4c6453c7102250063563ded80f550a5221ed5860744bc62b39aef5cc4cd0e5fb"
     },
     {
       "source": "briefing_reading",
@@ -21,37 +21,37 @@
     {
       "source": "items",
       "path": "output/analysis/analysis_items.parquet",
-      "sha256": "b71ff6a4fc2713f0c2283b111aa5c7ac733b2d86147432c012032ef493887acb"
+      "sha256": "7d1b539c380fe43dd13845164017414fd48c1e574211be8baa6dfa279c0b28e1"
     },
     {
       "source": "participants",
       "path": "output/analysis/analysis_participants.parquet",
-      "sha256": "0fe933309bbdfffd00f7a0f6215a9364cbd08da68d6e34e9fd64ecb6d98314c7"
+      "sha256": "bb3b33d5c9c3b8f11bbc4afc02de03ad1f03c71efc41c83a2feea8c60bc36456"
     },
     {
       "source": "item_responses",
       "path": "output/analysis/analysis_item_responses.parquet",
-      "sha256": "7aeb356455e99e14ece0bf7d66bd9475c0892ba1505b81eaee0fea88908d95f5"
+      "sha256": "de10d799b2d1a4a1094ca713122fcdcbb4d06407a444e618174aefbe4f3869d0"
     },
     {
       "source": "scores",
       "path": "output/analysis/analysis_scores.parquet",
-      "sha256": "0bffaac715c9510266655533691964dfb4c74e9cae6f92ee58302ca437ba2e0e"
+      "sha256": "14f6d7c23434e5cb2ee266c8cd49b6a9c3e7c1d3941e21ce377b0cf0737964bf"
     },
     {
       "source": "attitudes",
       "path": "output/analysis/analysis_attitude_responses.parquet",
-      "sha256": "de6a29ead84a1241da2148911e1bb764258c48f579136f17e436f1f7f0ae8a48"
+      "sha256": "633cd186d1b74faaaedb325acf54a998f6d9f0d45dd3240864fd27c111709b35"
     },
     {
       "source": "phase_participants",
       "path": "output/analysis/analysis_phase_participants.parquet",
-      "sha256": "492b99db21a97d0ddbf393c4159e570b5865cf19a3cf34d086407ca0eacadd4e"
+      "sha256": "65a3d1b0d937950654fd7f394ada760a1cfbc1b4c9d09468204df27e31cc99b5"
     },
     {
       "source": "phase_scores",
       "path": "output/analysis/analysis_phase_scores.parquet",
-      "sha256": "6d155bc9a1c40f948e291681ca852e8b9da59df905491f4e9c75a7b183e7dbf4"
+      "sha256": "e90642ecc5db45593b021edefdc1ecccdf426bab75cd2674b68769e064cb5ba8"
     },
     {
       "source": "studies",

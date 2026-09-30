@@ -7,7 +7,6 @@ test_that("climate completion labels retain the paired treatment cohort", {
   other <- climate & !people$panel & people$assignment == "invited"
   people$arm[complete] <- "completed"
   people$arm[other] <- "invited_noncompleter"
-  people$attended[other] <- NA
   data <- control_panel(participants = people)
   study <- dplyr::filter(data, poll_id == "a1r-climate-2021")
   expect_equal(sum(study$arm == "completed"), 962L)
@@ -38,7 +37,17 @@ test_that("the current upstream completion cohort reaches the main panel unchang
   expect_equal(nrow(completed), 962L)
   expect_true(all(completed$attended & completed$panel))
   expect_true(all(completed$assignment == "invited"))
-  expect_true(all(is.na(climate$attended[climate$arm == "invited_noncompleter"])))
+  other <- dplyr::filter(climate, arm == "invited_noncompleter")
+  expect_equal(nrow(other), 7018L)
+  expect_false(any(other$panel))
+  expect_false(anyNA(other$attended))
+  expect_equal(sum(other$attended), 184L)
+  sessions <- dplyr::filter(other, attendance_basis == "source_session_records")
+  expect_equal(sum(sessions$attended), 184L)
+  expect_equal(sum(!sessions$attended), 426L)
+  inferred <- dplyr::filter(other, attendance_basis == "inferred_absent_post_questionnaire")
+  expect_equal(nrow(inferred), 6408L)
+  expect_true(all(!inferred$attended))
   panel <- attendee_panel()
   actual <- dplyr::filter(panel, poll_id == "a1r-climate-2021")
   expect_setequal(actual$respondent_id, completed$respondent_id)
@@ -55,4 +64,21 @@ test_that("the current upstream completion cohort reaches the main panel unchang
   expected <- scores[match(actual$respondent_id, scores$respondent_id), ]
   expect_equal(actual$k1, expected$t1)
   expect_equal(actual$k2, expected$t2)
+})
+
+test_that("an explicitly documented nonattendee is excluded from paired attendees", {
+  people <- read_analysis_participants()
+  original <- attendee_panel(participants = people)
+  row <- which(people$poll_id == "btp-national-2003" &
+                 people$source_dataset == "historical" &
+                 people$historical_respondent_id == "930160")
+  expect_length(row, 1L)
+  people$attended[row] <- FALSE
+  result <- attendee_panel(participants = people)
+  expected <- original |>
+    dplyr::filter(!(poll_id == "btp-national-2003" &
+                      historical_respondent_id == "930160"))
+  expect_identical(result, expected)
+  expect_false(any(result$poll_id == "btp-national-2003" &
+                     result$historical_respondent_id == "930160"))
 })

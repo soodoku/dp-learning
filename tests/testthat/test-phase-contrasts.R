@@ -235,3 +235,146 @@ test_that("completion comparisons retain invitees with unknown attendance", {
   expect_true(all(coverage$n_unknown_attendance == 2L))
   expect_true(all(coverage$n_nonattendees == 1L))
 })
+
+
+test_that("verified Europolis source copies count once without dropping distinct batteries", {
+  fixture <- phase_fixture()
+  fixture$participants$poll_id <- "europolis-2009"
+  fixture$participants$study_id <- "europolis-2009"
+  fixture$polls$poll_id <- "europolis-2009"
+  fixture$scores$poll_id <- "europolis-2009"
+  fixture$scores$battery_id <- "europolis-2009:historical:knowledge"
+  fixture$scores$n_items <- 6L
+  expanded <- dplyr::filter(fixture$scores, wave != "t0")
+  expanded$battery_id <- "europolis-2009:historical:knowledge_expanded_nine"
+  expanded$n_items <- 9L
+  fixture$scores <- dplyr::bind_rows(fixture$scores, expanded)
+  copied_people <- fixture$participants
+  copied_people$source_dataset <- "cor_sood"
+  copied_scores <- fixture$scores
+  copied_scores$source_dataset <- "cor_sood"
+  copied_scores$battery_id <- sub(":historical:", ":cor_sood:", copied_scores$battery_id)
+  unrelated <- dplyr::filter(copied_scores, n_items == 9L)
+  unrelated$battery_id <- "europolis-2009:cor_sood:other_nine_items"
+  fixture$participants <- dplyr::bind_rows(fixture$participants, copied_people)
+  fixture$scores <- dplyr::bind_rows(fixture$scores, copied_scores, unrelated)
+  result <- run_phase_fixture(fixture)$contrasts
+  expected <- c(
+    "europolis-2009:historical:knowledge",
+    "europolis-2009:historical:knowledge_expanded_nine",
+    "europolis-2009:cor_sood:other_nine_items"
+  )
+  expect_setequal(result$battery_id, expected)
+  paired <- dplyr::filter(result,
+    sample == "available_paired_attendees", contrast == "post_minus_arrival"
+  )
+  expect_equal(nrow(paired), 3L)
+  expect_true(all(paired$n_people == 3L))
+  balanced <- dplyr::filter(result, sample == "all_three_observed_attendees", n_people > 0)
+  expect_equal(nrow(balanced), 3L)
+  expect_true(all(balanced$battery_id == expected[1]))
+
+  fixture$participants <- dplyr::filter(fixture$participants, source_dataset == "cor_sood")
+  fixture$scores <- dplyr::filter(fixture$scores, source_dataset == "cor_sood")
+  cor_only <- run_phase_fixture(fixture)$contrasts
+  expect_setequal(cor_only$battery_id, unique(fixture$scores$battery_id))
+})
+
+
+test_that("completion comparisons retain partial attendees among other invitees", {
+  fixture <- phase_fixture()
+  fixture$participants$arm[1:4] <- "completed"
+  fixture$participants$arm[5:7] <- "invited_noncompleter"
+  fixture$participants$attended[5:7] <- c(FALSE, TRUE, FALSE)
+  output <- run_phase_fixture(fixture)
+  difference <- dplyr::filter(output$selection,
+    analysis == "baseline_selection_difference",
+    category == "completed_minus_invited_noncompleter"
+  )
+  expect_equal(nrow(difference), 1L)
+  expect_equal(difference$n_people, 4L)
+  expect_equal(difference$n_reference, 3L)
+  expect_equal(difference$n_reference_scored, 3L)
+  expect_equal(difference$reference_mean_t0, mean(c(0, .2, .8)))
+})
+
+
+test_that("reviewed two-wave source aliases yield one estimate per contrast", {
+  polls <- c(
+    "btp-health-education-2005", "bulgaria-crime-2002", "cpl-1996",
+    "uk-crime-1994", "uk-general-election-1997", "uk-health-1998",
+    "wtu-1996", "swepco-1996", "san-mateo-2008", "uk-eu-1995"
+  )
+  for (poll in polls) {
+    fixture <- phase_fixture()
+    fixture$participants$poll_id <- poll
+    fixture$participants$study_id <- poll
+    fixture$polls$poll_id <- poll
+    fixture$scores <- dplyr::filter(fixture$scores, wave != "t1")
+    fixture$scores$poll_id <- poll
+    fixture$scores$battery_id <- paste(poll, "historical", "knowledge", sep = ":")
+    original <- run_phase_fixture(fixture)$contrasts
+    copied_people <- fixture$participants
+    copied_people$source_dataset <- "cor_sood"
+    copied_scores <- fixture$scores
+    copied_scores$source_dataset <- "cor_sood"
+    copied_scores$battery_id <- paste(poll, "cor_sood", "knowledge", sep = ":")
+    fixture$participants <- dplyr::bind_rows(fixture$participants, copied_people)
+    fixture$scores <- dplyr::bind_rows(fixture$scores, copied_scores)
+    selected <- run_phase_fixture(fixture)$contrasts
+    expect_true(all(selected$source_dataset == "historical"), info = poll)
+    expect_equal(selected$estimate, original$estimate, info = poll)
+    expect_equal(selected$n_people, original$n_people, info = poll)
+    fixture$participants <- copied_people
+    fixture$scores <- copied_scores
+    fallback <- run_phase_fixture(fixture)$contrasts
+    expect_true(all(fallback$source_dataset == "cor_sood"), info = poll)
+    expect_equal(fallback$estimate, original$estimate, info = poll)
+  }
+})
+
+
+test_that("unverified aliases and distinct cohorts are not removed", {
+  polls <- c(
+    "btp-general-election-2004", "australia-republic-1999", "nic-1996",
+    "uk-monarchy-1996", "tomorrows-europe-2007"
+  )
+  frame <- tidyr::expand_grid(
+    poll_id = polls, source_dataset = c("historical", "cor_sood"),
+    respondent_id = c("a", "b")
+  ) |>
+    dplyr::mutate(battery_id = paste(poll_id, source_dataset, "knowledge", sep = ":"))
+  expect_identical(phase_analysis_sources(frame), frame)
+})
+
+
+test_that("dropping source aliases preserves retained bootstrap seeds", {
+  fixture <- phase_fixture()
+  alias_people <- fixture$participants
+  alias_people$poll_id <- "europolis-2009"
+  alias_people$study_id <- "europolis-2009"
+  alias_scores <- fixture$scores
+  alias_scores$poll_id <- "europolis-2009"
+  alias_scores$battery_id <- "europolis-2009:historical:knowledge"
+  cor_people <- alias_people
+  cor_people$source_dataset <- "cor_sood"
+  cor_scores <- alias_scores
+  cor_scores$source_dataset <- "cor_sood"
+  cor_scores$battery_id <- "europolis-2009:cor_sood:knowledge"
+  fixture$participants <- dplyr::bind_rows(fixture$participants, alias_people, cor_people)
+  fixture$scores <- dplyr::bind_rows(fixture$scores, alias_scores, cor_scores)
+  fixture$polls <- dplyr::bind_rows(fixture$polls,
+    tibble::tibble(poll_id = "europolis-2009", title = "Europolis")
+  )
+  selected <- run_phase_fixture(fixture)$contrasts
+  unfiltered <- phase_contrasts
+  environment(unfiltered) <- list2env(
+    list(phase_analysis_sources = identity), parent = environment(phase_contrasts)
+  )
+  original <- do.call(unfiltered, c(fixture, list(n_boot = 19L)))$contrasts
+  retained <- dplyr::semi_join(original, selected,
+    by = c("poll_id", "source_dataset", "battery_id")
+  )
+  expect_equal(selected, retained)
+  expect_true(any(selected$poll_id == "example" & is.finite(selected$std_error)))
+})

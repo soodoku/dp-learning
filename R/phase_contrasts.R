@@ -174,23 +174,56 @@ phase_selection <- function(data) {
   dplyr::bind_rows(summaries, attrition, comparisons)
 }
 
+# Reviewed aliases have identical raw IDs, items, scores and group partitions.
+# Prefer historical linkage only for these batteries; other source cohorts remain.
+phase_analysis_sources <- function(frame) {
+  aliases <- tibble::tibble(
+    poll = c(
+      "btp-health-education-2005", "bulgaria-crime-2002", "cpl-1996",
+      "uk-crime-1994", "uk-general-election-1997", "uk-health-1998",
+      "wtu-1996", "swepco-1996", "san-mateo-2008", "uk-eu-1995",
+      "europolis-2009", "europolis-2009"
+    ),
+    battery = c(rep("knowledge", 11L), "knowledge_expanded_nine")
+  )
+  for (index in seq_len(nrow(aliases))) {
+    poll <- aliases$poll[index]
+    historical <- paste(poll, "historical", aliases$battery[index], sep = ":")
+    duplicate <- paste(poll, "cor_sood", aliases$battery[index], sep = ":")
+    preferred <- frame$poll_id == poll &
+      frame$source_dataset == "historical" & frame$battery_id == historical
+    if (any(preferred)) {
+      frame <- dplyr::filter(frame, !(
+        poll_id == .env$poll & source_dataset == "cor_sood" & battery_id == duplicate
+      ))
+    }
+  }
+  frame
+}
+
 # Phase differences are descriptive changes among explicit attendees. Source
 # datasets remain separate because identical respondent IDs do not establish linkage.
 phase_contrasts <- function(
   participants = read_phase_participants(), scores = read_analysis_phase_scores(),
   polls = read_poll_registry(), n_boot = bootstrap_replicates(), seed = 20260927L
 ) {
-  frame <- phase_score_frame(participants, scores, polls)
+  frame <- phase_score_frame(participants, scores, polls) |>
+    dplyr::group_by(poll_id, source_dataset, battery_id) |>
+    dplyr::mutate(phase_stratum_index = dplyr::cur_group_id()) |>
+    dplyr::ungroup() |>
+    phase_analysis_sources()
   specifications <- phase_contrast_spec()
   strata <- dplyr::group_split(frame, poll_id, source_dataset, battery_id, .keep = TRUE)
   results <- lapply(seq_along(strata), function(index) {
     people <- strata[[index]]
+    stratum_index <- unique(people$phase_stratum_index)
+    stopifnot(length(stratum_index) == 1L)
     metadata <- dplyr::distinct(people, poll_id, study_id, pollname, source_dataset, battery_id)
     attendees <- people[people$attended %in% TRUE, ]
     balanced <- Reduce(`&`, lapply(c("t0", "t1", "t2"), function(phase) phase_has_score(attendees, phase))) &
       phase_same_denominator(attendees, c("t0", "t1", "t2"))
     all_three <- phase_sample_statistics(
-      attendees[balanced & !is.na(attendees$group), ], specifications, seed + index * 1000L, n_boot
+      attendees[balanced & !is.na(attendees$group), ], specifications, seed + stratum_index * 1000L, n_boot
     ) |>
       dplyr::mutate(
         sample = "all_three_observed_attendees",
@@ -205,7 +238,7 @@ phase_contrasts <- function(
       observed <- phase_has_score(attendees, phases[1]) & phase_has_score(attendees, phases[2])
       compatible <- phase_same_denominator(attendees, phases)
       phase_sample_statistics(attendees[observed & compatible, ], specifications[i, ],
-        seed + index * 1000L + i, n_boot
+        seed + stratum_index * 1000L + i, n_boot
       ) |>
         dplyr::mutate(sample = "available_paired_attendees", n_incompatible_denominator = sum(observed & !compatible))
     }))
