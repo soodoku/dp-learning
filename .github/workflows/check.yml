@@ -28,7 +28,8 @@ jobs:
           r-version: '4.6.0'
           use-public-rspm: true
       - name: Install document tools
-        run: sudo apt-get update && sudo apt-get install -y pandoc texlive-xetex texlive-latex-extra
+        run: sudo apt-get update && sudo apt-get install -y texlive-xetex texlive-latex-extra
+      - uses: r-lib/actions/setup-pandoc@v2
       - uses: r-lib/actions/setup-renv@v2
       - run: make check
       - uses: actions/upload-artifact@v7.0.1
