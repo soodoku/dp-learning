@@ -16,6 +16,7 @@ attendee_panel <- function(
     tidyr::pivot_wider(names_from = wave, values_from = score) |>
     dplyr::filter(!is.na(t1), !is.na(t2))
   available <- participants |>
+    dplyr::filter(attended %in% TRUE) |>
     dplyr::inner_join(
       paired,
       by = c("poll_id", "source_dataset", "respondent_id"),

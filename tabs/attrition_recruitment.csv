@@ -1,8 +1,9 @@
 poll_id,pollname,source_dataset,battery_id,arm,assignment,attendance_status,n_people
 a1r-climate-2021,America in One Room: Climate,control,a1r-climate-2021:control:knowledge,completed,invited,attended,962
 a1r-climate-2021,America in One Room: Climate,control,a1r-climate-2021:control:knowledge,control,control,did_not_attend,834
-a1r-climate-2021,America in One Room: Climate,control,a1r-climate-2021:control:knowledge,invited_noncompleter,invited,unknown,7018
-marousi-2006,"Marousi, Greece",score_only,marousi-2006:score_only:knowledge,attendance_unknown,,unknown,1116
+a1r-climate-2021,America in One Room: Climate,control,a1r-climate-2021:control:knowledge,invited_noncompleter,invited,attended,184
+a1r-climate-2021,America in One Room: Climate,control,a1r-climate-2021:control:knowledge,invited_noncompleter,invited,did_not_attend,6834
+marousi-2006,"Marousi, Greece",score_only,marousi-2006:score_only:knowledge,attendance_unknown,,did_not_attend,1116
 marousi-2006,"Marousi, Greece",score_only,marousi-2006:score_only:knowledge,participant,,attended,159
 nic-1996,National Issues Convention,historical,nic-1996:historical:knowledge,surveyed,,attended,466
 nic-1996,National Issues Convention,historical,nic-1996:historical:knowledge,surveyed,,unknown,445

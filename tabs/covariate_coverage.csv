@@ -1,5 +1,5 @@
 poll_id,pollname,participants,age,education,female,reading
-uk-eu-1995,UK EU,238,237,230,238,0
+uk-eu-1995,UK EU,234,233,227,234,0
 uk-health-1998,UK Health,230,230,228,230,0
 uk-monarchy-1996,UK Monarchy,258,258,258,258,0
 uk-general-election-1997,UK General Election,275,274,274,275,0
@@ -10,9 +10,9 @@ cpl-1996,Central Power & Light,216,215,213,216,209
 zeguo-2005,Zeguo Township,233,214,205,225,0
 bulgaria-crime-2002,Bulgarian National Crime Poll,278,278,277,278,0
 europolis-2009,Europolis,348,347,335,348,340
-new-haven-2004,"New Haven, CT",132,129,132,132,0
+new-haven-2004,"New Haven, CT",131,128,131,131,0
 nic2-2003,National Issues Convention 2,340,338,340,340,335
-btp-national-2003,By the People: National,245,245,245,245,0
+btp-national-2003,By the People: National,244,244,244,244,0
 btp-general-election-2004,By the People 2004 US General Election,248,248,248,248,0
 san-mateo-2008,"San Mateo, CA",239,232,236,239,219
 btp-health-education-2005,By the People: Health and Education,454,452,452,452,0
