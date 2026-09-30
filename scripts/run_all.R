@@ -41,7 +41,7 @@ write_output(polls, "polls.csv")
 
 reading_frame <- dplyr::filter(core_frame, any(!is.na(read_briefing)), .by = poll_id)
 attitude_frame <- add_attitude_measures(core_frame)
-dplyr::bind_rows(
+models <- dplyr::bind_rows(
   bootstrap_model(core_frame, core_formula, "core"),
   bootstrap_model(core_frame, demographic_formula, "demographic"),
   bootstrap_model(core_frame, core_formula, "core_demographic_sample",
@@ -54,8 +54,9 @@ dplyr::bind_rows(
     included = model_complete_cases(attitude_frame, attitude_formula)
   ),
   bootstrap_model(add_item_peer_measure(core_frame, responses), items_formula, "items")
-) |>
-  write_output("models.csv")
+)
+write_output(models, "models.csv")
+write_output(knowledge_sensitivity_models(attendees, models), "knowledge_sensitivity.csv")
 
 effects <- control_effects(control_data)
 write_output(effects, "control_effects.csv")

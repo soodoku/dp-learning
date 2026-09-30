@@ -1,10 +1,10 @@
 test_that("gap changes preserve paired interviews and equal poll weighting", {
   frame <- tidyr::expand_grid(poll_id = as.character(1:6), female = c(0, 1),
-    education = c("Below high school", "High school", "BA or more")
+    education = c("Lower education", "Middle education", "Higher education")
   ) |>
     dplyr::mutate(
       respondent_id = as.character(dplyr::row_number()), online = as.integer(as.integer(poll_id) > 3),
-      educ = match(education, c("Below high school", "High school", "BA or more")) - 1,
+      educ = match(education, c("Lower education", "Middle education", "Higher education")) - 1,
       education_relative = as.numeric(educ > 0),
       k1 = .1 + .02 * as.integer(poll_id) * (1 - female) + .1 * educ,
       k2 = k1 + .1 - .01 * (1 - female) + .02 * educ
@@ -16,9 +16,9 @@ test_that("gap changes preserve paired interviews and equal poll weighting", {
   expect_equal(changes$upper, changes$estimate, tolerance = 1e-12)
   pre <- dplyr::filter(output$summary, term == "pre", comparison == "gender")
   expect_gt(pre$upper - pre$lower, 0)
-  without <- dplyr::filter(frame, !(poll_id == "1" & education == "Below high school"))
+  without <- dplyr::filter(frame, !(poll_id == "1" & education == "Lower education"))
   fewer <- knowledge_gaps(without, n_boot = 19L)$summary
-  expect_equal(unique(fewer$polls[fewer$comparison == "degree_vs_below_secondary"]), 5L)
+  expect_equal(unique(fewer$polls[fewer$comparison == "higher_vs_lower"]), 5L)
   duplicate <- dplyr::bind_rows(frame, frame[1, ])
   expect_error(knowledge_gaps(duplicate, n_boot = 19L))
 })
@@ -35,7 +35,7 @@ test_that("published knowledge gaps reproduce and measure paired change", {
       rows$estimate[rows$term == "post"] - rows$estimate[rows$term == "pre"], tolerance = 1e-12
     )
   }
-  expect_equal(unique(output$summary$n_people[output$summary$comparison == "gender"]), 8353L)
+  expect_equal(unique(output$summary$n_people[output$summary$comparison == "gender"]), 8335L)
   expect_equal(nrow(output$by_poll), 100L)
 })
 

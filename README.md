@@ -6,7 +6,7 @@ How much do participants in Deliberative Polls learn, does participation cause l
 
 [Manuscript](ms/main.pdf) · [Manuscript source](ms/main.Rmd) · [Results](tabs/) · [Figures](figs/)
 
-The main analysis compares pre-arrival and immediate-exit knowledge among attendees. It reports absolute gains, gains relative to initial knowledge, and estimates adjusted for guessing using the item model in [guess](https://github.com/soodoku/guess). Figure 1 also compares attendee and control gains in the two studies with both interviews in both arms. The regression table adds demographic covariates, then separately adds attitudes and briefing reading. The appendix examines groupmates' knowledge of missed questions, poll-specific estimates, precision-weighted averages, and later control interviews. Current sample sizes and estimates come from the [generated results](tabs/) and appear in the manuscript.
+The main analysis compares pre-arrival and immediate-exit knowledge among upstream-eligible participants. Eligibility requires attendance and observed questionnaires at every stage through exit that the poll collected; never-collected stages do not exclude anyone. It reports absolute gains, gains relative to initial knowledge, and estimates adjusted for guessing using the item model in [guess](https://github.com/soodoku/guess). Figure 1 also compares attendee and control gains in the two studies with both interviews in both arms. The regression table adds demographic covariates, then separately adds attitudes and briefing reading. The appendix examines groupmates' knowledge of missed questions, poll-specific estimates, precision-weighted averages, and later control interviews. Current sample sizes and estimates come from the [generated results](tabs/) and appear in the manuscript.
 
 All confidence intervals use a hierarchical bootstrap: resample polls within mode, then discussion groups, keeping each participant's item responses and interview waves together. Within-poll comparisons hold the poll fixed and resample separately by study arm; independent controls are individual sampling units. Pooled learning estimates weight polls equally. Control comparisons can reflect selection into attendance, and groupmate coefficients are descriptive.
 
@@ -22,7 +22,7 @@ make restore
 make check
 ```
 
-`DP_DATA_ROOT` can point to another checkout. `make check` rebuilds the tables, figures, and PDF, then runs linting and numerical tests. The build checks inputs against the manifests in `dp-data`; it does not download data or keep a second source inventory here. `make ci-docker` runs the same checks in a standard R image. The analysis uses 999 bootstrap replicates; `DP_BOOT_WORKERS` controls the number of parallel workers (default: 2).
+`DP_DATA_ROOT` can point to another checkout. `make check` runs linting and numerical tests and rebuilds the tables, figures, and PDF. The build checks inputs against the manifests in `dp-data`; it does not download data or keep a second source inventory here. `make ci-docker` runs the same checks in a standard R image. The analysis uses 999 bootstrap replicates; `DP_BOOT_WORKERS` controls the number of parallel workers (default: 2).
 
 ## Repository layout
 
@@ -61,14 +61,14 @@ changes preserve the authored source merge, whose sixteen conflicting exit IDs
 remain an upstream linkage limitation.
 
 The phase estimates are unweighted sample changes, without guessing adjustment.
-Seven Cor-Sood cohorts now have source-verified attendance in the phase
-participant export. Other cohorts retain unresolved attendance and contribute
-coverage; historical counterparts supply comparisons where available.
-A hardcoded participant arm or an online post survey alone is insufficient
-evidence of attendance. Comparable three-wave scores now support California,
-Europolis, Marousi, Michigan and Tomorrow's Europe. Michigan uses its common
-partial battery. The upstream wave catalog also records arrival materials for
-Denmark and Vermont; those polls do not enter the three-wave decomposition.
+Attendance and eligibility are supplied by the canonical participant tables.
+Harmonized attendance treats a wholly unanswered immediate post questionnaire
+as nonattendance, preserving the prior source indicator separately. Main models
+also require observed questionnaires at earlier stages actually collected.
+Comparable three-wave scores support California, Europolis, Marousi, Michigan
+and Tomorrow's Europe. Michigan now has a nine-item common battery as well as
+separate party-placement batteries. Denmark and Vermont have arrival scores but
+lack verified discussion groups for the grouped three-wave decomposition.
 Counts refer to underlying studies, so the two Primaries catalog IDs do not
 count twice.
 
@@ -100,7 +100,9 @@ missingness; `tabs/attrition_recruitment.csv` retains distinct attendance and
 assignment categories. `tabs/attrition_means.csv` records model predictors,
 response probabilities, weight diagnostics and baseline differences.
 `tabs/attrition_contrasts.csv` compares complete-case, normalized IPW and augmented
-IPW point estimates. Marousi targets baseline-observed attendees; follow-up
+IPW point estimates. Marousi targets baseline-observed members of the original
+source cohort with positive attendance evidence, including those without exit
+questionnaires who remain nonparticipants under the main completion rule. Follow-up
 comparisons target baseline-and-exit-observed attendees. These adjustments assume
 response is independent of missing knowledge conditional on recorded predictors.
 They do not estimate sampling intervals, nonresponse sensitivity bounds or
@@ -108,7 +110,7 @@ invitation effects. The manuscript reports the estimates and their assumptions.
 
 The climate poll retains its published cohort of 962 people who completed the
 sessions and post-survey, labeled `completed` upstream. The other 7,018 invitees
-are `invited_noncompleter`; their attendance is unknown in the analytical view.
+are `invited_noncompleter`; the harmonized attendance flag is false because they did not return the immediate post questionnaire. Prior session evidence, including 184 positive attendance records, remains separately available.
 Baseline comparisons therefore describe completers versus other invitees.
 Neither this labeling nor the nullable attendance flag changes paired knowledge
 scores, the 962-person treatment cohort, or the 671-person post-survey control
@@ -120,7 +122,15 @@ on the demographic-model sample. Each comparison weights eligible polls equally;
 Intervals resample whole polls within mode and preserve both interviews. These
 are descriptive changes in gaps, distinct from baseline-adjusted gain coefficients.
 The relative-education comparison uses the upstream within-poll median split
-in the 20 historical polls with that definition. Medians use each poll's reviewed
+where both sides of the historical within-poll median are observed. Medians use each poll's reviewed
 ordered education measure among unique historical participants; tied categories
-remain together. Fixed qualification comparisons retain their separate coverage. The regression education
-categories are unchanged.
+remain together. The other education comparisons retain source-specific lower, middle, and higher ordered categories; they do not imply equivalent qualifications across polls. Their numerical coding is unchanged.
+
+`tabs/knowledge_sensitivity.csv` retains zero scores in the main model and reports
+two separate sensitivity samples: exclude people with zero scores at either
+main interview, or exclude people with entirely blank knowledge batteries at
+either interview. Explicit don't-know answers are not blanks. Both alternatives
+use upstream typed flags for the same question battery, recalculate group
+composition, and refit the baseline model with 999 hierarchical bootstrap draws.
+Baseline attitude measures use only catalog entries marked `is_primary`; named
+midpoint-imputed alternatives do not count as additional attitudes.

@@ -1,4 +1,4 @@
-# One paired attendee record per person, selected from the canonical dp-data
+# One eligible paired participant record per person, selected from dp-data
 # participant and score tables. Overlapping historical and Cor--Sood source
 # rows represent the same poll, so the historical linkage takes priority except
 # for the reviewed Primaries cohort, which includes every verified attendee.
@@ -16,7 +16,7 @@ attendee_panel <- function(
     tidyr::pivot_wider(names_from = wave, values_from = score) |>
     dplyr::filter(!is.na(t1), !is.na(t2))
   available <- participants |>
-    dplyr::filter(attended %in% TRUE) |>
+    dplyr::filter(participant %in% TRUE, attended %in% TRUE) |>
     dplyr::inner_join(
       paired,
       by = c("poll_id", "source_dataset", "respondent_id"),
@@ -35,7 +35,7 @@ attendee_panel <- function(
     ) |>
     dplyr::filter(waves == 2L) |>
     dplyr::inner_join(
-      dplyr::filter(phase_participants, attended %in% TRUE),
+      dplyr::filter(phase_participants, participant %in% TRUE, attended %in% TRUE),
       by = c("poll_id", "source_dataset", "respondent_id"), relationship = "one-to-one"
     )
   stopifnot(length(aliases) == 1L, nrow(eligible) == 239L)

@@ -35,7 +35,8 @@ attrition_phases <- function(poll_id) {
 
 attrition_target <- function(data) {
   phases <- attrition_phases(unique(data$poll_id))
-  eligible <- data$attended %in% TRUE & phase_has_score(data, "t0") &
+  source_cohort <- data$attended %in% TRUE | data$attendance_before_post_rule %in% TRUE
+  eligible <- source_cohort & phase_has_score(data, "t0") &
     phase_same_denominator(data, phases)
   if ("t3" %in% phases) eligible <- eligible & phase_has_score(data, "t2")
   data[eligible, ]

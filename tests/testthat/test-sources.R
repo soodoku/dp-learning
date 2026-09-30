@@ -1,13 +1,13 @@
 test_that("upstream manifests identify available and unchanged files", {
   manifest <- upstream_source_manifest()
-  expect_equal(nrow(manifest), 12L)
+  expect_equal(nrow(manifest), 14L)
   expect_false(anyDuplicated(manifest$source) > 0L)
   expect_true(verify_sources())
   expect_setequal(
     manifest$source,
     c(
       "distortions_responses", "briefing_reading", "polls", "items",
-      "participants", "item_responses", "scores", "attitudes",
+      "participants", "item_responses", "scores", "attitudes", "attitude_catalog", "knowledge_flags",
       "phase_participants", "phase_scores", "studies", "survey_waves"
     )
   )
@@ -62,15 +62,19 @@ test_that("appendix poll coverage comes from upstream data", {
 
 test_that("one canonical attendee panel supplies gains and group models", {
   panel <- attendee_panel()
-  expect_equal(nrow(panel), 10259L)
+  expect_equal(nrow(panel), 10239L)
   expect_equal(dplyr::n_distinct(panel$poll_id), 30L)
   expect_equal(dplyr::n_distinct(panel$poll_id[!is.na(panel$group)]), 27L)
-  expect_equal(nrow(core_group_frame(panel)), 8469L)
+  expect_equal(nrow(core_group_frame(panel)), 8450L)
   nic <- dplyr::filter(panel, poll_id == "nic-1996")
   expect_equal(nrow(nic), 456L)
   historical_nic <- read_analysis_participants() |>
-    dplyr::filter(poll_id == "nic-1996", source_dataset == "historical", attended %in% TRUE)
+    dplyr::filter(
+      poll_id == "nic-1996", source_dataset == "historical", attendance_before_post_rule %in% TRUE
+    )
   expect_equal(nrow(historical_nic), 466L)
+  expect_equal(sum(historical_nic$attended), 460L)
+  expect_equal(sum(historical_nic$participant), 456L)
   expect_setequal(setdiff(historical_nic$respondent_id, nic$respondent_id), c(
     "cdd-nic-1996-survey:source-row-1", "10000400", "10000460", "10004670",
     "10007580", "10007590", "10011680", "10012790", "10014282", "10014650"
@@ -107,7 +111,9 @@ test_that("unavailable exit questionnaires are retained upstream and excluded fr
     dplyr::inner_join(expected, by = c("poll_id", "respondent_id"))
   expect_equal(nrow(paired), 0L)
   health <- dplyr::filter(people, poll_id == "uk-health-1998")
-  expect_true(all(health$attended))
+  expect_true(all(!health$attended))
+  expect_true(all(health$attendance_before_post_rule))
+  expect_true(all(!health$participant))
 })
 
 test_that("control analyses include only polls with respondent item answers", {
@@ -284,7 +290,9 @@ test_that("approved attendance, exit absence and unknown groups define model eli
     poll_id == "new-haven-2004", source_dataset == "historical", respondent_id == "3124"
   )
   expect_equal(nrow(new_haven), 1L)
-  expect_true(new_haven$attended)
+  expect_false(new_haven$attended)
+  expect_true(new_haven$attendance_before_post_rule)
+  expect_false(new_haven$participant)
   expect_false(new_haven$panel)
   departure <- read_analysis_phase_scores() |>
     dplyr::filter(
@@ -311,6 +319,6 @@ test_that("approved attendance, exit absence and unknown groups define model eli
   expect_true(all(is.finite(unknown_groups$k1) & is.finite(unknown_groups$k2)))
   expect_false(any(grouped$poll_id == "uk-eu-1995" & grouped$respondent_id %in% unknown_ids))
   demographic <- grouped[model_complete_cases(grouped, demographic_formula), ]
-  expect_equal(nrow(demographic), 8353L)
+  expect_equal(nrow(demographic), 8335L)
   expect_equal(dplyr::n_distinct(demographic$group), 622L)
 })

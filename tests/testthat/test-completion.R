@@ -41,12 +41,13 @@ test_that("the current upstream completion cohort reaches the main panel unchang
   expect_equal(nrow(other), 7018L)
   expect_false(any(other$panel))
   expect_false(anyNA(other$attended))
-  expect_equal(sum(other$attended), 184L)
+  expect_equal(sum(other$attended), 0L)
+  expect_equal(sum(other$attendance_before_post_rule %in% TRUE), 184L)
   sessions <- dplyr::filter(other, attendance_basis == "source_session_records")
-  expect_equal(sum(sessions$attended), 184L)
+  expect_equal(sum(sessions$attended), 0L)
   expect_equal(sum(!sessions$attended), 426L)
   inferred <- dplyr::filter(other, attendance_basis == "inferred_absent_post_questionnaire")
-  expect_equal(nrow(inferred), 6408L)
+  expect_equal(nrow(inferred), 6592L)
   expect_true(all(!inferred$attended))
   panel <- attendee_panel()
   actual <- dplyr::filter(panel, poll_id == "a1r-climate-2021")
@@ -69,16 +70,17 @@ test_that("the current upstream completion cohort reaches the main panel unchang
 test_that("an explicitly documented nonattendee is excluded from paired attendees", {
   people <- read_analysis_participants()
   original <- attendee_panel(participants = people)
+  selected_id <- original$historical_respondent_id[original$poll_id == "btp-national-2003"][1]
   row <- which(people$poll_id == "btp-national-2003" &
                  people$source_dataset == "historical" &
-                 people$historical_respondent_id == "930160")
+                 people$historical_respondent_id == selected_id)
   expect_length(row, 1L)
   people$attended[row] <- FALSE
   result <- attendee_panel(participants = people)
   expected <- original |>
     dplyr::filter(!(poll_id == "btp-national-2003" &
-                      historical_respondent_id == "930160"))
+                      historical_respondent_id == selected_id))
   expect_identical(result, expected)
   expect_false(any(result$poll_id == "btp-national-2003" &
-                     result$historical_respondent_id == "930160"))
+                     result$historical_respondent_id == selected_id))
 })

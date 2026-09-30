@@ -23,11 +23,17 @@ test_that("fully observed means need no fitted response model", {
   expect_error(attrition_mean(data, "t0", "score_t0"))
 })
 
-test_that("attrition cohorts retain intermittent interviews and known attendance only", {
+test_that("attrition targets preserve the original source cohort without changing main eligibility", {
   frame <- attrition_frame()
   marousi <- dplyr::filter(frame, poll_id == "marousi-2006")
   target <- attrition_target(marousi)
   expect_equal(nrow(target), 159L)
+  expect_equal(sum(!target$attended), 21L)
+  missing_exit <- target[!phase_has_score(target, "t2"), ]
+  expect_equal(nrow(missing_exit), 21L)
+  expect_true(all(missing_exit$attendance_before_post_rule))
+  expect_true(all(!missing_exit$participant))
+  expect_true(all(!missing_exit$attended))
   expect_equal(sum(!phase_has_score(target, "t1") & phase_has_score(target, "t2")), 5L)
   expect_equal(attrition_predictors(target), "score_t0")
   nic <- attrition_target(dplyr::filter(frame, poll_id == "nic-1996"))

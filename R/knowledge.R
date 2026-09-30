@@ -1,4 +1,4 @@
-education_labels <- c("0" = "Below high school", "0.5" = "High school", "1" = "BA or more")
+education_labels <- c("0" = "Lower education", "0.5" = "Middle education", "1" = "Higher education")
 
 # Share of the other members of i's group with attribute x, and the same share
 # among the other members of i's poll. Conditioning on the second removes the
@@ -10,11 +10,11 @@ leave_one_out <- function(x, by) {
   (total - dplyr::coalesce(x, 0)) / (count - !is.na(x))
 }
 
-assignment_check <- function(frame, covariates = c("k1", "female", "age", "education_ba")) {
+assignment_check <- function(frame, covariates = c("k1", "female", "age", "education_higher")) {
   if ("education" %in% names(frame)) {
     frame <- dplyr::mutate(
       frame,
-      education_ba = as.numeric(education == "BA or more")
+      education_higher = as.numeric(education == "Higher education")
     )
   }
   purrr::map(covariates, \(covariate) {

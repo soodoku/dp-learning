@@ -2,7 +2,7 @@ test_that("phase exhibits report estimates and intervals on the same sample", {
   balanced <- read_output("phase_contrasts.csv") |>
     dplyr::filter(sample == "all_three_observed_attendees", n_people > 0L)
   table <- phase_comparison_table(balanced)
-  expect_equal(nrow(table), 5L)
+  expect_equal(nrow(table), 6L)
   expect_setequal(balanced$poll_id, c(
     "california-whats-next-2011", "europolis-2009", "marousi-2006",
     "michigan-2009", "tomorrows-europe-2007"
@@ -40,7 +40,7 @@ test_that("selection and attrition exhibits retain distinct populations", {
   expect_equal(amr$`Comparator N`, "1,139")
   expect_equal(amr$`Gap (pp)`, "4.7")
   a1r <- selection[selection$Poll == "America in One Room", ]
-  expect_true(all(a1r$`Participant N` == "526"))
+  expect_true(all(a1r$`Participant N` == "523"))
   invited <- a1r[a1r$Comparator == "Recruitment nonattenders", ]
   expect_equal(invited$`Comparator N`, "2,215")
   expect_equal(invited$`Gap (pp)`, "8.0")
@@ -49,10 +49,17 @@ test_that("selection and attrition exhibits retain distinct populations", {
   expect_equal(control$`Gap (pp)`, "5.3")
   attrition <- phase_attrition_table(source)
   a1r <- attrition[attrition$Poll == "America in One Room", ]
-  expect_equal(sum(as.integer(a1r$`Attendee N`)), 526L)
-  expect_equal(a1r$`Attendee N`[a1r$Exit == "Absent"], "3")
+  expect_equal(sum(as.integer(a1r$`Attendee N`)), 523L)
+  expect_false(any(a1r$Exit == "Absent"))
+  original <- read_phase_participants() |>
+    dplyr::filter(poll_id == "america-in-one-room-2019", source_dataset == "control")
+  expect_equal(sum(original$attendance_before_post_rule %in% TRUE), 526L)
+  expect_equal(sum(original$attendance_before_post_rule %in% TRUE & !original$attended), 3L)
   europe <- attrition[grepl("Europe", attrition$Poll), ]
-  expect_equal(europe$`Attendee N`[europe$Exit == "Uncertain"], "9")
+  expect_false(any(europe$Exit == "Uncertain"))
+  original <- read_phase_participants() |>
+    dplyr::filter(poll_id == "tomorrows-europe-2007", source_dataset == "historical")
+  expect_equal(sum(original$attendance_before_post_rule %in% TRUE & !original$attended), 9L)
   expect_false(any(attrition$Exit == "Unknown"))
 })
 
@@ -64,5 +71,5 @@ test_that("phase exhibits distinguish question batteries within the same poll", 
   europolis <- pairs[pairs$Poll == "Europolis" & pairs$Comparison == "Arrival to exit", ]
   expect_setequal(europolis$Items, c("6", "9"))
   michigan <- pairs[pairs$Poll == "Michigan" & pairs$Comparison == "Arrival to exit", ]
-  expect_setequal(michigan$Items, c("4", "6"))
+  expect_setequal(michigan$Items, c("4", "6", "9"))
 })

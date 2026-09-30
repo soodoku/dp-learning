@@ -22,8 +22,8 @@ knowledge_gap_spec <- function() {
     ~comparison, ~variable, ~first, ~second,
     "gender", "female", "0", "1",
     "relative_education", "education_relative", "1", "0",
-    "degree_vs_below_secondary", "education", "BA or more", "Below high school",
-    "degree_vs_secondary", "education", "BA or more", "High school"
+    "higher_vs_lower", "education", "Higher education", "Lower education",
+    "higher_vs_middle", "education", "Higher education", "Middle education"
   )
 }
 

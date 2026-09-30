@@ -15,6 +15,8 @@ upstream_source_ids <- c(
   item_responses = "analysis_item_responses_parquet",
   scores = "analysis_scores_parquet",
   attitudes = "analysis_attitude_responses_parquet",
+  attitude_catalog = "analysis_attitudes_parquet",
+  knowledge_flags = "analysis_knowledge_flags_parquet",
   phase_participants = "analysis_phase_participants_parquet",
   phase_scores = "analysis_phase_scores_parquet",
   studies = "analysis_studies_parquet",
@@ -178,4 +180,12 @@ write_results_provenance <- function() {
     "  year = {2026},", paste0("  note = {Revision ", provenance$data_commit, "},"),
     paste0("  url = {https://github.com/soodoku/dp-data/tree/", provenance$data_commit, "}"), "}"
   ), "ms/data-version.bib")
+}
+
+read_attitude_catalog <- function(root = dp_data_root()) {
+  arrow::read_parquet(source_path("attitude_catalog", root = root))
+}
+
+read_knowledge_flags <- function(root = dp_data_root()) {
+  arrow::read_parquet(source_path("knowledge_flags", root = root))
 }
