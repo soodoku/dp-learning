@@ -62,14 +62,14 @@ test_that("appendix poll coverage comes from upstream data", {
 
 test_that("one canonical attendee panel supplies gains and group models", {
   panel <- attendee_panel()
-  expect_equal(nrow(panel), 10270L)
+  expect_equal(nrow(panel), 10259L)
   expect_equal(dplyr::n_distinct(panel$poll_id), 30L)
   expect_equal(dplyr::n_distinct(panel$poll_id[!is.na(panel$group)]), 27L)
-  expect_equal(nrow(core_group_frame(panel)), 8480L)
+  expect_equal(nrow(core_group_frame(panel)), 8469L)
   nic <- dplyr::filter(panel, poll_id == "nic-1996")
   expect_equal(nrow(nic), 456L)
   historical_nic <- read_analysis_participants() |>
-    dplyr::filter(poll_id == "nic-1996", source_dataset == "historical", panel)
+    dplyr::filter(poll_id == "nic-1996", source_dataset == "historical", attended %in% TRUE)
   expect_equal(nrow(historical_nic), 466L)
   expect_setequal(setdiff(historical_nic$respondent_id, nic$respondent_id), c(
     "cdd-nic-1996-survey:source-row-1", "10000400", "10000460", "10004670",
@@ -84,6 +84,30 @@ test_that("one canonical attendee panel supplies gains and group models", {
   expect_true(all(evidence$attendance_status == "attended"))
   expect_true(all(evidence$sessions_attended >= 1L))
   expect_setequal(unique(core_group_frame(panel)$poll_id), read_output("poll_gains.csv")$poll_id)
+})
+
+test_that("unavailable exit questionnaires are retained upstream and excluded from paired gains", {
+  expected <- tibble::tibble(
+    poll_id = c(rep("uk-health-1998", 2), rep("tomorrows-europe-2007", 9)),
+    respondent_id = c("3809", "4307", "3522", "3495", "2824", "625", "516", "693", "374", "225", "148")
+  )
+  people <- read_analysis_participants() |>
+    dplyr::filter(source_dataset == "historical") |>
+    dplyr::inner_join(expected, by = c("poll_id", "respondent_id"), relationship = "one-to-one")
+  expect_equal(nrow(people), 11L)
+  exit <- read_analysis_scores() |>
+    dplyr::filter(source_dataset == "historical", wave == "t2") |>
+    dplyr::inner_join(expected, by = c("poll_id", "respondent_id"), relationship = "one-to-one")
+  expect_equal(nrow(exit), 11L)
+  expect_true(all(is.na(exit$score)))
+  expect_true(all(is.na(exit$n_observed) | exit$n_observed == 0))
+  health_exit <- dplyr::filter(exit, poll_id == "uk-health-1998")
+  expect_true(all(health_exit$n_observed == 0))
+  paired <- attendee_panel() |>
+    dplyr::inner_join(expected, by = c("poll_id", "respondent_id"))
+  expect_equal(nrow(paired), 0L)
+  health <- dplyr::filter(people, poll_id == "uk-health-1998")
+  expect_true(all(health$attended))
 })
 
 test_that("control analyses include only polls with respondent item answers", {
@@ -287,6 +311,6 @@ test_that("approved attendance, exit absence and unknown groups define model eli
   expect_true(all(is.finite(unknown_groups$k1) & is.finite(unknown_groups$k2)))
   expect_false(any(grouped$poll_id == "uk-eu-1995" & grouped$respondent_id %in% unknown_ids))
   demographic <- grouped[model_complete_cases(grouped, demographic_formula), ]
-  expect_equal(nrow(demographic), 8364L)
+  expect_equal(nrow(demographic), 8353L)
   expect_equal(dplyr::n_distinct(demographic$group), 622L)
 })

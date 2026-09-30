@@ -23,7 +23,7 @@ test_that("assignment checks use the main sample and report finite intervals", {
     c("k1", "female", "age", "education_ba")
   )
   k1 <- dplyr::filter(check, covariate == "k1")
-  expect_equal(k1$n, 8480L)
+  expect_equal(k1$n, 8469L)
   expect_true(all(is.finite(check$lower) & is.finite(check$upper)))
   expect_true(all(check$lower <= check$upper))
 })
@@ -56,7 +56,7 @@ test_that("gains use the same grouped attendees as the main model", {
   gains <- read_output("poll_gains.csv")
   expect_identical(gains$poll_id, read_output("polls.csv")$poll_id)
   expect_equal(nrow(gains), 27L)
-  expect_equal(sum(gains$respondents), 8480L)
+  expect_equal(sum(gains$respondents), 8469L)
   expect_equal(gains$respondents[gains$poll_id == "btp-online-primaries-2004"], 238L)
   effects <- read_output("control_effects.csv") |>
     dplyr::filter(comparison %in% c("Attended vs uninvited control", "Completed vs uninvited control"))
@@ -82,7 +82,7 @@ test_that("missed-item peer model uses the main item sample", {
   main <- read_output("models.csv") |> dplyr::filter(model == "demographic")
   core <- read_output("models.csv") |> dplyr::filter(model == "core")
   expect_equal(unique(core$polls), 27L)
-  expect_equal(unique(core$n), 8480L)
+  expect_equal(unique(core$n), 8469L)
   expect_equal(unique(items$polls), 27L)
   expect_equal(unique(main$n) - unique(items$n), 0L)
   expect_true(all(c(
@@ -117,7 +117,7 @@ test_that("expanded models retain all polls and comparisons hold cases fixed", {
   row <- function(name) samples[samples$model == name, ]
   expect_equal(row("demographic")$polls, 27L)
   expect_equal(row("demographic")$groups, 622L)
-  expect_equal(row("demographic")$n, 8364L)
+  expect_equal(row("demographic")$n, 8353L)
   expect_equal(row("core_demographic_sample")$n, row("demographic")$n)
   expect_equal(row("attitudes")$polls, 27L)
   expect_equal(row("attitude_sd")$n, row("attitudes")$n)
