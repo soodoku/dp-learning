@@ -1,12 +1,12 @@
 {
-  "data_commit": "371e06520f0f3993f0a09474bb27941030dffade",
+  "data_commit": "afd32a59286263c991abe813a17fb8732b2f00e7",
   "guess_version": "0.8.0",
   "bootstrap_replicates": 999,
   "sources": [
     {
       "source": "distortions_responses",
       "path": "output/polardata/polardata.parquet",
-      "sha256": "4c6453c7102250063563ded80f550a5221ed5860744bc62b39aef5cc4cd0e5fb"
+      "sha256": "42d540ae24db61656f360a06ce150dd8056ebc8e5abae297cc68d4aed7c259bf"
     },
     {
       "source": "briefing_reading",
@@ -26,17 +26,17 @@
     {
       "source": "participants",
       "path": "output/analysis/analysis_participants.parquet",
-      "sha256": "bb3b33d5c9c3b8f11bbc4afc02de03ad1f03c71efc41c83a2feea8c60bc36456"
+      "sha256": "f74fb1648deefb277ef047d62360933f96cf62e5f1f32d6ba7ff6277838fb38c"
     },
     {
       "source": "item_responses",
       "path": "output/analysis/analysis_item_responses.parquet",
-      "sha256": "de10d799b2d1a4a1094ca713122fcdcbb4d06407a444e618174aefbe4f3869d0"
+      "sha256": "af708e547d3bd6ac047233d10595271827fc4d3733bc2ec72fc774eb2967b74b"
     },
     {
       "source": "scores",
       "path": "output/analysis/analysis_scores.parquet",
-      "sha256": "14f6d7c23434e5cb2ee266c8cd49b6a9c3e7c1d3941e21ce377b0cf0737964bf"
+      "sha256": "101885e3eb5ac55a5af6dd182743a3c3872f8f4a9bd6934f2d357cc4d2fa52a1"
     },
     {
       "source": "attitudes",
@@ -46,12 +46,12 @@
     {
       "source": "phase_participants",
       "path": "output/analysis/analysis_phase_participants.parquet",
-      "sha256": "65a3d1b0d937950654fd7f394ada760a1cfbc1b4c9d09468204df27e31cc99b5"
+      "sha256": "6fcd56cd245d8eb242b1053cbcfbcf40e2869ddc198d1b31dea4f980b3493471"
     },
     {
       "source": "phase_scores",
       "path": "output/analysis/analysis_phase_scores.parquet",
-      "sha256": "e90642ecc5db45593b021edefdc1ecccdf426bab75cd2674b68769e064cb5ba8"
+      "sha256": "0d2a2236c9d159c9786463810784386c054298901771c5ebc4240125bf9e26e7"
     },
     {
       "source": "studies",
@@ -61,7 +61,7 @@
     {
       "source": "survey_waves",
       "path": "output/analysis/analysis_survey_waves.parquet",
-      "sha256": "9c39124e697993c7632a1f348b217a565e2e0cd7df4030deb7f163c6da5fdbc5"
+      "sha256": "04f56eb7fa5cb16fe5f00e6bc5f44094cb7aeb12d7fef65df5ba43a03532e039"
     }
   ]
 }
