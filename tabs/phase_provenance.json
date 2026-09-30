@@ -1,5 +1,5 @@
 {
-  "data_commit": "afd32a59286263c991abe813a17fb8732b2f00e7",
+  "data_commit": "71b949c250e3b79ed0a1ff3ece8b8f781bad9103",
   "bootstrap_replicates": 999,
   "sources": [
     {
@@ -25,7 +25,7 @@
     {
       "source": "survey_waves",
       "path": "output/analysis/analysis_survey_waves.parquet",
-      "sha256": "04f56eb7fa5cb16fe5f00e6bc5f44094cb7aeb12d7fef65df5ba43a03532e039"
+      "sha256": "17c16d5b0bc5820f8ec5e7accaef303879c15fbb1a19f7398be7a802d4b989e3"
     }
   ]
 }
