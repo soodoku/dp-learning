@@ -1,0 +1,77 @@
+{
+  "data_commit": "896154a0a0b58e51a600075b76e0bbe60cc42e33",
+  "guess_version": "0.8.0",
+  "bootstrap_replicates": 999,
+  "sources": [
+    {
+      "source": "distortions_responses",
+      "path": "output/polardata/polardata.parquet",
+      "sha256": "6f6e4ab51ece4ebdbfd95a8da6f06c3c1f26ccd73d8a778a24fed6c8e18d1675"
+    },
+    {
+      "source": "briefing_reading",
+      "path": "output/respondent/briefing_reading.parquet",
+      "sha256": "92a0f763310311edb4f460ee45eb2d2a566ffab37eb5c4773067626635ce3dd8"
+    },
+    {
+      "source": "polls",
+      "path": "output/analysis/analysis_polls.parquet",
+      "sha256": "e378b69887098ee33bae2187a235d4913db17961def58f5da2d632884ff1e477"
+    },
+    {
+      "source": "items",
+      "path": "output/analysis/analysis_items.parquet",
+      "sha256": "7d1b539c380fe43dd13845164017414fd48c1e574211be8baa6dfa279c0b28e1"
+    },
+    {
+      "source": "participants",
+      "path": "output/analysis/analysis_participants.parquet",
+      "sha256": "ea9c732bfeb76801461399d1041cc632dd53e72526fe306e8623a6615d036a71"
+    },
+    {
+      "source": "item_responses",
+      "path": "output/analysis/analysis_item_responses.parquet",
+      "sha256": "0f6e708e2b7cd461bd2f223857b34cd16669de2bdb05619c77f97868b5bd1137"
+    },
+    {
+      "source": "scores",
+      "path": "output/analysis/analysis_scores.parquet",
+      "sha256": "39cb38dcc1a4d1d6a94637c6aa393a97cca79c612c73482595f20061b8e754c8"
+    },
+    {
+      "source": "attitudes",
+      "path": "output/analysis/analysis_attitude_responses.parquet",
+      "sha256": "646b6ea4d5ec2523be642abfb4572434d9d3541af155c8fbe13d5488578b3594"
+    },
+    {
+      "source": "attitude_catalog",
+      "path": "output/analysis/analysis_attitudes.parquet",
+      "sha256": "88b05629f54c5a8df6c83d3ef40e430e69bcc667c1d83d9d41bb5e24eb86eb70"
+    },
+    {
+      "source": "knowledge_flags",
+      "path": "output/analysis/analysis_knowledge_flags.parquet",
+      "sha256": "03e018929b47cec4b99f04e0fb9e6a8f22bc73f09db7f8d3f07f8e8ace9dce50"
+    },
+    {
+      "source": "phase_participants",
+      "path": "output/analysis/analysis_phase_participants.parquet",
+      "sha256": "a05f552bd18c80a362cb58e8dd3a8289b39c19089552d3843960398954737e9e"
+    },
+    {
+      "source": "phase_scores",
+      "path": "output/analysis/analysis_phase_scores.parquet",
+      "sha256": "3fb649b0f4d94549337e6fb299d0ee75fd714efab50a4d61da647dc494a680bb"
+    },
+    {
+      "source": "studies",
+      "path": "output/analysis/analysis_studies.parquet",
+      "sha256": "e9329db5f475d69be1ca0504ee1c088f7d1ee1d3ef92e275c98167509cbae1d6"
+    },
+    {
+      "source": "survey_waves",
+      "path": "output/analysis/analysis_survey_waves.parquet",
+      "sha256": "e0139a4084b2023bb1d97c281c8d5b8913f7b8cc2085aaa0eacd8b78fd2f0502"
+    }
+  ]
+}

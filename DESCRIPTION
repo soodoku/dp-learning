@@ -1,0 +1,36 @@
+Package: dplearning
+Type: Project
+Title: Deliberation and Learning: Evidence From Deliberative Polls
+Version: 0.0.1
+Authors@R: c(
+    person("Robert C.", "Luskin", role = "aut"),
+    person("Gaurav", "Sood", role = c("aut", "cre"), email = "gsood07@gmail.com"),
+    person("James S.", "Fishkin", role = "aut"))
+Description: Reproducible analyses and manuscript on who learns how much in
+    Deliberative Polls.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Imports:
+    arrow,
+    assertr,
+    digest,
+    dplyr,
+    forcats,
+    ggplot2,
+    guess,
+    haven,
+    jsonlite,
+    knitr,
+    lme4,
+    purrr,
+    readr,
+    rmarkdown,
+    rprojroot,
+    tibble,
+    tidyr
+Suggests:
+    lintr,
+    renv,
+    styler,
+    testthat
+Config/testthat/edition: 3
