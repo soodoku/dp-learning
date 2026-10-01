@@ -1,5 +1,5 @@
 {
-  "data_commit": "555b29d8dbd364c7f5048d3f32748fdb87e97bdb",
+  "data_commit": "896154a0a0b58e51a600075b76e0bbe60cc42e33",
   "bootstrap_replicates": 999,
   "sources": [
     {
@@ -15,7 +15,7 @@
     {
       "source": "phase_scores",
       "path": "output/analysis/analysis_phase_scores.parquet",
-      "sha256": "e09511d333dfc64362d52e3352b8bb1fff637ddec8ad3327c429c908f6131741"
+      "sha256": "3fb649b0f4d94549337e6fb299d0ee75fd714efab50a4d61da647dc494a680bb"
     },
     {
       "source": "studies",
