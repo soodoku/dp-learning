@@ -54,6 +54,13 @@ phase_coverage <- read_out("phase_coverage.csv")
 phase_selection <- read_out("pre_arrival_selection.csv")
 phase_provenance <- jsonlite::read_json("tabs/phase_provenance.json", simplifyVector = TRUE)
 phase_balanced <- dplyr::filter(phase_changes, sample == "all_three_observed_attendees", n_people > 0)
+phase_primary <- phase_primary_exhibit(phase_changes)
+phase_summary <- read_out("phase_summary.csv")
+phase_average <- function(contrast) {
+  row <- dplyr::filter(phase_summary, .data$contrast == .env$contrast)
+  stopifnot(nrow(row) == 1L)
+  row
+}
 phase_pairs <- dplyr::filter(phase_changes, sample == "available_paired_attendees", n_people > 0,
                              study_id != "btp-primaries-2004" | poll_id == "btp-online-primaries-2004")
 phase_baseline_exit <- dplyr::filter(phase_pairs, contrast == "post_minus_pre_arrival")
@@ -272,23 +279,13 @@ figure("learning")
 
 ## Changes before arrival and during the event {#sec:phases}
 
-California, Europolis, Marousi, Michigan, and Tomorrow's Europe have comparable knowledge measures before arrival, on arrival, and after deliberation. All five show gains before arrival, ranging from `r pp(min(phase_balanced$estimate[phase_balanced$contrast == "arrival_minus_pre_arrival"]))` to `r pp(max(phase_balanced$estimate[phase_balanced$contrast == "arrival_minus_pre_arrival"]))` percentage points. Gains during the event range from `r pp(min(phase_balanced$estimate[phase_balanced$contrast == "post_minus_arrival"]))` to `r pp(max(phase_balanced$estimate[phase_balanced$contrast == "post_minus_arrival"]))` points; the intervals for Marousi and Michigan's four-item party-placement battery include zero. Table \ref{tab:phase-changes} uses the same respondents for all three changes within each poll, so the total equals the sum of its two component changes before rounding. Michigan is shown for both its full nine-item battery and the four party-placement questions common to all three interviews. Pair-specific samples, reported in Appendix \ref{app:phases}, answer a different question when questionnaire availability differs.
+Knowledge increases both before arrival and during the event in the five polls with comparable measurements at all three interviews: California, Europolis, Marousi, Michigan, and Tomorrow's Europe. Giving each poll equal weight, the mean gain is `r pp(phase_average("arrival_minus_pre_arrival")$estimate)` percentage points before arrival (95\% interval `r pp(phase_average("arrival_minus_pre_arrival")$lower)` to `r pp(phase_average("arrival_minus_pre_arrival")$upper)`) and `r pp(phase_average("post_minus_arrival")$estimate)` points during the event (`r pp(phase_average("post_minus_arrival")$lower)` to `r pp(phase_average("post_minus_arrival")$upper)`). Figure \ref{fig:phase-components} shows both components for each poll and their equally weighted means. These estimates use the same respondents at all three interviews within each poll, so the total gain equals the sum of its two components before rounding. Their common three-wave sample differs from Figure \ref{fig:learning}'s pair-specific sample.
 
-```{r phase-changes, results="asis"}
-cat("\n```{=latex}\n")
-phase_comparison_table(phase_balanced) |>
-  knitr::kable(
-    format = "latex", booktabs = TRUE, escape = FALSE, position = "H",
-    align = c(">{\\raggedright\\arraybackslash}p{1.4in}", "r", "r", "r", "r", "r"),
-    col.names = c("Poll", "Items", "N", "\\shortstack[r]{Pre-arrival \\\\ to arrival}",
-                  "\\shortstack[r]{Arrival \\\\ to exit}", "\\shortstack[r]{Pre-arrival \\\\ to exit}"),
-    caption = "Knowledge changes among attendees with all three questionnaires and recorded discussion groups. Entries are percentage points; brackets contain 95 percent group-bootstrap intervals. Items reports the battery size where documented; a dash marks an unavailable count."
-  ) |>
-  print()
-cat("\n```\n")
+```{r phase-components, out.width="100%", fig.cap=paste0("Knowledge changes before arrival and during the event among ", count(phase_summary$n_people[1]), " attendees with all three questionnaires, the same questions and scoring denominator, and recorded discussion groups. Points are unweighted mean changes in proportion correct, expressed as percentage points; lines show 95 percent bootstrap intervals from ", phase_summary$bootstrap_replicates[1], " draws. Poll intervals resample discussion groups; equally weighted mean intervals resample polls and groups, retaining each person's three scores together. Both panels use the same poll order and common sample. Michigan contributes its full nine-question battery once. These samples differ from the pair-specific samples in Figure 1.")}
+figure("phase_changes")
 ```
 
-These estimates are unweighted changes in proportion correct, without adjustment for guessing. Intervals resample discussion groups in `r phase_provenance$bootstrap_replicates` draws, retaining each respondent's three scores together. The Marousi comparisons exclude `r prose_count(marousi_exit$n_excluded_unknown_group)` otherwise eligible respondents whose discussion groups are unknown. Its original merge also contains conflicting telephone and exit identifiers; these estimates therefore depend on the original matching of respondents across interviews, which remains unresolved.
+The estimates do not adjust for guessing. Michigan's main row uses its full nine-question battery; its four-question party-placement comparison remains a sensitivity in Appendix Table \ref{tab:phase-changes}, which also reports total pre-arrival-to-exit gains and sample sizes. The Marousi comparisons exclude `r prose_count(marousi_exit$n_excluded_unknown_group)` otherwise eligible respondents whose discussion groups are unknown. Its original merge also contains conflicting telephone and exit identifiers; these estimates therefore depend on the original matching of respondents across interviews, which remains unresolved.
 
 Changes before arrival could reflect briefing, preparation, repeated testing, or other events between interviews. Arrival-to-exit changes isolate the event's time window, but do not identify deliberation's causal effect without a credible comparison. Even on a common sample, these estimates describe the attendees with observed questionnaires at all three phases; they do not describe all recruited citizens or all attendees.
 
@@ -366,7 +363,7 @@ Table \ref{tab:models} addresses the peer-knowledge hypothesis directly. A ten-p
 
 The average of the separate within-poll peer-knowledge associations is also positive but imprecise: a ten-percentage-point difference in groupmates' initial knowledge is associated with `r num(10 * peer("k1")$estimate, 1)` points of additional gain (95\% interval `r num(10 * peer("k1")$lower, 1)` to `r num(10 * peer("k1")$upper, 1)`). Appendix Figure \ref{fig:peers} displays the estimates across polls. Its average gives each poll equal weight; Table \ref{tab:models} instead fits a common slope in a hierarchical model.
 
-Appendix Table \ref{tab:baseline-composition} examines whether participants with similar baseline characteristics were grouped together. For initial knowledge, the association with groupmates' initial knowledge is `r interval(balance_knowledge$estimate, balance_knowledge$lower, balance_knowledge$upper)`. Its interval includes zero. This diagnostic concerns characteristics measured before discussion; later knowledge and gain can themselves respond to group composition. A causal interpretation of peer coefficients also requires evidence about the assignment process. Group knowledge after deliberation is difficult to interpret because groupmates share the same experience [@manski1993].
+Appendix Table \ref{tab:baseline-composition} examines whether participants with similar baseline characteristics were grouped together. For initial knowledge, the association with groupmates' initial knowledge is `r interval(balance_knowledge$estimate, balance_knowledge$lower, balance_knowledge$upper)`. Its interval includes zero. This diagnostic concerns characteristics measured before discussion; later knowledge and gain can themselves respond to group composition. A causal interpretation of peer coefficients also requires evidence about the assignment process. Group members may finish with similar knowledge because they received the same briefing and took part in the same discussion. Their exit scores alone cannot establish whether they learned from one another [@manski1993]. We therefore use groupmates' initial knowledge in the peer models.
 
 # Conclusion
 
@@ -561,6 +558,22 @@ assignment |>
 
 \clearpage
 # Interview timing and analysis samples {#app:phases}
+
+Table \ref{tab:phase-changes} reports all three changes on the same three-wave sample within each poll, including the four-question Michigan sensitivity. Figure \ref{fig:phase-components} uses one primary battery per poll and reports the equally weighted means of its two components. Michigan's nine-question primary battery contains five factual questions and four party-placement questions at every interview; the four-question sensitivity never supplies a second Michigan observation to those means. The total pre-arrival-to-exit change is the sum of the two component changes before rounding.
+
+```{r phase-changes, results="asis"}
+cat("\n```{=latex}\n")
+phase_comparison_table(phase_balanced) |>
+  knitr::kable(
+    format = "latex", booktabs = TRUE, escape = FALSE, position = "H",
+    align = c(">{\\raggedright\\arraybackslash}p{1.4in}", "r", "r", "r", "r", "r"),
+    col.names = c("Poll", "Items", "N", "\\shortstack[r]{Pre-arrival \\\\ to arrival}",
+                  "\\shortstack[r]{Arrival \\\\ to exit}", "\\shortstack[r]{Pre-arrival \\\\ to exit}"),
+    caption = "Knowledge changes among attendees with all three questionnaires and recorded discussion groups. Entries are percentage points; brackets contain 95 percent group-bootstrap intervals. Items reports the battery size where documented; a dash marks an unavailable count."
+  ) |>
+  print()
+cat("\n```\n")
+```
 
 Questionnaire completion creates an additional selection stage. Appendix Table \ref{tab:phase-attrition} compares baseline knowledge among known attendees with observed, absent, or uncertain exit questionnaires. A blank quiz within an observed questionnaire scores zero; a wholly absent questionnaire remains unmeasured. Respondents whose questionnaire completion is uncertain are excluded from the paired comparisons. Those whose attendance is unknown remain in the baseline summaries and sample counts, with attendance recorded as unknown. Attendance classifications use source indicators, session records, onsite questionnaires, and verified historical identity links. For the harmonized participation measure, a wholly unanswered immediate post questionnaire implies nonattendance even when a roster or session record indicates attendance; the original indicator remains available. Main analyses also require observed questionnaires at earlier stages that the poll collected. A stage that was never collected does not exclude anyone. Cases without sufficient source evidence remain unknown. Uncertain attendance does not establish that a respondent was absent, and missing scores do not establish that a poll lacked an arrival survey.
 

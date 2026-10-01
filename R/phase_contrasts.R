@@ -259,3 +259,50 @@ phase_contrasts <- function(
     selection = dplyr::bind_rows(lapply(results, `[[`, "selection"))
   )
 }
+
+phase_primary_sample <- function(
+  participants = read_phase_participants(), scores = read_analysis_phase_scores(), polls = read_poll_registry()
+) {
+  frame <- phase_score_frame(participants, scores, polls) |>
+    phase_analysis_sources()
+  eligible <- frame$attended %in% TRUE & !is.na(frame$group) &
+    frame$battery_id == paste(frame$poll_id, frame$source_dataset, "knowledge", sep = ":") &
+    phase_same_denominator(frame, c("t0", "t1", "t2")) &
+    Reduce(`&`, lapply(c("t0", "t1", "t2"), function(phase) phase_has_score(frame, phase)))
+  out <- frame[eligible, ]
+  stopifnot(
+    nrow(out) > 0L,
+    !anyDuplicated(out[c("poll_id", "source_dataset", "respondent_id")])
+  )
+  batteries <- dplyr::distinct(out, poll_id, source_dataset, battery_id)
+  stopifnot(!anyDuplicated(batteries$poll_id))
+  out
+}
+
+phase_pooled <- function(
+  participants = read_phase_participants(), scores = read_analysis_phase_scores(),
+  polls = read_poll_registry(), n_boot = bootstrap_replicates(), seed = 20260929L
+) {
+  data <- phase_primary_sample(participants, scores, polls)
+  specifications <- phase_contrast_spec()
+  statistic <- function(x) {
+    stats::setNames(vapply(seq_len(nrow(specifications)), function(i) {
+      x |>
+        dplyr::summarise(
+          change = mean(.data[[paste0("score_", specifications$to[i])]] -
+                          .data[[paste0("score_", specifications$from[i])]]), .by = pollid
+        ) |>
+        dplyr::pull(change) |>
+        mean()
+    }, numeric(1)), specifications$contrast)
+  }
+  fit <- bootstrap_stat(data, statistic, seed = seed, resample_polls = TRUE, n = n_boot)
+  bootstrap_rows(fit) |>
+    dplyr::rename(contrast = term) |>
+    dplyr::mutate(
+      sample = "all_three_observed_attendees", weighting = "equal poll means",
+      inference = "poll_and_group_bootstrap", n_polls = dplyr::n_distinct(data$poll_id),
+      n_people = nrow(data), n_known_groups = nrow(dplyr::distinct(data, poll_id, group)),
+      bootstrap_replicates = n_boot
+    )
+}

@@ -1,0 +1,4 @@
+contrast,estimate,std_error,lower,upper,sample,weighting,inference,n_polls,n_people,n_known_groups,bootstrap_replicates
+post_minus_arrival,0.06774308714406856,0.01889180015015435,0.03199298182428006,0.10529695938701847,all_three_observed_attendees,equal poll means,poll_and_group_bootstrap,5,1504,99,999
+arrival_minus_pre_arrival,0.07620065513691908,0.00971864362835314,0.05733787176476601,0.09466623282170007,all_three_observed_attendees,equal poll means,poll_and_group_bootstrap,5,1504,99,999
+post_minus_pre_arrival,0.1439437422809876,0.022746402919518866,0.0987117745898949,0.18787619671569997,all_three_observed_attendees,equal poll means,poll_and_group_bootstrap,5,1504,99,999

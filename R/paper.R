@@ -139,6 +139,13 @@ phase_labels <- c(
   post_minus_pre_arrival = "Pre-arrival to exit"
 )
 
+phase_primary_exhibit <- function(data) {
+  dplyr::filter(data,
+    sample == "all_three_observed_attendees", n_people > 0,
+    battery_id == paste(poll_id, source_dataset, "knowledge", sep = ":")
+  )
+}
+
 phase_interval_text <- function(estimate, lower, upper) {
   out <- rep("--", length(estimate))
   observed <- is.finite(estimate)

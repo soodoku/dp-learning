@@ -12,13 +12,21 @@ pooled_row <- function(x, panel, label = "Pooled estimate") {
 
 # Rows ordered by estimate within each panel; the pooled estimate sits at the
 # bottom, set off by a rule.
-forest <- function(data, x_label) {
+forest <- function(data, x_label, row_order = NULL) {
   rules <- data |>
     dplyr::summarise(yintercept = sum(pooled) + 0.5, .by = panel)
-  data <- dplyr::mutate(
-    data,
-    row = forcats::fct_reorder(paste(panel, label, sep = "::"), dplyr::if_else(pooled, -Inf, estimate))
-  )
+  data$row <- if (is.null(row_order)) {
+    forcats::fct_reorder(paste(data$panel, data$label, sep = "::"),
+      dplyr::if_else(data$pooled, -Inf, data$estimate)
+    )
+  } else {
+    factor(data$label, levels = rev(row_order))
+  }
+  panels <- if (is.null(row_order)) {
+    ggplot2::facet_grid(panel ~ ., scales = "free_y", space = "free_y")
+  } else {
+    ggplot2::facet_grid(. ~ panel)
+  }
   ggplot2::ggplot(data, ggplot2::aes(estimate, row)) +
     geom_zero() +
     ggplot2::geom_hline(
@@ -27,7 +35,7 @@ forest <- function(data, x_label) {
     ) +
     geom_estimate() +
     ggplot2::scale_y_discrete(labels = \(x) sub(".*::", "", x)) +
-    ggplot2::facet_grid(panel ~ ., scales = "free_y", space = "free_y") +
+    panels +
     ggplot2::labs(x = x_label, y = NULL) +
     theme_evidence() +
     ggplot2::theme(strip.text.y = ggplot2::element_text(angle = 0, hjust = 0))
@@ -85,3 +93,25 @@ peers <- read_output("peer_effects.csv") |>
 p <- forest(peers, "Association of groupmates' mean initial knowledge (95% CI)") +
   ggplot2::theme(strip.text = ggplot2::element_blank())
 save_evidence(p, "figs/peer_effects", width = 6.5, height = 7.5)
+
+phase_panels <- c(
+  arrival_minus_pre_arrival = "A. Pre-arrival to arrival",
+  post_minus_arrival = "B. Arrival to exit"
+)
+phase_polls <- phase_primary_exhibit(read_output("phase_contrasts.csv")) |>
+  dplyr::filter(contrast %in% names(phase_panels)) |>
+  dplyr::transmute(
+    panel = unname(phase_panels[contrast]), label = pollname,
+    estimate = 100 * estimate, lower = 100 * lower, upper = 100 * upper, pooled = FALSE
+  )
+phase_average <- read_output("phase_summary.csv") |>
+  dplyr::filter(contrast %in% names(phase_panels)) |>
+  dplyr::transmute(
+    panel = unname(phase_panels[contrast]), label = "Equally weighted mean",
+    estimate = 100 * estimate, lower = 100 * lower, upper = 100 * upper, pooled = TRUE
+  )
+phase_order <- c(sort(unique(phase_polls$label)), "Equally weighted mean")
+p <- forest(dplyr::bind_rows(phase_polls, phase_average),
+  "Knowledge change (percentage points; 95% confidence interval)", row_order = phase_order
+)
+save_evidence(p, "figs/phase_changes", width = 6.5, height = 3.8)
